@@ -1,0 +1,49 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+@import "minima";
+
+#avatar {
+	margin-left: 10px;
+	margin-right: 15px;
+	float: left;
+	background-image: url('/avatar_tiny.png');
+	width: 30px;
+	height: 30px;
+	top: 12px;
+	position: relative;
+}
+
+@media(max-width: 365px) {
+	a.site-title { font-size: 20px; }
+}
+
+.my-footer-col-1 {
+  width: -webkit-calc(25% - (#{$spacing-unit} / 2));
+  width:         calc(25% - (#{$spacing-unit} / 2));
+}
+
+.my-footer-col-2 {
+  width: -webkit-calc(30% - (#{$spacing-unit} / 2));
+  width:         calc(30% - (#{$spacing-unit} / 2));
+}
+
+.my-footer-col-3 {
+  width: -webkit-calc(45% - (#{$spacing-unit} / 2));
+  width:         calc(45% - (#{$spacing-unit} / 2));
+}
+
+
+@include media-query($on-laptop) {
+  .my-footer-col-1,
+  .my-footer-col-2 {
+    width: -webkit-calc(50% - (#{$spacing-unit} / 2));
+    width:         calc(50% - (#{$spacing-unit} / 2));
+  }
+
+  .my-footer-col-3 {
+    width: -webkit-calc(100% - (#{$spacing-unit} / 2));
+    width:         calc(100% - (#{$spacing-unit} / 2));
+  }
+}
