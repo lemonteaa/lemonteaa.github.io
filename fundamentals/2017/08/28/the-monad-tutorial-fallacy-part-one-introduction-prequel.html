@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>The Monad Tutorial Fallacy, Part One: Introduction/Prequel</title>
+  <meta name="description" content="Understanding how monad works is a kind of mandatory rite of passage for any programmer aspiring to truly master the functional paradigm (of the advanced sta...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://lemonteaa.github.io/fundamentals/2017/08/28/the-monad-tutorial-fallacy-part-one-introduction-prequel.html">
+  <link rel="alternate" type="application/rss+xml" title="(into tech :lemontea)" href="/feed.xml">
+  
+  
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-105429614-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  
+
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+	<div>
+		<a id="avatar" href="/"></a>
+	</div>
+    <a class="site-title" href="/">(into tech :lemontea)</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/projects/">Projects</a>
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">The Monad Tutorial Fallacy, Part One: Introduction/Prequel</h1>
+    <p class="post-meta">
+      <time datetime="2017-08-28T22:56:00+08:00" itemprop="datePublished">
+        
+        Aug 28, 2017
+      </time>
+      
+      
+        • <a href="https://lemonteaa.github.io/fundamentals/2017/08/28/the-monad-tutorial-fallacy-part-one-introduction-prequel.html#disqus_thread">0 Comments</a>
+      
+	</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Understanding how monad works is a kind of mandatory rite of passage for any programmer aspiring to truly master the functional paradigm (of the advanced statically typed kind). Unfortunately it is an unforgiving trial: in spite of the large amount of tutorials out there the construction itself just seem to have some kind of irreducible complexity whose reason is mostly opaque to neophytes.</p>
+
+<p>Interestingly, although I mainly studied math when I was an undergrad, I first came to learn monad through the usual programmer’s way - see some hand-wavy explanation of what it is/does, see introductory examples of monads, read the abstract interface, read (and try to understand) more examples, struggle, then “think” that I understood it, realize (a few months to a year later) that I haven’t - that I have missed some facet of it, rinse and repeat, despair at some point that I am probably never going to truly master it…
+<!--more--></p>
+
+<p>Until I study monad from the perspective of a pure mathematician with no thought given to applications. Then everything clicked. “Why don’t you tell me this earlier?”</p>
+
+<p>So as a service mainly to myself, I’m writing this series of post retracing the story of monad (cleaned up of course). <strong><em>In clear violation of the warning of the infamous <a href="https://byorgey.wordpress.com/2009/01/12/abstraction-intuition-and-the-monad-tutorial-fallacy/">Monad Tutorial Fallacy</a>.</em></strong> You have been warned.</p>
+
+<p>In retrospect, the reasons that learning-through-example/pattern didn’t work for me is because:</p>
+<ol>
+  <li>The pattern emerging from the examples is not the monad itself (at least, not its interface nor its implementation). It is sort of like the mismatch of thinking in the problem domain vs the solution domain.</li>
+  <li>Unlike interface in traditional OOP languages, there are variants of the monad interface(s) with translation “formula” between them - a situation where Haskell typeclass shines but which add confusion to beginners. More importantly, unlike other context where things decompose obviously, the “moving pieces” of the monad interface seems to be tightly coupled to each other and look like the wrong decomposition, so that while it is possible to say understand any of its parts if I focus my mind on it for a while, it is hard to hold a mental conception/model of the whole thing in my head in one piece. Exactly the same situation where understanding a large, interlocking system is scary because you can’t really hold the full picture in your head and have to work on it piece-by-piece, always worrying about possible side effects.</li>
+</ol>
+
+<p>Okay, let’s begin the story. <em>(Prerequisite: <del>Bachelor’s degree in Pure Math</del> Knowledge of some category theory and basic abstract algebra)</em></p>
+
+<p><em>(Warning to actual mathematician: skipping all proofs as this is a tech blog and not a math blog, and because you can find them elsewhere/do it yourself anyway. Or is it just a lame excuse on my part to not make this post ridiculously long?)</em></p>
+
+<p>Before Monad, there’s the Adjoint Functor. But even that is a pretty mysterious abstraction as impenetrable as the monad. So let’s talk about <del>concrete</del> prototypical example, which in our story will be the free algebra.</p>
+
+<p>Recall that given any unstructured set <script type="math/tex">X</script>, the free algebra generated by <script type="math/tex">X</script>/over <script type="math/tex">X</script>, denoted <script type="math/tex">F(X)</script>, is the algebra formed by taking all formal expressions over <script type="math/tex">X</script> with the obvious algebraic operations, and where elements are identified if and only if they can be proved to be identities under the axioms of the algebraic system we are using. (So <script type="math/tex">a+(b+c)</script> is the same element as <script type="math/tex">(a+b)+c</script>.) The intuition for this construction is that it is a tautological one: the formal expressions represent things that simply have to exists in any algebra containing <script type="math/tex">X</script> (e.g. If <script type="math/tex">a, b</script> are in <script type="math/tex">X</script>, and we have some algebra <script type="math/tex">A</script> containing <script type="math/tex">X</script>, then necessarily <script type="math/tex">a + b</script> is in <script type="math/tex">A</script> by closure law), and then we impose the minimal constraint on the generated algebra by identifying only what have to be (those that can be proved to be equivalent).</p>
+
+<p>Now the categorical way to think of free algebra is that they are a universal construction: There is an obvious embedding <script type="math/tex">\iota</script> of <script type="math/tex">X</script> into <script type="math/tex">F(X)</script>, and for any other algebra <script type="math/tex">Y</script> that contains <script type="math/tex">X</script> (through the embedding <script type="math/tex">g</script>), we always have an unique homomorphism <script type="math/tex">\phi: F(X) \rightarrow Y</script> so that the diagram below commutes:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\array{
+    X & \stackrel{\iota}\rightarrow & F(X) \\
+      & {}_g \searrow       & \downarrow^\phi \\
+      &                     & Y
+} %]]></script>
+
+<p>If you actually read category theory textbook you may find the above diagram doesn’t look quite right: the problem is that we have been a bit loose and didn’t clearly distinguish which object belongs in which category: we can’t really just say <script type="math/tex">X \rightarrow F(X)</script> as <script type="math/tex">X</script> is in the category of set, while <script type="math/tex">F(X)</script> is in the category of algebra. We can fix this (at the cost of making the diagram more complicated looking) by using the forgetful functor <script type="math/tex">G: \mathbf{Algebra} \rightarrow \mathbf{Set}</script>, which just stripe away all the algebraic operations, leaving only the set of elements. So the embedding become: <script type="math/tex">I: X \rightarrow GF(X)</script> as a map/morphism between sets. And voila - this is the natural transformation called <strong>the unit</strong>.</p>
+
+<p>There is also a nifty idea that will become critical later on: adjoint functor is a theory of duality, and whenever there is such an adjunction the properties outlined above also work if we flip all the arrows (i.e. take the dual in category-speak). In particular there would naturally be a morphism <script type="math/tex">E: FG(A) \rightarrow A</script> for any algebra <script type="math/tex">A</script>, called <strong>the counit</strong>. But what is this? <script type="math/tex">FG(A)</script> is the free algebra whose underlying elements are <script type="math/tex">G(A)</script>, or just the elements of <script type="math/tex">A</script>. So <script type="math/tex">FG(A)</script>’s elements are formal expressions, where all those variables take values in <script type="math/tex">A</script>, <em>where algebraic operations are well defined since <script type="math/tex">A</script> is an algebra</em>. <strong>E is an expression evaluator!</strong></p>
+
+<p>But there’s still one thing more (at least). The duality/symmetry of an adjunction become apparent once we express it in terms of a <em>natural</em> isomorphism between two hom-sets. (In fact this representation is the key ingredient in the proof of the duality mentioned above anyway) Packaged up in a nice formula, it reads: <script type="math/tex">{\operatorname{Hom}}_{\mathbf{Algebra}}(FX, Y) \cong {\operatorname{Hom}}_{\mathbf{Set}}(X, GY)</script>. What does it mean? Well, similar to how any linear transformation is uniquely determined by the values it takes on any basis of the source vector space, any homomorphism from the free algebra <script type="math/tex">F(X)</script> to any other algebra <script type="math/tex">Y</script>, is uniquely determined by the value it takes over a natural basis, which is just the underlying set/set of variables <script type="math/tex">X</script>. Equivalently, any such map induces a full homomorphism (and not just a map of sets) over <script type="math/tex">F(X)</script> by the obvious algebra law (e.g. If <script type="math/tex">\phi(a) = p</script> and <script type="math/tex">\phi(b) = q</script>, then <script type="math/tex">\phi(a + 2b)</script> can be defined as <script type="math/tex">p + 2q</script>). The reason for the appearance of the forgetful functor <script type="math/tex">G</script> is the same as in the discussion on universal property.</p>
+
+<p>Now we mostly understand Adjoint Functors (excluding the more theory side of things, such as the Special and General Adjoint Functor Theorem for existence/construction of <script type="math/tex">G</script> from <script type="math/tex">F</script>), but so what? Here comes the important part: <strong><em>we can interpret (typed) pure functional programming through category theory</em></strong>, and a suitably comprehension interpretive framework serves as the foundation for understanding monad, among other things.</p>
+
+<p>In the simplest situation, a Category is a typed version of the composition higher order function. The objects in the Category are the type of the system, morphisms from <script type="math/tex">A</script> to <script type="math/tex">B</script> are the pure (computable) functions of type <script type="math/tex">A \rightarrow B</script>, and composition of arrows (in the category) correspond to function compositions (in our programming model). Even though it appears to be trivial and useless, this naive model can be extended and changed in various way, and you may even specify your own Category/Programming Model! (I promise to give examples of these in Part 3 or something of this series)</p>
+
+<p><em>Adjoint Functors represents the duality between an unstructured, raw computational model/domain versus a structured, contextual computational model/domain.</em> So we first design and specify a custom-made Category <script type="math/tex">\mathcal{D}</script> (where all its element - object, morphism and composition - need not be the standard/usual one) that capture/model the particular context we want, and Category <script type="math/tex">\mathcal{C}</script> remains the standard one in last paragraph. Then the functors <script type="math/tex">F: \mathcal{C} \rightarrow \mathcal{D}</script> and <script type="math/tex">G: \mathcal{C} \leftarrow \mathcal{D}</script> provides the natural translation between these two contrasting model of computation. In particular <script type="math/tex">F</script> is an embedding functor: any computation can be trivially considered as computation with context by simply carrying out all computation without using or depending on the context at all. (In practice though describing <script type="math/tex">F</script> is not trivial since category <script type="math/tex">\mathcal{D}</script> is itself not trivial) On the other hand, any computation with context is still a computation (Church-Turing thesis), so <script type="math/tex">U</script> interpret it as plain computation by forgetting/stripping away the extra structure (but no information is lost - it is the marking of context, and not the content of the context, that is being stripped). In more silly terms, <script type="math/tex">F</script> tells you that you can technically write assembly in any high level (Turing complete) language, while <script type="math/tex">U</script> tells you that ultimately any such high level language will be compiled down into assembly anyway.</p>
+
+
+  </div>
+
+  
+    
+
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://lemonteaa.github.io/fundamentals/2017/08/28/the-monad-tutorial-fallacy-part-one-introduction-prequel.html';
+      this.page.identifier = '/fundamentals/2017/08/28/the-monad-tutorial-fallacy-part-one-introduction-prequel.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+
+      s.src = 'https://lemontea-techblog.disqus.com/embed.js';
+
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <!--<h2 class="footer-heading">(into tech :lemontea)</h2>-->
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col my-footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              (into tech :lemontea)
+            
+            </li>
+        </ul>
+      </div>
+
+      <div class="footer-col my-footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/lemonteaa"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">lemonteaa</span></a>
+
+          </li>
+          
+
+          
+		  
+		  
+          <li>
+			<a href="mailto:lemontea.Tom@gmail.com"><span class="icon icon--email"><svg viewBox="0 0 16 16" width="16px" height="16px">
+<g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g4187"
+       transform="matrix(0.82252529,0,0,0.82252529,-254.40571,-324.97836)">
+      <rect
+         y="400.36658"
+         x="311.20438"
+         height="10"
+         width="16"
+         id="rect4164"
+         style="fill:none;fill-opacity:1;stroke:#828282;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="ccc"
+         inkscape:connector-curvature="0"
+         id="path4166"
+         d="m 311.6,400.8622 7.9,4.9 7.5,-5"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4170"
+         d="m 311.4,409.9622 4.7,-5.8"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4170-5"
+         d="m 326.85,409.9622 -4.2,-6.1"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+  </g>
+</svg></span><span class="username">lemontea.Tom@gmail.com</span></a>
+
+		  </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col my-footer-col-3">
+        <p>Site Generated by <a href="https://jekyllrb.com/">Jekyll</a> using customized version of the <a href="https://github.com/jekyll/minima">Minima</a> theme.</p>
+
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+<script id="dsq-count-scr" src="//lemontea-techblog.disqus.com/count.js" async></script>
+
+
+
+  </body>
+
+</html>

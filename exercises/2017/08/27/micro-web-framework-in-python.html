@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Micro Web Framework in Python</title>
+  <meta name="description" content="Web Framework is arguably the most often used kind of library in real world, as well as being something that keeps being reinvented for every programming lan...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://lemonteaa.github.io/exercises/2017/08/27/micro-web-framework-in-python.html">
+  <link rel="alternate" type="application/rss+xml" title="(into tech :lemontea)" href="/feed.xml">
+  
+  
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-105429614-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  
+
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+	<div>
+		<a id="avatar" href="/"></a>
+	</div>
+    <a class="site-title" href="/">(into tech :lemontea)</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/projects/">Projects</a>
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Micro Web Framework in Python</h1>
+    <p class="post-meta">
+      <time datetime="2017-08-27T20:26:00+08:00" itemprop="datePublished">
+        
+        Aug 27, 2017
+      </time>
+      
+      
+        • <a href="https://lemonteaa.github.io/exercises/2017/08/27/micro-web-framework-in-python.html#disqus_thread">0 Comments</a>
+      
+	</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Web Framework is arguably the most often used kind of library in real world, as well as being something that keeps being reinvented for every programming language and every generation of programmer. Given such ubiquity, it is strange that it is not included in the canon of the undergrad Computer Science cirriculum alongside Operating System, Database, and Compiler. This post seeks to bridge this gap by presenting a series of short exercise that culiminates in building your own micro web framework. Have fun!</p>
+
+<p><em>Important Note:</em> This exercise is inspired by <a href="https://ruslanspivak.com/lsbaws-part1/">Ruslan’s “Let’s Build A Web Server”</a> series as a kind of follow up. As we will be using online resources to help, please read the reference section at the end first before beginning the exercise.
+<!--more--></p>
+
+<h2 id="0-preparation">0. Preparation</h2>
+<p><em>(Difficulty: Easy to Medium+ depending on how serious you get)</em></p>
+
+<p>First we want to refine some aspect of the codes in the blog series to make further development on top of them more pleasant to work with.</p>
+
+<p>a) You may come across problem when trying to test part 1 using telnet in window. It turns out that telnet may decide to send packets as it receives characters you type, rather than sending them all at once. Since the function <code class="highlighter-rouge">client_connection.recv(1024)</code> means trying to get <strong>something</strong> with an upper bound of fetching 1024 bytes at most, you may get cut off after entering a single character. What we really need is some sort of protocol coupled with a stream interface - we should be persistantly reading until we know enough about the beginning part of the content sent to know the actual length of the whole payload - in this case it is the <code class="highlighter-rouge">Content-Length</code> http header field that will tell us.</p>
+
+<p>Extract suitable function from part 2’s code to help with parsing the packet’s content, and then write a code snippet to properly read the packet and insert it into the code in part 1. (Hint: use the readline and read function)</p>
+
+<p>b) Add logging to the code in part 1 and part 2 so that we can debug more easily. After importing logging, add the line</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">'</span><span class="si">%(asctime)</span><span class="s">s [</span><span class="si">%(levelname)</span><span class="s">s] </span><span class="si">%(message)</span><span class="s">s'</span><span class="p">)</span></code></pre></figure>
+
+<p>for a minimal setup, then add log in places you think are important.</p>
+
+<p>c) The code in part 2 skipped some details of the WSGI requirement to simplify things, and we need to add some of that back in.
+i. The <code class="highlighter-rouge">PATH_INFO</code> parameter is currently the whole path. Write functions to extract query string into <code class="highlighter-rouge">QUERY_STRING</code> and correct the line for <code class="highlighter-rouge">PATH_INFO</code> correspondingly.
+ii. Write functions to extract all http headers and add them to the environ dict in one stroke. (Be careful about special case of <code class="highlighter-rouge">CONTENT_LENGTH</code>)</p>
+
+<p>(Optional) d) Study using multiprocessing to make a httpd daemon so that starting/stopping server is less tedious.</p>
+
+<h2 id="1-elements-of-a-framework">1. Elements of a Framework</h2>
+<p>A Web Framework provides its own model of how things work, as well as a more convenient and/or more powerful interface to the user than the actual interface to the web server (which in this case is the WSGI). They achieve this by layering on top of the basic interface, doing some of the tasks that can be generalized. We will build a heavily simplified micro web framework incrementally, starting with miscellaneous functions.</p>
+
+<p><em>(Difficulty: Easy)</em></p>
+
+<p>a) The first issue is that the data structure in WSGI is too low-level with everything packed in one single env dict - we want to present the data in a cleaner way that is also more meaningful from a user’s point of view.</p>
+
+<p>Let’s create a class named <code class="highlighter-rouge">HttpReq</code> (Shortform for HTTP Request) that is just data structure:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">HttpReq</span><span class="p">:</span>
+	<span class="k">pass</span></code></pre></figure>
+
+<p>It should have the following attributes:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>url</td>
+      <td>The URL being requested.</td>
+    </tr>
+    <tr>
+      <td>method</td>
+      <td><code class="highlighter-rouge">GET</code> or <code class="highlighter-rouge">POST</code></td>
+    </tr>
+    <tr>
+      <td>headers</td>
+      <td>a python dict whose keys are the header names and the values are the corresponding header values.</td>
+    </tr>
+    <tr>
+      <td>getparams</td>
+      <td>if request method is <code class="highlighter-rouge">GET</code>, this should be a python dict of the request parameters whose keys are parameter names and the values are the corresponding parameter values. The value should be a python array if there is a repeat of parameter name.</td>
+    </tr>
+    <tr>
+      <td>postparams</td>
+      <td>if request method is <code class="highlighter-rouge">POST</code>, this should be a python dict with the request parameters in the same schema as getparams.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>i. Write a helper function <code class="highlighter-rouge">extractHeaders(env)</code> to extract headers from the env dict according to the requirement for the class <code class="highlighter-rouge">HttpReq</code>.</p>
+
+<p>ii. Write a function <code class="highlighter-rouge">get_req(env)</code> to construct and return a <code class="highlighter-rouge">HttpReq</code> object from the env dict, conforming to the above specification.</p>
+
+<p><em>Note:</em> You are allowed to use the module <code class="highlighter-rouge">urlparse</code> (<code class="highlighter-rouge">urllib.parse</code> if using Python 3) in standard library for this question.</p>
+
+<p><em>(Difficulty: Hard)</em></p>
+
+<p>b) The second and third (and fourth) issues are that it is still too cumbersome to work directly with HTTP request and response (too much boilerplate code to extract data from request object manually as well as assembly/building response object), and for larger projects with many ‘pages’ located at various URL, doing everything in one function is confusing and difficult to manage (try searching through/jumping around the code!). Different frameworks may use different mechanisms, but some common ideas are:</p>
+<ul>
+  <li>Use handler that focus on dealing with requests on one particular (or one family of) resource.</li>
+  <li>Inject various kinds of parameters into the handler, and only require the handler to return the core content of the response (or return an abstracted response object)</li>
+  <li>Some frameworks will also allow automatic configuration of the web application itselfs to varying degree.</li>
+</ul>
+
+<p>In this exercise, we will implement a ‘router’ in the framework (explained in question 2 below), use dependency injection-like method to provide the parameters, and use decorator for auto-config (a similar thing is called annotation-driven config in Java).</p>
+
+<p>Implement a decorator called <code class="highlighter-rouge">route</code> that is applied to methods (which is a kind of callable in python) acting as handler. The decorator should have the following arguments:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Required?</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>url</td>
+      <td><em>mandatory</em></td>
+      <td>for which URL will this handler be able to process the request?</td>
+    </tr>
+    <tr>
+      <td>method</td>
+      <td><em>optional</em></td>
+      <td>any restriction on request type? <code class="highlighter-rouge">GET</code> if handler only deals with GET request, <code class="highlighter-rouge">POST</code> for POST request only, and <code class="highlighter-rouge">ANY</code> for no restriction. Defaults to <code class="highlighter-rouge">ANY</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>It should wrap the method and apply dependency injection by inspecting the method argument names and providing the corresponding request parameters (using <code class="highlighter-rouge">None</code> as value if it doesn’t exist).</p>
+
+<p>As an example:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">TodoApp</span><span class="p">:</span>
+	<span class="nd">@route</span><span class="p">(</span><span class="s">'/todo/create'</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">'POST'</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">addTodoListItem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+		<span class="c"># ...snip...</span></code></pre></figure>
+
+<p>Here the route’s URL is ‘/todo/create’, the method is <code class="highlighter-rouge">POST</code>, and the decorator should extract request parameters <code class="highlighter-rouge">task</code> and <code class="highlighter-rouge">pos</code> if they exists.</p>
+
+<h2 id="2-piecing-stuff-together">2. Piecing Stuff Together</h2>
+<p>A router is something that route a request to a suitable handler for further processing. The handlers are matched/tested against the request by examining its HTTP method and URL, and in more advanced cases patterns/regex can be used when matching URL (which we won’t do here). Usually a map/registry of handlers are internally recorded and used for matching.</p>
+
+<p><em>(Difficulty: Easy+)</em></p>
+
+<p>a) In older generations of web framework the user is responsible for providing/configuring the handler map manually/explicitly, for example by calling a function with the full handler map as argument, or by calling a register function for each handler/route. Newer generation can be auto-config as mentioned in Q1 above.</p>
+
+<p>i. Write a function <code class="highlighter-rouge">buildHandlerMap(clz)</code>, that accept a class meta-object as argument, extract all handlers inside that class (i.e. methods in the class decorated with <code class="highlighter-rouge">@route</code>), and return the handler map. The map should be a list of 4-tuple with format <code class="highlighter-rouge">(&lt;method name&gt;, &lt;URL in route decorator&gt;, &lt;method in route decorator&gt;, &lt;the handler callable&gt;)</code>.</p>
+
+<p>(Hint: modify your code in Q1 b to add suitable attributes to the callable, so that the meta-data stored in the decorator itself can be inspected)</p>
+
+<p>ii. Write a function <code class="highlighter-rouge">dispatchReq(handlerMap, req)</code>, that when given the handler map built from Q2 a(i), and a <code class="highlighter-rouge">HttpReq</code> object, will perform the routing as described above. It should call the first handler in the list that matches successfully with req supplied as argument, and then return the result of that call, or raise an Exception with message <code class="highlighter-rouge">No route found</code> otherwise.</p>
+
+<p><em>(Difficulty: Medium)</em></p>
+
+<p>b) We are now finally ready to write the ‘main function’ of our framework. Finish the following code snippet:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">microFrame</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clz</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">handlerMap</span> <span class="o">=</span> <span class="n">buildHandlerMap</span><span class="p">(</span><span class="n">clz</span><span class="p">)</span>
+	
+	<span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">,</span> <span class="n">start_response</span><span class="p">):</span>
+		<span class="c"># TODO</span></code></pre></figure>
+
+<p><em>(Difficulty: Easy+)</em></p>
+
+<p>c) i. Now test the framework you’ve just written by writting an example web application. Your test should include at least one route each for:</p>
+
+<ul>
+  <li>Returning a html form to submit</li>
+  <li>A page accepting query parameter called through GET</li>
+  <li>A page that accept form submit through POST</li>
+</ul>
+
+<p>You may optionally test for default argument in function in Python.</p>
+
+<p>ii. Test drive your web application. Open an interactive Python session, and type suitable command to package a web application, “deploy” it to the custom web server (after enhancements in question 0), and start the server. Open your browser and tests that it behaves as expected.</p>
+
+<h2 id="optional-3-extension">(Optional) 3. Extension</h2>
+<p>In this question we try to extend our web framework to support more functionality. We will provide only the goal - you are free to come up with your own idea! (See reference section for explanation, supporting materials etc if you get stuck)</p>
+
+<p>a) Add support for manipulating Cookie.</p>
+
+<p>b) i. Based on part a, now implement Session.</p>
+
+<p>ii. Can you make your implementation of a and b(i) be thread-safe?</p>
+
+<h2 id="reference">Reference</h2>
+
+<h3 id="q0">Q.0</h3>
+<p>The original tutorial/DIY series is at <a href="https://ruslanspivak.com/lsbaws-part1/">here</a> (Part 1, follow links at bottom to get to other parts), and we assume that the reader has already read (but not neccessarily worked out) both part 1 and part 2 throughout this exercise.</p>
+
+<p>We will be working and perhaps tinklering with both HTTP’s protocol detail and drill down on WSGI’s interface a bit. For http, the authoritative reference is the <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4">original spec</a>.</p>
+
+<p>Python’s standard socket library provide a function <code class="highlighter-rouge">socket.makefile</code> to allow accessing socket through a file-like api. However there are some subtlety involved and it have (previously?) some limitations. Nonetheless it is good enough for our exercise. See <a href="http://stackoverflow.com/questions/12203800/should-i-close-makefileed-socket-and-it-is-original-socket-independently">this</a> for hints on how to use it.</p>
+
+<p>One of Python’s strength has been in its battery included philosophy while providing an easy, accessible interface and supporting a wide variety of system integration tasks. Logging is taken care of in a similar spirit and it is in fact a built in library. Read <a href="https://docs.python.org/2/howto/logging.html#logging-basic-tutorial">Python’s doc</a> for an introduction.</p>
+
+<p>It turns out that you cannot test the simple server in part 2 with chrome because of speculative connection that send nothing, see <a href="http://stackoverflow.com/questions/4761913/server-socket-receives-2-http-requests-when-i-send-from-chrome-and-receives-one">this</a> for explanation.</p>
+
+<p>WSGI is an old school interface that still works - similar to the CGI interface at the dawn of web 2.0 one or two decades before. Refer to <a href="https://wsgi.readthedocs.io/en/latest/definitions.html">the WSGI Community Website</a> for a brief description of the environ keys, and read <a href="http://wsgi.tutorial.codepoint.net/">Clodoaldo Neto’s WSGI Tutorial</a> to quickily learn how to work with it practically.</p>
+
+<p>For a concise but still in-depth explanation of the multiprocessing module, see <a href="https://pymotw.com/2/multiprocessing/">the Python Module Of the Week’s entry</a>. This website is also useful in general for getting a tour of various Python modules.</p>
+
+<p>Aside from specific pages mentioned above, Python has a good amount of online materials ranging from beginner-level-tutorial to more advanced articles. One example is <a href="http://docs.python-guide.org/en/latest/">The Hitchhiker’s Guide to Python by Kenneth Reitz</a>. Meanwhile, do not forget that Python’s <a href="https://docs.python.org/2/index.html">official documentation</a> has reasonable average quality too, so check it out before looking for supplementary materials.</p>
+
+<h3 id="q1">Q.1</h3>
+<p>Web framework is a foundational, classical piece of software and as such there has been numerous specific frameworks, in a wide variety of context (e.g. different language) throughout the years. In spite of “recent” innovations such as Ruby On Rails and Express in Node.js (and many new generation, lightweight frameworks emphasizing interactive development), their basic principles remain the same (and so in my opinion belongs to the realm of Computer Science). See <a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Web_frameworks">the MDN Web Docs’ entry on Server-side Web Framework</a> for an introduction to what they do. (<em>Sidenote:</em> The MDN is also in general an authoritative reference especially for front-end developer)</p>
+
+<p>Decorator is a somewhat tricky feature in Python because it uses higher order function in an essential way, and also because there are different use cases with subtly different syntax. Two blog posts that explain these points are <a href="https://www.thecodeship.com/patterns/guide-to-python-function-decorators/">[1]</a> at a beginner level, and <a href="http://scottlobdell.me/2015/04/decorators-arguments-python/">[2]</a> that also covers the more advanced cases of using a class as decorator.</p>
+
+<h3 id="q3">Q.3</h3>
+<p>Cookie and web sessions are closely related concepts. Cookie solves the problem of maintaining state across HTTP requests (the HTTP protocol itself is stateless) by changing the protocol specification to require browser cooperation. Server can set a designated header in its HTTP response, which the browser should honor by saving the data in its own memory and repeating the data in all subsequent requests (until expiry or reset) in another designated header. See <a href="https://en.wikipedia.org/wiki/HTTP_cookie">Wikipedia’s Article</a> for details and <a href="https://tools.ietf.org/html/rfc6265">RFC6265</a> for the specification itself.</p>
+
+<p>Web Session solve a similar class of problem as Cookie, but with the state stored on server side. The usual way to do it is to build on top of Cookie: the server generate a session ID and set it as the Cookie value. Any state that need to be saved is stored on server side by associating that data with the session ID, which can later be retrieved by lookup. Authentication can be achieved by choosing a suitable scheme for generating the session ID with various cryptographic/security properties (Full security requires many more considerations though). In this exercise you can ignore security issues and just use the <code class="highlighter-rouge">uuid</code> module in Python. See <a href="http://machinesaredigging.com/2013/10/29/how-does-a-web-session-work/">[3]</a> for an illustrated example. Also see <a href="https://web.stanford.edu/~ouster/cgi-bin/cs142-fall10/lecture.php?topic=cookie">[4]</a> for a condensed summary of the discussions above.</p>
+
+<p>Concurrency is an intrinsically difficult problem that we sometimes cannot avoid (espcially more so in this age when the free lunch given by Mooer’s law is basically over). Python offer a number of facilities for doing multithreading - see for example <a href="http://www.laurentluce.com/posts/python-threads-synchronization-locks-rlocks-semaphores-conditions-events-and-queues/comment-page-1/">[5]</a> for a catalogue of options.</p>
+
+<p>Unfortunately it also turns out that concurrency is one of the weak spot in Python due to the infamous Global Interpreter Lock (GIL). In short, even if multi-threading is done correctly you may not get the desired performance boost. See <a href="https://jeffknupp.com/blog/2012/03/31/pythons-hardest-problem/">Jeff Knupp’s blog post “Python’s Hardest Problem”</a> for an account of the problem and its <a href="https://jeffknupp.com/blog/2013/06/30/pythons-hardest-problem-revisited/">follow up article</a> for a list of possible remedies. The standard advise given when asking this problem on forums such as stackoverflow is “Use multiprocessing instead of threading”. Read <a href="https://stackoverflow.com/questions/3044580/multiprocessing-vs-threading-python">this</a> for a summarized comparison.</p>
+
+<p><em>(Wow, you really read to the end! As a reward for that, <a href="https://github.com/lemonteaa/python-exercise/tree/master/micro_web_framework">here</a> is my own work-out of these exercises - exluding bonus sections)</em></p>
+
+
+  </div>
+
+  
+    
+
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://lemonteaa.github.io/exercises/2017/08/27/micro-web-framework-in-python.html';
+      this.page.identifier = '/exercises/2017/08/27/micro-web-framework-in-python.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+
+      s.src = 'https://lemontea-techblog.disqus.com/embed.js';
+
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <!--<h2 class="footer-heading">(into tech :lemontea)</h2>-->
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col my-footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              (into tech :lemontea)
+            
+            </li>
+        </ul>
+      </div>
+
+      <div class="footer-col my-footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/lemonteaa"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">lemonteaa</span></a>
+
+          </li>
+          
+
+          
+		  
+		  
+          <li>
+			<a href="mailto:lemontea.Tom@gmail.com"><span class="icon icon--email"><svg viewBox="0 0 16 16" width="16px" height="16px">
+<g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g4187"
+       transform="matrix(0.82252529,0,0,0.82252529,-254.40571,-324.97836)">
+      <rect
+         y="400.36658"
+         x="311.20438"
+         height="10"
+         width="16"
+         id="rect4164"
+         style="fill:none;fill-opacity:1;stroke:#828282;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="ccc"
+         inkscape:connector-curvature="0"
+         id="path4166"
+         d="m 311.6,400.8622 7.9,4.9 7.5,-5"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4170"
+         d="m 311.4,409.9622 4.7,-5.8"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4170-5"
+         d="m 326.85,409.9622 -4.2,-6.1"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+  </g>
+</svg></span><span class="username">lemontea.Tom@gmail.com</span></a>
+
+		  </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col my-footer-col-3">
+        <p>Site Generated by <a href="https://jekyllrb.com/">Jekyll</a> using customized version of the <a href="https://github.com/jekyll/minima">Minima</a> theme.</p>
+
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+<script id="dsq-count-scr" src="//lemontea-techblog.disqus.com/count.js" async></script>
+
+
+
+  </body>
+
+</html>
