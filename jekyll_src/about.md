@@ -2,6 +2,7 @@
 layout: page
 title: About
 permalink: /about/
+comments: true
 ---
 
 Lemontea is a Math lover who is in awe of the beauty and power of high level programming languages. Unfortunately he has been sitting on the side for way too long, looking at everything passing him by while lots of awesome people arround him (as well as other awesome people around the globe) do amazing things.

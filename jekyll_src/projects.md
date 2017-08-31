@@ -2,6 +2,7 @@
 layout: page
 title: Projects
 permalink: /projects/
+comments: true
 ---
 An overarching theme of the Open Source Projects I choose to engage in/create is that they are infrastructural, innovative (hopefully), fun to me, and pushes my own skill and knowledge of both programming and computer science.
 
