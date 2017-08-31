@@ -17,6 +17,17 @@ layout: default
         <h2>
           <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
         </h2>
+		
+		<span>
+			{{ post.excerpt }}
+			<p><a href="{{ post.url | relative_url }}">More...</a></p>
+		</span>
+		
+		{% if site.disqus.shortname and jekyll.environment == "production" %}
+		<span class="post-meta">
+			<a href="{{ post.url | absolute_url }}#disqus_thread">0 Comments</a>
+		</span>
+		{% endif %}
       </li>
     {% endfor %}
   </ul>
