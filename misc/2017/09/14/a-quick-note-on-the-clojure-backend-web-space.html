@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>A Quick Note on the Clojure (Backend) Web Space</title>
+  <meta name="description" content="(Note to Experts: if you find any factual error in this note, please tell me by leaving a comment in the comment section below. Many thanks!) Frameworks Cloj...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html">
+  <link rel="alternate" type="application/rss+xml" title="(into tech :lemontea)" href="/feed.xml">
+  
+  
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-105429614-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  
+
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+	<div>
+		<a id="avatar" href="/"></a>
+	</div>
+    <a class="site-title" href="/">(into tech :lemontea)</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/projects/">Projects</a>
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">A Quick Note on the Clojure (Backend) Web Space</h1>
+    <p class="post-meta">
+      <time datetime="2017-09-14T20:16:00+08:00" itemprop="datePublished">
+        
+        Sep 14, 2017
+      </time>
+      
+      
+        • <a href="https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html#disqus_thread">0 Comments</a>
+      
+	</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p><em>(Note to Experts: if you find any factual error in this note, please tell me by leaving a comment in the comment section below. Many thanks!)</em></p>
+
+<h2 id="frameworks">Frameworks</h2>
+<p>Clojure as a community has emphasized two points (among others):</p>
+<ol>
+  <li>No complicated, Rube-Goldberg-Machine framework - prefer simple, focused, composable libraries for specific features. Pick your own choice for each feature and combine them in your application.</li>
+  <li>Data is a first-class-citizen. Instead of coupling it with function, let it stand alone and have functions operating on/transforming them.</li>
+</ol>
+
+<p>That being said it is tedious and intimidating for a rookie to have to make informed choice on every step. So there is still some “frameworks”:
+<!--more--></p>
+
+<ul>
+  <li><a href="http://www.luminusweb.net/">Luminus</a> is a funky thing: while it is called a “micro framework” on its webpage, if you look closer you will find nothing beyond the series of guide webpages. It is not even a library! Instead it is just a lein template you can call to scaffold a web project with sensible default choices of libraries (per point 1 above) and all the tedious configuration done for you.</li>
+  <li><a href="http://arachne-framework.org/">Arachne</a> (still in alpha) is more opinionated and co-opt point 2 above: the app is data-driven and the kind of messy configurations so common in other web framework (in other languages) are “real data” and given first-class, systematic/unified treatment. (Similar project and/or successor on this line is the <a href="https://github.com/duct-framework/duct">Duct</a> framework)</li>
+  <li><a href="http://clojure-liberator.github.io/liberator/">Liberator</a> is more a library targeted to those who want to write a RESTful web service backend. It has put heavy emphasis on fully embracing the doctrine of REST - even those that are less adhered to in practise (<a href="http://timelessrepo.com/haters-gonna-hateoas">HATEOAS</a> comes to mind). It seems that its more pragmatic, <em>asynchronous</em> counterpart - <a href="http://pedestal.io/">Pedestal</a> - has more adoption in the real world.</li>
+</ul>
+
+<h2 id="build-tools">Build Tools</h2>
+<p>Just in case you don’t know (yet), there are two:</p>
+
+<ul>
+  <li><a href="https://leiningen.org/">Leiningen</a> (lein in short) is the standard one and is a task runner, declarative project configuration, and dependency management combined (sort of like Maven if you’re in Java, npm if you’re from Javascript, rake if you’re in Ruby I think(?), XX if you’re from language YY - really most modern languages nowadays have this particular combination as the default)</li>
+  <li><a href="http://boot-clj.com/">Boot</a> is (ironically) the new kid on the block and pursue a procedural style that allows more flexibility/programmability. (E.g. Just Ant for Java, or Gulp over Grunt for Javascript guy - I know, that two are ancient in 2017, but still)</li>
+</ul>
+
+<h2 id="servers">Servers</h2>
+
+<p><em>(I assume you have the Java background to understand, well, the Java part. If not, well that’s too bad - wait until my planned next post where I will briefly talk about that in a tangential subsection :P )</em></p>
+
+<p>Of course two “universal” deployment options are:</p>
+<ul>
+  <li>Build an uberjar that is completely standalone (web application is packaged with an embedded web server) and then just execute it on the JVM</li>
+  <li>Build an (Servlet-compliant) uberwar and deploy it into any Java web server / web container</li>
+</ul>
+
+<p>Unfortunately thing starts to get unruly at this point, so tighten your seat belt…</p>
+
+<p>While Servlets are a good thing <em>in spite of</em> how it might be <a href="http://misko.hevery.com/2009/04/08/how-to-do-everything-wrong-with-servlets/">badly designed</a>, by abstracting away differences between web/application servers and presenting a uniform interface to application developer, maintaining this kind of standard (especially in Java) pretty much ensure that it will be slow to pick up on innovation in the web server space. But the rise of asynchronous web servers such as Node.js and other emerging forms of interaction (such as websockets) put on pressure for adoption. When the standard fails to adapt <em>fast enough</em> (Newer version of the Servlet spec has support for them), people will begin to work around (and hence without) it. So instead of a unified interface, expects custom API specific to each web server.</p>
+
+<p>Another trend that may be unfamiliar to people used to working in an enterprise context is the rise of embedded server. <sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> It is interesting to note a kind of <em>Inversion of Control</em> here: instead of deploying an application to the container/server and letting the server’s execution manage starting/stopping the app, we now have explicit control: the application contains the server and triggers the start/stop of the server through application logic. <sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup> One advantage of this approach is that the <em>implicit</em> logic of a server managing a deployment is now <a href="https://www.python.org/dev/peps/pep-0020/"><em>explicit</em></a> so that when problem occurs, things are more traceable.</p>
+
+<p>So, with these understanding, what clojure-specific web servers do we have?</p>
+
+<p>First, <a href="https://github.com/ring-clojure/ring">ring</a> is the Clojure analogue of the Servlet spec. It is <em>a HTTP server abstraction/interface plus a number of small libraries</em>.</p>
+
+<ul>
+  <li><a href="http://www.http-kit.org/">http-kit</a> is a ring-compatible web server written in Java and Clojure.</li>
+  <li>Jetty and Netty are classical Java web servers. Jetty is a standard, embedded Java server, while Netty is closer to Node.js with emphasis on the Transport Layer by providing access to TCP/UDP/socket server as well as supporting asynchronity.
+    <ul>
+      <li>Ring itself has an adaptor for Jetty, and that’s an (easy) default choice in some contexts.</li>
+      <li><a href="http://aleph.io/">Aleph</a> is a server that’s a thin wrapper over Netty. It can also acts as drop-in replacement for ring.</li>
+    </ul>
+  </li>
+  <li><a href="http://immutant.org/">Immutant</a> is a more heavyweight library/server that includes other services needed for more sophisticated system (messaging queue for instance). It can be deployed to either Java’s WildFly or since 2.x the <a href="http://undertow.io/">Undertow</a> web server.</li>
+</ul>
+
+<h2 id="libraries">Libraries</h2>
+<p>There are just too many of them to discuss here. Instead I just highlight some of the foundational ones:</p>
+
+<ul>
+  <li>For something similar to dependency injection in Java, we’ve got application lifecycle/state management libraries: <a href="https://github.com/stuartsierra/component">Component</a> vs <a href="https://github.com/tolitius/mount">Mount</a>.</li>
+  <li>For the routing part of your typical/classical MVC framework, we’ve got <a href="https://github.com/stuartsierra/component">Compojure</a> vs just plain <a href="https://github.com/ring-clojure">ring</a> (Remember ring is an API + a collection of libraries) vs <a href="https://juxt.pro/yada/index.html">yada</a>.</li>
+</ul>
+
+<h2 id="and-one-more-thing">And One More Thing…</h2>
+<p>I haven’t mentioned database in this post so far. Well of course you can use any as long as JDBC supports it… database is not usually tied to a particular programming language. But since we’re talking about clojure, it is criminal not to mention <a href="http://www.datomic.com/">Datomic</a>, a <a href="http://augustl.com/blog/2016/datomic_the_most_innovative_db_youve_never_heard_of/">super-innovative</a> “database” made by <a href="https://cognitect.com/">Cognitect</a> (if it can be called that, per the talks by Rick on the <a href="https://www.infoq.com/presentations/Datomic-Database-Value">Database-as-a-value</a>). Unfortunately, it is one of the rare infrastructural piece of software in our ecosystem that is not Open Source nor free (they have a free version, but it has <a href="https://my.datomic.com/downloads/free">restrictions</a>).</p>
+
+<h2 id="references">References</h2>
+<p>Thanks Google!</p>
+
+<ul>
+  <li><a href="https://groups.google.com/forum/#!topic/clojure/9nsVazn44u0">Announcing Aleph</a>
+    <ul>
+      <li><a href="https://news.ycombinator.com/item?id=1498198">Discussion on HN</a></li>
+    </ul>
+  </li>
+  <li><a href="https://www.booleanknot.com/blog/2017/05/09/advancing-duct.html">Advancing Duct</a></li>
+  <li><a href="https://adambard.com/blog/i-finally-get-boot/">My first time using boot over leiningen</a></li>
+  <li><a href="https://stackoverflow.com/questions/5385407/whats-the-difference-between-jetty-and-netty">Differences between Jetty vs Netty</a></li>
+</ul>
+
+<hr />
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>My own pet theory: Ever heard of DevOps? Instead of externalising config and dependent systems with a dedicated, separate team to manage them, why not put everything back to the hands of developer with the same powerful set of tool - general purpose programming language - to manage config? Really nice for lone wolf developer… the operation department, not so much.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>I will confess to having personal prejudice that embedded server are somehow slower: no they are not <em>a priori</em> slow. How could it be? Afterall web/application server are just codes, and where exactly are those code executed does not affect its performance.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div>
+
+  
+    
+
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html';
+      this.page.identifier = '/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+
+      s.src = 'https://lemontea-techblog.disqus.com/embed.js';
+
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <!--<h2 class="footer-heading">(into tech :lemontea)</h2>-->
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col my-footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              (into tech :lemontea)
+            
+            </li>
+        </ul>
+      </div>
+
+      <div class="footer-col my-footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/lemonteaa"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">lemonteaa</span></a>
+
+          </li>
+          
+
+          
+		  
+		  
+          <li>
+			<a href="mailto:lemontea.Tom@gmail.com"><span class="icon icon--email"><svg viewBox="0 0 16 16" width="16px" height="16px">
+<g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g4187"
+       transform="matrix(0.82252529,0,0,0.82252529,-254.40571,-324.97836)">
+      <rect
+         y="400.36658"
+         x="311.20438"
+         height="10"
+         width="16"
+         id="rect4164"
+         style="fill:none;fill-opacity:1;stroke:#828282;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="ccc"
+         inkscape:connector-curvature="0"
+         id="path4166"
+         d="m 311.6,400.8622 7.9,4.9 7.5,-5"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4170"
+         d="m 311.4,409.9622 4.7,-5.8"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4170-5"
+         d="m 326.85,409.9622 -4.2,-6.1"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+  </g>
+</svg></span><span class="username">lemontea.Tom@gmail.com</span></a>
+
+		  </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col my-footer-col-3">
+        <p>Site Generated by <a href="https://jekyllrb.com/">Jekyll</a> using customized version of the <a href="https://github.com/jekyll/minima">Minima</a> theme.</p>
+
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+<script id="dsq-count-scr" src="//lemontea-techblog.disqus.com/count.js" async></script>
+
+
+
+  </body>
+
+</html>
