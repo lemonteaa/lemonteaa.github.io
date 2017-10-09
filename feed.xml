@@ -1,5 +1,306 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="https://lemonteaa.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lemonteaa.github.io/" rel="alternate" type="text/html" /><updated>2017-09-16T14:50:49+08:00</updated><id>https://lemonteaa.github.io/</id><title type="html">(into tech :lemontea)</title><subtitle>Lemontea's tech blog: A math lover in awe of the beauty and power of high level programming languages
-</subtitle><entry><title type="html">A Quick Note on the Clojure (Backend) Web Space</title><link href="https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html" rel="alternate" type="text/html" title="A Quick Note on the Clojure (Backend) Web Space" /><published>2017-09-14T20:16:00+08:00</published><updated>2017-09-14T20:16:00+08:00</updated><id>https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space</id><content type="html" xml:base="https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html">&lt;p&gt;&lt;em&gt;(Last Updated on 16 Sep 2017. Thanks nha, gsnewmark and danielcompton for corrections and discussions!)&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="https://lemonteaa.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lemonteaa.github.io/" rel="alternate" type="text/html" /><updated>2017-10-09T23:54:06+08:00</updated><id>https://lemonteaa.github.io/</id><title type="html">(into tech :lemontea)</title><subtitle>Lemontea's tech blog: A math lover in awe of the beauty and power of high level programming languages
+</subtitle><entry><title type="html">The Monad Tutorial Fallacy, Part Two: Monad, Kleisli and Eilenberg-Moore Category</title><link href="https://lemonteaa.github.io/fundamentals/2017/10/03/the-monad-tutorial-fallacy-part-two-monad-kleisli-and-eilenberg-moore-category.html" rel="alternate" type="text/html" title="The Monad Tutorial Fallacy, Part Two: Monad, Kleisli and Eilenberg-Moore Category" /><published>2017-10-03T20:36:00+08:00</published><updated>2017-10-03T20:36:00+08:00</updated><id>https://lemonteaa.github.io/fundamentals/2017/10/03/the-monad-tutorial-fallacy-part-two-monad-kleisli-and-eilenberg-moore-category</id><content type="html" xml:base="https://lemonteaa.github.io/fundamentals/2017/10/03/the-monad-tutorial-fallacy-part-two-monad-kleisli-and-eilenberg-moore-category.html">&lt;p&gt;&lt;em&gt;(Go to &lt;a href=&quot;/fundamentals/2017/08/28/the-monad-tutorial-fallacy-part-one-introduction-prequel.html&quot;&gt;Part 1&lt;/a&gt; of this series)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;In part 2 of this series we explain the technical core of the theory of Monad. Of central importance is the attempt to provide algebraic interpretation of everything, as well as to convert things into suitably algebraic structures. We will also revisit this issue at an arguably “better” (but more advanced) angle in part 5.&lt;/p&gt;
+
+&lt;p&gt;While the picture for an adjunction is relatively clear, it suffers from needing to work with two categories at the same time. Monad fixes this by composing the left and right adjoint functors into an endofunctor &lt;script type=&quot;math/tex&quot;&gt;T = G \circ F&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;T: \mathcal{C} \rightarrow \mathcal{C}&lt;/script&gt; over a single category. An additional advantage with this construction is that it is more algebraic as it is now composable: we can iterate &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; to get &lt;script type=&quot;math/tex&quot;&gt;T^2&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;T^3&lt;/script&gt; etc for example. &lt;!--more--&gt;&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;on-the-benefit-of-being-algebraicfunctional&quot;&gt;On the benefit of being Algebraic/Functional&lt;/h2&gt;
+&lt;p&gt;It is perhaps appropriate at this point to pontificate on what does it means to be “algebraic”, and why do we obsesses over it, before proceeding further on the details. From my armchair philosophical perspective, being “algebraic” simply mean having a system of rules for manipulating symbols. But this “definition” is obviously wrong, for with this requirement the whole of pure mathematics at the very least qualifies! (All math are built from logic, and formal logic is just such a system of rules, albeit a bit more complicated than arithmetic) What distinguishes algebra from other such formal system is an intrinsic quality that it is easy and convenient to use.&lt;/p&gt;
+
+&lt;p&gt;But “easy” is subjective. And there seems to be more than one kind of feature that contribute to this elusive quality. These features include:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The rules and system should be as Context-free as possible, so that operations can be liberally applied, and so that a piece of operation/reasoning carried out somewhere can be taken and re-applied anywhere else
+    &lt;ul&gt;
+      &lt;li&gt;i.e. Equational Reasoning&lt;/li&gt;
+      &lt;li&gt;And in other words things should be reusable.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Composability. (Excuse my circular reasoning) It should be possible to chain functions together and if these functions are expressed with certain specific structures in mind, these structures should be preserved after composition.
+    &lt;ul&gt;
+      &lt;li&gt;Moreover, it should ideally have the Compositionality property - the meaning of a composed function should be derivable from the meaning of the individual functions alone.&lt;/li&gt;
+      &lt;li&gt;What they imply are that you have an easy way to build larger structures out of smaller one, while controlling (semantic) complexity.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you are a programmer, you may find this list suspiciously familiar even though you may have forgotten all the math since you’re done with high school. Basically they are just the benefits of functional programming: pure functions are composable, safe, reusable, and easy to reason about and understand.&lt;/p&gt;
+
+&lt;h2 id=&quot;defining-monad-is-a-dangerous-affair&quot;&gt;Defining Monad is a Dangerous Affair&lt;/h2&gt;
+&lt;p&gt;If one dig around a bit in Haskell’s community, one can easily see how this is a topic laden with traps, controversies, and a sea of confused/perplexed beginners. There is an active advise against posting new Monad tutorials. There is a trail of &lt;a href=&quot;https://wiki.haskell.org/Monad_tutorials_timeline&quot;&gt;past attempts&lt;/a&gt; at such tutorials. There is a post in the wiki specifically to debunk what &lt;a href=&quot;https://wiki.haskell.org/What_a_Monad_is_not&quot;&gt;Monad is not&lt;/a&gt; and notwithstanding such effort, it is (in this author’s opinion) next to impossible to eradicate those “wrong” definitions, not even in principle. Oh and if you try to read Monad tutorial (like this one), you will find out that everyone’s definition is &lt;a href=&quot;http://www.codecommit.com/blog/ruby/monads-are-not-metaphors&quot;&gt;different&lt;/a&gt;. &lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;That’s quite a downer, to put it mildly. Why? &lt;sup id=&quot;fnref:3&quot;&gt;&lt;a href=&quot;#fn:3&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;&amp;lt;begin rant&amp;gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Please bear with me as I do a second round of philosophizing and go meta. Defining real world, nebulous concepts is almost always messy (in contrast to the pristine one you get in pure math). They are typically complicated. Have multiple facets. Have multiple possible perspectives to look at that are mostly equally reasonable within their own frameworks. (Or, at least, no one managed to convince anyone else in case of a conflict) Have multiple layers of understanding possible to attain. Ad Nauseum.&lt;/p&gt;
+
+&lt;p&gt;With this kind of stuff, saying any particular definition is “wrong” is meaningless without defining “wrongness” within a suitable context. Say in a hypothetical (i.e. oversimplified) situation there is a hierarchy of definitions possible, from the most specific to the most general. Is the specific one wrong because it fails to capture the full range of possibilities, or the general one wrong because it is utterly useless for application? Sometimes I think we geeks and nerds need to stop pretending math/logic/programming is the solo, absolute standard of truth in all domains. Just go read some (ok, any) sociology texts and resists the temptation to call everything in it bullshit. (except some toxic part of postmodernism maybe?)&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;&amp;lt;end rant&amp;gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;But it seems irresponsible to go on without any definition at all besides the formal one. So, in light of the sensitiveness of this issue, I will tread carefully and give more than one definitions.&lt;/p&gt;
+
+&lt;p&gt;A Monad is not about statefulness/impurity. It’s also not about explicit sequencing of execution. They are, however, possible applications of Monad. (Among others)&lt;/p&gt;
+
+&lt;h3 id=&quot;most-general-definition-i-can-think-of&quot;&gt;Most general definition I can think of&lt;/h3&gt;
+&lt;p&gt;(Inspired by this &lt;a href=&quot;https://www.reddit.com/r/haskell/comments/68fb19/monad_tutorial_no_57005/dgynjik/&quot;&gt;brilliant comment&lt;/a&gt; over there)&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Monad is a mathematical theory that can be used to extend the semantics of a programming language in a principled manner, provided the extra structures admits an algebraic formulation.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Because of this I believe the closest comparison one can make is versus Macro in the Lisp family of language &lt;sup id=&quot;fnref:4&quot;&gt;&lt;a href=&quot;#fn:4&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt;. At least they are roughly at the same conceptual level of abstraction.&lt;/p&gt;
+
+&lt;p&gt;One should also be careful to distinguish between Monad-as-a-concept, versus how it is implemented in actual languages.&lt;/p&gt;
+
+&lt;p&gt;Monad is not a &lt;a href=&quot;http://lambda-diode.com/programming/monads-are-a-class-of-hard-drugs&quot;&gt;silver bullet&lt;/a&gt; nor black magic. It is, in the final analysis, up to you to decide what to do with it.&lt;/p&gt;
+
+&lt;h3 id=&quot;operational-definition---full-buy-in&quot;&gt;Operational definition - Full buy in&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;A Monad is a contract between the programmer and the language. Programmer agrees to structure their program in a particular form, and to supply proof of the Monad axiom themselves, outside of the program. In return, the language promises automatic guarantee of some properties of the program.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;But asking a programmer to write proof is scary, horrible stuff. Monad is thoughtful in this regard:
+As there is multiple equivalent formulation of Monad, one have the option to choose which one to work on.
+The math statements that one is actually required to prove is also algebraic/equational in nature, so it is in principle possible to just compute/derive with lambda calculus blindly and hope that the equations just line up, as opposed to requiring professional grade mathematical literacy.&lt;/p&gt;
+
+&lt;h3 id=&quot;operational-definition---partial-buy-in&quot;&gt;Operational definition - Partial buy in&lt;/h3&gt;
+&lt;p&gt;In case even that is too much, it is also possible to write code in a monadic style. In this case one adopts patterns inspired by the Monad, but refrain from (actively) doing the proof or making their code completely compliant to the requirement. One may still gain some benefits, but foregoes the mathematical guarantee offered by the theory.&lt;/p&gt;
+
+&lt;h2 id=&quot;formal-definition-of-monad&quot;&gt;Formal definition of Monad&lt;/h2&gt;
+&lt;p&gt;For delicate, highly abstract entity like Monad (as well as other heavily categorical construct, and especially things involving &lt;a href=&quot;https://ncatlab.org/nlab/show/higher+category+theory&quot;&gt;higher category&lt;/a&gt;), one can argue that the only safe way to grok it would be to look at the full, formal definition (otherwise one runs the risk of missing a “small” piece of the definition - which usually contains a “large” number of such pieces - that turns out to be crucial in unexpected place). But doing so come with the cost of things being opaque and complicated. While I may not be able to solve the “complicated” part (irreducible complexity, say), I have tried to deal with the first by presenting a mixture of motivation, discourse, supporting theories, etc.&lt;/p&gt;
+
+&lt;p&gt;Even so, we won’t try to understand Monad all in one go, preferring an iterative and indirect approach instead. We will provide a preliminary, algebraic understanding of Monad, only in the context of classical Mathematics (through the “Universal” example of Free algebra vs Forgetful Functor). In part 3 of this series we will give an interpretation within the context of raw vs structured computational model, alongside actual examples of Monad in programming, while in part 4 we will give alternative, equivalent formulation of Monad that admits an easier interpretation in the computational context. (Part 5’s purpose has been stated at the beginning of this article) Nonetheless, all these niceties depends on the core theory presented in this part.&lt;/p&gt;
+
+&lt;p&gt;The actual definition of &lt;a href=&quot;https://en.wikipedia.org/wiki/Monad_(category_theory)&quot;&gt;Monad&lt;/a&gt; is here (Don’t worry if you don’t get it all at once! The important thing in this part is actually the theory of Kleisli and Eilenberg-Moore Category since I don’t see them fully interpreted anywhere except for some handwaving. Just read on and stay tuned for part 3 - 5 :P ):&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A Monad over a category &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt; is a triple &lt;script type=&quot;math/tex&quot;&gt;(T, \eta, \mu)&lt;/script&gt; where &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; is a functor &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C} \rightarrow \mathcal{C}&lt;/script&gt;.
+    &lt;ul&gt;
+      &lt;li&gt;(for those not studying math: I must highlight that a functor when implemented in a programming language is actually two things: &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; here maps objects in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt; to objects in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt;, and &lt;strong&gt;also&lt;/strong&gt; morphisms/function in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt; to morphisms/function in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt;, where the (co)domain object is also mapped. That is, &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; sends &lt;script type=&quot;math/tex&quot;&gt;f: X \rightarrow Y&lt;/script&gt; into &lt;script type=&quot;math/tex&quot;&gt;Tf: TX \rightarrow TY&lt;/script&gt;)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;script type=&quot;math/tex&quot;&gt;\eta&lt;/script&gt; is the unit (sometimes called &lt;code class=&quot;highlighter-rouge&quot;&gt;return&lt;/code&gt; in programming), which is a natural transformation from the identity functor to &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt;. More concretely for any object &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt;, we have a morphism/function &lt;script type=&quot;math/tex&quot;&gt;\eta_X: X \rightarrow TX&lt;/script&gt;.&lt;/li&gt;
+  &lt;li&gt;And &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt; is the “multiplication” / “algebraic operation” (called &lt;code class=&quot;highlighter-rouge&quot;&gt;join&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;flatten&lt;/code&gt; in programming). It is also a natural transformation, this time from &lt;script type=&quot;math/tex&quot;&gt;T^2&lt;/script&gt; to &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt;. That is it is a polymorphic function from &lt;script type=&quot;math/tex&quot;&gt;T^2 X&lt;/script&gt; to &lt;script type=&quot;math/tex&quot;&gt;TX&lt;/script&gt;.
+    &lt;ul&gt;
+      &lt;li&gt;Notice that both &lt;a href=&quot;https://en.wikipedia.org/wiki/Functor#Definition&quot;&gt;functor&lt;/a&gt; and &lt;a href=&quot;https://en.wikipedia.org/wiki/Natural_transformation#Definition&quot;&gt;natural transformation&lt;/a&gt; obey certain constraints/equations/axioms, which are not listed here.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Finally, our &lt;script type=&quot;math/tex&quot;&gt;\eta&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt; satisfies two additional coherence conditions, expressed via commutative diagrams:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\array{
+    \phantom{\mu T} T^3 &amp; \stackrel{T \mu}\longrightarrow &amp; T^2 \\
+    ^{\mu T}\downarrow  &amp;                                 &amp; \downarrow^\mu \\
+    \phantom{\mu T} T^2 &amp; \stackrel{\mu}\longrightarrow   &amp; T
+}
+\qquad
+\array{
+	\phantom{T \eta} T   &amp; \stackrel{\eta T}\longrightarrow &amp; T^2 \\
+	^{T \eta} \downarrow &amp; \searrow^\text{id}               &amp; \downarrow^\mu \\
+	\phantom{T \eta} T^2 &amp; \stackrel{\mu}\longrightarrow    &amp; T
+} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;As many people/articles/tutorials have observed, these laws look a lots like the identity and associativity law of an algebra (say a group):&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;(Identity) For all &lt;script type=&quot;math/tex&quot;&gt;x&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;0 + x = x + 0 = x&lt;/script&gt;.&lt;/li&gt;
+  &lt;li&gt;(Associativity) For all &lt;script type=&quot;math/tex&quot;&gt;x, y, z&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;x + (y + z) = (x + y) + z&lt;/script&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We will in time comes to a fuller understanding of this point, through multiple rounds of seeing this play out in different level of abstractions.&lt;/p&gt;
+
+&lt;p&gt;Before moving on, here’s a technical aside (included since we’ll assume knowledge of this bit when doing proofs later on in this post): the notation mixing functor and natural transform above is a shorthand. Suppose &lt;script type=&quot;math/tex&quot;&gt;\epsilon: F \Rightarrow G&lt;/script&gt; is a natural transform from &lt;script type=&quot;math/tex&quot;&gt;F&lt;/script&gt; to &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt;, and let &lt;script type=&quot;math/tex&quot;&gt;H&lt;/script&gt; be another functor. Then &lt;script type=&quot;math/tex&quot;&gt;H\epsilon&lt;/script&gt; means applying the functor &lt;script type=&quot;math/tex&quot;&gt;H&lt;/script&gt; to the arrow &lt;script type=&quot;math/tex&quot;&gt;FX \stackrel{\epsilon_X}\longrightarrow GX&lt;/script&gt; to get &lt;script type=&quot;math/tex&quot;&gt;H(FX) \stackrel{H \epsilon_X}\longrightarrow H(GX)&lt;/script&gt;. Meanwhile, &lt;script type=&quot;math/tex&quot;&gt;\epsilon H&lt;/script&gt; actually means the natural transform applied at the object &lt;script type=&quot;math/tex&quot;&gt;HX&lt;/script&gt; instead of &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt;, i.e. &lt;script type=&quot;math/tex&quot;&gt;F(HX) \stackrel{\epsilon_{HX}}\longrightarrow G(HX)&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;We still need to connect this formal definition to our earlier motivation of composing adjoint functors. In fact there is a general construction to get a monad from any adjoint functors. &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; is just &lt;script type=&quot;math/tex&quot;&gt;G \circ F&lt;/script&gt; as mentioned before. The unit is just the unit in the adjunction. The join operation is obtained by applying the counit to &lt;script type=&quot;math/tex&quot;&gt;T^2&lt;/script&gt;, that is: &lt;script type=&quot;math/tex&quot;&gt;T^2 = (GF)(GF) = G(FG)F \longrightarrow G \operatorname{1}_{\mathcal{D}} F = GF = T&lt;/script&gt;. (While this general construction works, I can’t get a satisfactory interpretation in the context of computational model. So I’ll take a detour and interpret a different, but equivalent formulation of Monad in part 4)&lt;/p&gt;
+
+&lt;p&gt;Now let’s interpret this using the example of free algebra vs forgetful functors. &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; simply map any set &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; to the underlying set of its free algebra &lt;script type=&quot;math/tex&quot;&gt;F(X)&lt;/script&gt;, and maps function between set to the naturally induced map between their corresponding free algebra, as usual. The unit provides the embedding of the original set &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; into the free algebra(‘s underlying set). The really non-trivial part is the join operation. Notice that &lt;script type=&quot;math/tex&quot;&gt;T^2X&lt;/script&gt; is a set consisting of algebraic expression of algebraic expression over &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt;. If this is befuddling, we can also say that it is an algebraic expression where one layer of variable definition is allowed. For example:
+If &lt;script type=&quot;math/tex&quot;&gt;X = \{ x, y, z \}&lt;/script&gt;, then let &lt;script type=&quot;math/tex&quot;&gt;p = 2x+1, q=x-y+3z, r=y^2 + xz&lt;/script&gt;, and let the final expression be &lt;script type=&quot;math/tex&quot;&gt;p^2 - q + 2r&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now there is an obvious way to simplify this: just (partially) evaluate it by substitution: &lt;script type=&quot;math/tex&quot;&gt;(2x+1)^2 - (x-y+3z) +2(y^2 + xz) = \ldots&lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;We can see how this is related to the general construction of the join operation: Recalling that an expression evaluator is possible in any algebra (and given by the counit), a substitution evaluator is really just a plain evaluator over the free algebra &lt;script type=&quot;math/tex&quot;&gt;F(X)&lt;/script&gt;, so we have &lt;script type=&quot;math/tex&quot;&gt;FGF(X) \longrightarrow F(X)&lt;/script&gt;. Now simply apply forgetful functor on both sides.&lt;/p&gt;
+
+&lt;h2 id=&quot;kleisli-category&quot;&gt;Kleisli Category&lt;/h2&gt;
+&lt;p&gt;We use monad in practise instead of adjunction when programming because it is difficult to specify an entirely new computational model, while it is “easy” (in the sense of not having to leave your current programming environment) to implement things within the current computational model. While our conceptual picture is that of constructing/deriving a monad from an adjunction, we can still ask the converse question: does every monad arise from/implies an adjunction?&lt;/p&gt;
+
+&lt;p&gt;Happily, it turns out the answer is a resounding “Yes”. In fact there is a family of possible adjunctions that compose to the same monad. Even more luckily, there is both a minimal and maximal such adjunctions, and they are the minimal, &lt;a href=&quot;https://en.wikipedia.org/wiki/Kleisli_category&quot;&gt;Kleisli category&lt;/a&gt; consisting of just the free algebra, versus the maximal, &lt;a href=&quot;https://en.wikipedia.org/wiki/F-algebra&quot;&gt;Eilenberg-Moore category&lt;/a&gt; of all algebra. We will look at both in turns.&lt;/p&gt;
+
+&lt;p&gt;Suppose that we just assume the existence of any such adjunction, without knowing what the other category &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}&lt;/script&gt; is (nor the individual functors &lt;script type=&quot;math/tex&quot;&gt;F&lt;/script&gt; or &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt;). Further assume that they are really just some form of Free algebra/Forgetful functors. At the very least, &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}&lt;/script&gt; must contain the image of &lt;script type=&quot;math/tex&quot;&gt;F&lt;/script&gt; over &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt;, which are all the free algebras. Since we don’t really know what &lt;script type=&quot;math/tex&quot;&gt;F&lt;/script&gt; is, we will just let any object &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt; stands for an unknown object &lt;script type=&quot;math/tex&quot;&gt;F(X)&lt;/script&gt;. &lt;sup id=&quot;fnref:5&quot;&gt;&lt;a href=&quot;#fn:5&quot; class=&quot;footnote&quot;&gt;5&lt;/a&gt;&lt;/sup&gt; Hence we can let the set of objects in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}_{\text{min}}&lt;/script&gt; be just all the objects in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now how about the morphisms? &lt;em&gt;Prima facie&lt;/em&gt;, they should really be just the algebra’s homomorphisms, i.e. &lt;script type=&quot;math/tex&quot;&gt;{\operatorname{Hom}}_{\mathbf{Alg}}(FX, FY)&lt;/script&gt;, and composition of morphism is just ordinary composition of function. However we can’t do that since we don’t directly know &lt;script type=&quot;math/tex&quot;&gt;F&lt;/script&gt;. Instead we need to do so indirectly by expressing them in terms of things we have direct access to only. So appealing to the Hom-adjunction property of an adjunction, we have that that set is naturally isomorphic to &lt;script type=&quot;math/tex&quot;&gt;{\operatorname{Hom}}_{\mathbf{Set}}(X, UFY) = {\operatorname{Hom}}_{\mathbf{Set}}(X, TY)&lt;/script&gt;, and we can just let this latter set be the definition of morphisms between &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;Y&lt;/script&gt; in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;A challenge that remains is to define composition of morphisms. Per the reasoning/interpretation for the Hom-Set adjunction we talked about in &lt;a href=&quot;/fundamentals/2017/08/28/the-monad-tutorial-fallacy-part-one-introduction-prequel.html&quot;&gt;Part 1&lt;/a&gt;, given an arrow &lt;script type=&quot;math/tex&quot;&gt;X \longrightarrow TY&lt;/script&gt; it should be possible to uniquely extend it into a morphism &lt;script type=&quot;math/tex&quot;&gt;TX \longrightarrow TY&lt;/script&gt;. Then we can just compose as usual: &lt;script type=&quot;math/tex&quot;&gt;X \longrightarrow TY \longrightarrow TZ&lt;/script&gt; is an arrow from &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; to &lt;script type=&quot;math/tex&quot;&gt;TZ&lt;/script&gt;, which fits the representation of morphism in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}_{\text{min}}&lt;/script&gt;. In programming this extension operation is called a &lt;code class=&quot;highlighter-rouge&quot;&gt;bind&lt;/code&gt; (After switching order of arguments if necessary and using the curried form). &lt;sup id=&quot;fnref:6&quot;&gt;&lt;a href=&quot;#fn:6&quot; class=&quot;footnote&quot;&gt;6&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;It turns out that bind can be expressed in terms of a Monad by sending &lt;script type=&quot;math/tex&quot;&gt;X \stackrel{\phi}\longrightarrow TY&lt;/script&gt; into &lt;script type=&quot;math/tex&quot;&gt;TX \stackrel{T\phi}\longrightarrow T^2 Y \stackrel{\mu_Y}\longrightarrow TY&lt;/script&gt;. We can prove that this is correct, namely, that the result of extension defined this way, is the same as applying the forgetful functor to the same morphism &lt;script type=&quot;math/tex&quot;&gt;\phi&lt;/script&gt; represented as an honest algebra homomorphism &lt;script type=&quot;math/tex&quot;&gt;{\operatorname{Hom}}_{\mathbf{Alg}}(FX, FY)&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;First note that the extended morphism has at least one &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; throughout ( &lt;script type=&quot;math/tex&quot;&gt;UFX \stackrel{UF\phi}\longrightarrow (UF)(UF)Y \stackrel{\mu_Y}\longrightarrow UFY&lt;/script&gt;), so we can strip the outer &lt;script type=&quot;math/tex&quot;&gt;U&lt;/script&gt; (due to functor’s law), and then it suffices to show that the morphism &lt;script type=&quot;math/tex&quot;&gt;FX \stackrel{F\phi}\longrightarrow FUFY \stackrel{\eta_{FY}}\longrightarrow FY&lt;/script&gt; is &lt;script type=&quot;math/tex&quot;&gt;\phi&lt;/script&gt; mapped by the natural isomophism between &lt;script type=&quot;math/tex&quot;&gt;{\operatorname{Hom}}_{\mathbf{Set}}(X, UFY)&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;{\operatorname{Hom}}_{\mathbf{Alg}}(FX, FY)&lt;/script&gt;. Now note that by category theory, the counit &lt;script type=&quot;math/tex&quot;&gt;\eta_{FY}&lt;/script&gt; is really just the identity on &lt;script type=&quot;math/tex&quot;&gt;UFY&lt;/script&gt; mapped through the natural isomorphism, and that by naturality’s commutative diagram, pre-composing it with &lt;script type=&quot;math/tex&quot;&gt;F\phi&lt;/script&gt; is then the same as just pre-composing &lt;script type=&quot;math/tex&quot;&gt;\text{id}_{UFY}&lt;/script&gt; with &lt;script type=&quot;math/tex&quot;&gt;\phi&lt;/script&gt; (which is then still &lt;script type=&quot;math/tex&quot;&gt;\phi&lt;/script&gt;), and then applying the natural isomorphism, and so we are done.&lt;/p&gt;
+
+&lt;p&gt;If this is too dense, a rough sketch of the proof is that the counit (expression evaluator) extend to the identity, and that since extension is basically just the natural isomophism of an adjunction, we can indirectly get what we want by applying the counit and relying on the “commutative” property of extension.&lt;/p&gt;
+
+&lt;p&gt;For the case of actual free algebra, what this operation amount to is to first induce a map from the free algebras generated by &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;TY&lt;/script&gt; by considering &lt;script type=&quot;math/tex&quot;&gt;\phi&lt;/script&gt; as just an honest map between sets (ignoring the structures in &lt;script type=&quot;math/tex&quot;&gt;TY&lt;/script&gt;), and then collapse the nested algebraic expression that results by substitution.&lt;/p&gt;
+
+&lt;p&gt;Before moving on we want to check that composition defined this way is associative. Since the composition is built out of the extension operator, we only need to check the following:
+&lt;script type=&quot;math/tex&quot;&gt;(g^* \circ f)^* = g^* \circ f^*&lt;/script&gt; (Which can be seen as an indirect form of idempotency. It cannot be stated directly because the extension operator cannot be applied to the same function twice)&lt;/p&gt;
+
+&lt;p&gt;We compute&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{eqnarray} 
+(g^* \circ f)^* &amp;=&amp; (X \stackrel{f}\longrightarrow TY \stackrel{g^*}\longrightarrow TZ)^* \\
+&amp;=&amp; T \left( X \stackrel{f}\longrightarrow TY \stackrel{g^*}\longrightarrow TZ \right) \stackrel{\mu_Z}\longrightarrow TZ \\
+&amp;=&amp; TX \stackrel{Tf}\longrightarrow T^2 Y \stackrel{Tg^*}\longrightarrow T^2 Z \stackrel{\mu_Z}\longrightarrow TZ
+\end{eqnarray} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;Now since &lt;script type=&quot;math/tex&quot;&gt;g^*&lt;/script&gt; is &lt;script type=&quot;math/tex&quot;&gt;TY \stackrel{Tg}\longrightarrow T^2 Z \stackrel{\mu_Z}\longrightarrow TZ&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;Tg^*&lt;/script&gt; is &lt;script type=&quot;math/tex&quot;&gt;T^2 Y \stackrel{T^2 g}\longrightarrow T^3 Z \stackrel{T \mu_Z}\longrightarrow T^2 Z&lt;/script&gt;.&lt;/p&gt;
+
+&lt;p&gt;We can use the associativity of &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt;, and then the naturality of &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt;, to change to&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{eqnarray}
+&amp;&amp; TX \stackrel{Tf}\longrightarrow \left( T^2 Y \stackrel{T^2 g}\longrightarrow T^3 Z \stackrel{T \mu_Z}\longrightarrow T^2 Z \right) \stackrel{\mu_Z}\longrightarrow TZ \\
+&amp;=&amp; TX \stackrel{Tf}\longrightarrow T^2 Y \stackrel{T^2 g}\longrightarrow \left( T^3 Z \stackrel{\mu_{TZ}}\longrightarrow T^2 Z \stackrel{\mu_Z}\longrightarrow TZ \right) \\
+&amp;=&amp; TX \stackrel{Tf}\longrightarrow \left( T^2 Y \stackrel{\mu_Y}\longrightarrow T Y \stackrel{Tg}\longrightarrow T^2 Z \right) \stackrel{\mu_Z}\longrightarrow TZ \\
+&amp;=&amp; g^* \circ f^*
+\end{eqnarray} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;as desired.&lt;/p&gt;
+
+&lt;p&gt;We can also reconstruct &lt;script type=&quot;math/tex&quot;&gt;F&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;G&lt;/script&gt; from the monad &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; using Kleisli Category, and it is mostly common sense. &lt;script type=&quot;math/tex&quot;&gt;F&lt;/script&gt; should just send any object in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt; to the same object in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}_{\text{min}}&lt;/script&gt; (due to the way we relabel things). Morphisms in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt; can be embedded in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}_{\text{min}}&lt;/script&gt; by just composing with the unit, aka &lt;script type=&quot;math/tex&quot;&gt;X \stackrel{f}\longrightarrow Y \stackrel{\mu_Y}\longrightarrow TY&lt;/script&gt;. (Check that this is a functor!) Similarly, to forget things, &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}_{\text{min}}&lt;/script&gt;, which represent &lt;script type=&quot;math/tex&quot;&gt;F(X)&lt;/script&gt;, should be sent to &lt;script type=&quot;math/tex&quot;&gt;UF(X) = TX&lt;/script&gt;. Morphisms in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}_{\text{min}}&lt;/script&gt;, say &lt;script type=&quot;math/tex&quot;&gt;X \stackrel{g}\longrightarrow TY&lt;/script&gt;, will need to sent to some function of type &lt;script type=&quot;math/tex&quot;&gt;TX \longrightarrow TY&lt;/script&gt;. So we just apply the extension operator since it is unique anyway.&lt;/p&gt;
+
+&lt;h2 id=&quot;eilenberg-moore-category&quot;&gt;Eilenberg-Moore Category&lt;/h2&gt;
+&lt;p&gt;At the opposite extreme, suppose we want to construct the category of all “algebra”. The challenge here is that we need to specify it without referring to anything internal to the objects itself (say, the addition operation in abelian groups), since for the construct to be general we must not make any assumption on what kinds of objects they are actually. Instead we can try to appeal to the interrelationship between objects. This kind of approach to generalizing things beyond their original context/example is known as “categorification” in mathematics.&lt;/p&gt;
+
+&lt;p&gt;So an algebra is just a set with all the algebraic operation specified over that set. Per the remarks above we are not allowed to refer to the actual algebra, although we can refer to the underlying sets. (As they are in category &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt;) Recalling what we said in &lt;a href=&quot;/fundamentals/2017/08/28/the-monad-tutorial-fallacy-part-one-introduction-prequel.html&quot;&gt;part 1&lt;/a&gt;, a cunning trick to recover the algebra is to specify an expression evaluator instead. (This works because expression encompass and generalize algebraic operation. For example, to fully specify &lt;script type=&quot;math/tex&quot;&gt;+&lt;/script&gt;, it suffices to know the value of the expression &lt;script type=&quot;math/tex&quot;&gt;a + b&lt;/script&gt; where &lt;script type=&quot;math/tex&quot;&gt;a&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;b&lt;/script&gt; can range over everything in &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt;) This we can do: objects in our category &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}_\text{max}&lt;/script&gt; is just an arrow &lt;script type=&quot;math/tex&quot;&gt;TX \stackrel{\alpha}\longrightarrow X&lt;/script&gt;, where &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; is in &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt;. Here &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; is the underlying set, &lt;script type=&quot;math/tex&quot;&gt;TX&lt;/script&gt; is a free algebra whose elements are all the expressions, and the morphism is then the evaluator (it maps expression over &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; to value in &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; again).&lt;/p&gt;
+
+&lt;p&gt;However, the formulation here is too loose: we must somehow ensure that the evaluator is valid, that it obey the algebra’s laws/axioms. Part of this work is already done by the free algebra construct hidden within &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt;, since expressions that are provably identical using the axioms of the algebra are quotiented out (i.e. identified) in &lt;script type=&quot;math/tex&quot;&gt;F(X)&lt;/script&gt;. The remaining part is a baggage brought on by the fact that &lt;script type=&quot;math/tex&quot;&gt;TX&lt;/script&gt;, as a free algebra, has extra structures not present when we are just talking about the value of &lt;script type=&quot;math/tex&quot;&gt;a + b&lt;/script&gt; (with &lt;script type=&quot;math/tex&quot;&gt;a&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;b&lt;/script&gt; mere values and not expressions).&lt;/p&gt;
+
+&lt;p&gt;To do this we appeal to the monad, again applying the idea that expression generalize algebraic operation. Namely, we require the following diagram commutes:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\array{
+	T^2 X            &amp; \stackrel{T \alpha}\longrightarrow &amp; TX \\
+	\downarrow^{\mu} &amp;                                    &amp; \downarrow^{\alpha} \\
+	TX               &amp; \stackrel{\alpha}\longrightarrow   &amp; X
+}
+\qquad
+\array{
+	X &amp; \stackrel{\eta}\rightarrow  &amp; TX \\
+	  &amp; {}_{\text{id}} \searrow     &amp; \downarrow^{\alpha} \\
+	  &amp;                             &amp; X
+} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;What does it mean? Suppose we have an expression of expression. The two ways to evaluate it would be to either substitute then evaluate (monad join, followed by &lt;script type=&quot;math/tex&quot;&gt;\alpha&lt;/script&gt;), or evaluate twice - evaluate the value of intermediate variables first, then evaluate the resulting expression. (&lt;script type=&quot;math/tex&quot;&gt;T \alpha&lt;/script&gt; then &lt;script type=&quot;math/tex&quot;&gt;\alpha&lt;/script&gt;) They should obviously be the same. As an example, let &lt;script type=&quot;math/tex&quot;&gt;u = x + 2y&lt;/script&gt; and &lt;script type=&quot;math/tex&quot;&gt;v = y - z&lt;/script&gt;. Suppose that &lt;script type=&quot;math/tex&quot;&gt;x = 3, y = 7, z = 1&lt;/script&gt;. Then &lt;script type=&quot;math/tex&quot;&gt;u = 17, v = 6&lt;/script&gt; and so &lt;script type=&quot;math/tex&quot;&gt;u + v = 23&lt;/script&gt;. On the other hand &lt;script type=&quot;math/tex&quot;&gt;u + v = x + 3y - z&lt;/script&gt;, so the evaluator have to map &lt;script type=&quot;math/tex&quot;&gt;x + 3y - z&lt;/script&gt; to &lt;script type=&quot;math/tex&quot;&gt;23&lt;/script&gt; (as this is not otherwise mandated since this expression is different from either &lt;script type=&quot;math/tex&quot;&gt;u&lt;/script&gt; or &lt;script type=&quot;math/tex&quot;&gt;v&lt;/script&gt;, and &lt;script type=&quot;math/tex&quot;&gt;TX \longrightarrow X&lt;/script&gt; is just a map from set to set).&lt;/p&gt;
+
+&lt;p&gt;With the basic structure out of the way, specifying homomorphisms between algebra is actually pretty easy. Consider that a hom is a function between the underlying set which must also respect the algebraic structure. In ordinary algebra this is expressed through commutative diagrams for each algebraic operations. For instance:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\require{AMScd}
+\begin{CD}
+\stackrel{(a, b)}{G \times G}             @&gt;+&gt;&gt; \stackrel{(a + b)}{G} \\
+@V{(\phi, \phi)}VV                              @VV{\phi}V \\
+\underset{(\phi(a), \phi(b))}{H \times H} @&gt;+&gt;&gt; \underset{\phi(a + b) = \phi(a) + \phi(b)}{H}
+\end{CD}&lt;/script&gt;
+
+&lt;p&gt;Because the structure of each algebra is already constrained by the requirement above, we can just naively generalize this diagram, turning the artificial &lt;script type=&quot;math/tex&quot;&gt;G \times G&lt;/script&gt; into the more general set of expression &lt;script type=&quot;math/tex&quot;&gt;TX&lt;/script&gt;:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\require{AMScd}
+\begin{CD}
+T(X)     @&gt;{\alpha}&gt;&gt; X \\
+@V{Tf}VV              @VVfV \\
+T(Y)     @&gt;{\beta}&gt;&gt;  Y
+\end{CD}&lt;/script&gt;
+
+&lt;p&gt;It remains to show that this does indeed form a category, and the main work to do is to check the composition of morphisms. Well, we can just stack the commutative diagram together:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\require{AMScd}
+\begin{CD}
+T(X)     @&gt;{\alpha}&gt;&gt; X \\
+@V{Tf}VV              @VVfV \\
+T(Y)     @&gt;{\beta}&gt;&gt;  Y \\
+@V{Tg}VV              @VVgV \\
+T(Z)     @&gt;{\gamma}&gt;&gt;  Z \\
+\end{CD}&lt;/script&gt;
+
+&lt;p&gt;Recalling that our goal is to prove the outer square commutes, we can perform diagram chasing: first note that the arrows &lt;script type=&quot;math/tex&quot;&gt;X \stackrel{f}\longrightarrow Y \stackrel{g}\longrightarrow Z&lt;/script&gt; is the same as &lt;script type=&quot;math/tex&quot;&gt;X \stackrel{g \circ f}\longrightarrow Z&lt;/script&gt;, and by functor’s axiom we can apply &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; to this “equation” to get that the arrow on the left hand side can also be decomposed: &lt;script type=&quot;math/tex&quot;&gt;X \stackrel{T(g \circ f)}\longrightarrow Z&lt;/script&gt; is the same as &lt;script type=&quot;math/tex&quot;&gt;X \stackrel{Tf}\longrightarrow Y \stackrel{Tg}\longrightarrow Z&lt;/script&gt;. Then just apply the commutativity condition for the two inner squares to transform:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;(g \circ f) \circ \alpha = g \circ (f \circ \alpha) = g \circ \beta \circ Tf = \gamma \circ Tg \circ Tf = \gamma \circ T(g \circ f)&lt;/script&gt;
+
+&lt;h2 id=&quot;full-circle-back&quot;&gt;Full Circle Back&lt;/h2&gt;
+&lt;p&gt;Finally, as free algebra are also algebra, we want to see how the Kleisli category embed into the Eilenberg Moore Category. Well, the underlying set of a free algebra generated by &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; is just &lt;script type=&quot;math/tex&quot;&gt;TX&lt;/script&gt;, so we need an arrow &lt;script type=&quot;math/tex&quot;&gt;T^2 X \longrightarrow TX&lt;/script&gt;. The monad join fits the bill here (and not just because the signature match&lt;sup id=&quot;fnref:7&quot;&gt;&lt;a href=&quot;#fn:7&quot; class=&quot;footnote&quot;&gt;7&lt;/a&gt;&lt;/sup&gt;) Why? Because algebraic operations in a free algebra is in fact defined by the substitution semantics. Anyway we still need to verify the conditions/diagrams for being an algebra. The first diagram is commutative because &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt; is a natural transform. The second diagram is just the unit law of monad.&lt;/p&gt;
+
+&lt;p&gt;How about morphism? We need a representation that is of type &lt;script type=&quot;math/tex&quot;&gt;TX \longrightarrow TY&lt;/script&gt; - which means for a morphism &lt;script type=&quot;math/tex&quot;&gt;\phi: X \longrightarrow TY&lt;/script&gt; we should use its extension &lt;script type=&quot;math/tex&quot;&gt;\phi^*&lt;/script&gt;. Then we should check that it is in fact a morphism in the Eilenberg-Moore Category:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\array{
+	T^2 X                 &amp; \stackrel{\mu}\longrightarrow   &amp; TX \\
+	\downarrow^{T^2 \phi} &amp;                                 &amp; \downarrow^{T \phi} \\
+	T^3 Y                 &amp; \stackrel{\mu T}{\cdots\cdots}  &amp; T^2 Y \\
+	\downarrow^{T \mu}    &amp;                                 &amp; \downarrow^{\mu} \\
+	T^2 Y                 &amp; \stackrel{\mu}\longrightarrow   &amp; TY
+} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;The diagram constructed from &lt;script type=&quot;math/tex&quot;&gt;\phi^*&lt;/script&gt; is shown above (with the obvious step for decomposing &lt;script type=&quot;math/tex&quot;&gt;T(\phi^*)&lt;/script&gt; omitted as it is the same as what we’ve seen before - just use the functor’s law). To prove that it commutes, connect the middle row with the morphism &lt;script type=&quot;math/tex&quot;&gt;\mu T&lt;/script&gt;. Then the bottom square commutes by the multiplication law of monad, while the upper square commutes due to &lt;script type=&quot;math/tex&quot;&gt;\mu&lt;/script&gt; being a natural transform. Then we’re done by performing the usual diagram chasing.&lt;/p&gt;
+
+&lt;p&gt;Incidentally, this provide an alternative proof that the extension operator is correct: as extension is unique, we only need to ensure that:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The extended morphism remains the same on &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt;&lt;/li&gt;
+  &lt;li&gt;It is a homomorphism on &lt;script type=&quot;math/tex&quot;&gt;\mathcal{D}&lt;/script&gt; and not just &lt;script type=&quot;math/tex&quot;&gt;\mathcal{C}&lt;/script&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The argument above amount to showing 2. For 1, we precompose with the unit:
+&lt;script type=&quot;math/tex&quot;&gt;% &lt;![CDATA[
+\begin{eqnarray}
+&amp;&amp;X \stackrel{\eta}\longrightarrow TX \stackrel{T \phi}\longrightarrow T^2 Y \stackrel{\mu}\longrightarrow TY \\
+&amp;=&amp; X \stackrel{\phi}\longrightarrow TY \stackrel{\eta}\longrightarrow T^2 Y \stackrel{\mu}\longrightarrow TY \text{(unit is natural)} \\
+&amp;=&amp; X \stackrel{\phi}\longrightarrow TY.
+\end{eqnarray} %]]&gt;&lt;/script&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;one-more-thing&quot;&gt;One more thing…&lt;/h2&gt;
+
+&lt;p&gt;Right when I’m doing the final editing I come across &lt;a href=&quot;http://blog.sigfpe.com/2009/12/where-do-monads-come-from.html&quot;&gt;this&lt;/a&gt; and at a glance the approach it took looks similar to what I did here (free algebra/algebraic expression, that kind of stuff), although I took a pure math approach in case you’re too thick :P.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;(Monad Series: To be continued…)&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;This does not mean that the adjunction construct is not algebraic - in fact a Category can be thought of as a groupoid, where elements can be multiplied provided their domain/co-domain match. Then an ordinary group is just a groupoid with only one domain so that anything can be multiplied with anything.&amp;nbsp;&lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot;&gt;
+      &lt;p&gt;But I can’t resist the temptation to include a Matrix quote:&lt;/p&gt;
+      &lt;blockquote&gt;
+        &lt;p&gt;The Matrix is everywhere. It is all around us. Even now, in this very room. You can see it when you look out your window or when you turn on your television. You can feel it when you go to work… when you go to church… when you pay your taxes. It is the world that has been pulled over your eyes to blind you from the truth.&lt;/p&gt;
+
+        &lt;p&gt;…&lt;/p&gt;
+
+        &lt;p&gt;Unfortunately, no one can be…told what the Matrix is. You have to see it for yourself.&lt;/p&gt;
+
+        &lt;p&gt;Morpheus, The Matrix (1999)&lt;/p&gt;
+      &lt;/blockquote&gt;
+      &lt;p&gt;&lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:3&quot;&gt;
+      &lt;p&gt;But fear not, for the Haskell community recognized this problem long ago (How can they not when you have endless waves of people asking about Monad?), and I think somewhere, nice and smart people are trying to find a better way. For example, see &lt;a href=&quot;https://www.slideshare.net/linecorp/the-monad-fear&quot;&gt;this presentation&lt;/a&gt;.&amp;nbsp;&lt;a href=&quot;#fnref:3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:4&quot;&gt;
+      &lt;p&gt;But Haskell also has something similar - template. See &lt;a href=&quot;https://www.reddit.com/r/haskell/comments/61r64w/what_does_the_free_monad_offer_that_macros_dont/&quot;&gt;this&lt;/a&gt; for an advocacy.&amp;nbsp;&lt;a href=&quot;#fnref:4&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:5&quot;&gt;
+      &lt;p&gt;Those not coming from a math/abstract algebra background may find this strange. Rest assured it is a culturally standard practise in math. One of the very first thing you learn in university algebra is that the actual name/label given to things in a set doesn’t matter - so long as you always get the right things when called upon to. (In fact recall that the definition of a Category doesn’t really require looking into the &lt;em&gt;content&lt;/em&gt; of an object) So using &lt;script type=&quot;math/tex&quot;&gt;X&lt;/script&gt; instead of the actual &lt;script type=&quot;math/tex&quot;&gt;F(X)&lt;/script&gt; doesn’t hurt - given such a label we can get back the real things, metaphorically, by applying the functor &lt;script type=&quot;math/tex&quot;&gt;F&lt;/script&gt;.&amp;nbsp;&lt;a href=&quot;#fnref:5&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:6&quot;&gt;
+      &lt;p&gt;The naming here may look strange. It will look much more “natural” (no pun intended) when doing actual programming where we care about actually applying those functions.&amp;nbsp;&lt;a href=&quot;#fnref:6&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:7&quot;&gt;
+      &lt;p&gt;A gripe I have with the statically typed camp of programming, even for the sufficiently-advanced-type-that-offer-automatic-safety-guarantee, is that placing too much focus on the type risks crowding out my cognitive capacity to understand the actual semantics of a piece of code. It takes discipline to resist the temptation to consider a function correct just because the signature match.&amp;nbsp;&lt;a href=&quot;#fnref:7&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">(Go to Part 1 of this series) In part 2 of this series we explain the technical core of the theory of Monad. Of central importance is the attempt to provide algebraic interpretation of everything, as well as to convert things into suitably algebraic structures. We will also revisit this issue at an arguably “better” (but more advanced) angle in part 5. While the picture for an adjunction is relatively clear, it suffers from needing to work with two categories at the same time. Monad fixes this by composing the left and right adjoint functors into an endofunctor , over a single category. An additional advantage with this construction is that it is more algebraic as it is now composable: we can iterate to get , etc for example.</summary></entry><entry><title type="html">A Quick Note on the Clojure (Backend) Web Space</title><link href="https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html" rel="alternate" type="text/html" title="A Quick Note on the Clojure (Backend) Web Space" /><published>2017-09-14T20:16:00+08:00</published><updated>2017-09-14T20:16:00+08:00</updated><id>https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space</id><content type="html" xml:base="https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html">&lt;p&gt;&lt;em&gt;(Last Updated on 16 Sep 2017. Thanks nha, gsnewmark and danielcompton for corrections and discussions!)&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;(Note to Experts: if you find any factual error in this note, please tell me by leaving a comment in the comment section below. Many thanks!)&lt;/em&gt;&lt;/p&gt;
 
