@@ -20,7 +20,7 @@ math: true
         </h2>
 		
 		<span>
-			{{ post.excerpt }}
+			{{ post.excerpt | strip_footnotes }}
 			<p><a href="{{ post.url | relative_url }}">More...</a></p>
 		</span>
 		
