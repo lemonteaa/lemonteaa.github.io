@@ -27,3 +27,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Others
 gem "nokogiri"
+gem "rmagick", "2.16.0"
