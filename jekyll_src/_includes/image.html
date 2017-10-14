@@ -1,0 +1,12 @@
+{% comment %}
+Credit: https://superdevresources.com/image-caption-jekyll/
+Customized to integrate with Jekyll thumbnail generator at https://github.com/oturpe/jekyll-thumbnail-generator
+{% endcomment %}
+<div class="image-wrapper" >
+    <a href="{% asset_path {{ include.img }} %}" title="{{ include.title }}" target="_blank">
+        <img src="{% asset_path thumbnails/{{ include.img }} %}" alt="{{ include.title }}"/>
+    </a>
+    {% if include.caption %}
+        <p class="image-caption">{{ include.caption }}</p>
+    {% endif %}
+</div>
