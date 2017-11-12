@@ -1,9 +1,774 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="https://lemonteaa.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lemonteaa.github.io/" rel="alternate" type="text/html" /><updated>2017-10-09T23:54:06+08:00</updated><id>https://lemonteaa.github.io/</id><title type="html">(into tech :lemontea)</title><subtitle>Lemontea's tech blog: A math lover in awe of the beauty and power of high level programming languages
-</subtitle><entry><title type="html">The Monad Tutorial Fallacy, Part Two: Monad, Kleisli and Eilenberg-Moore Category</title><link href="https://lemonteaa.github.io/fundamentals/2017/10/03/the-monad-tutorial-fallacy-part-two-monad-kleisli-and-eilenberg-moore-category.html" rel="alternate" type="text/html" title="The Monad Tutorial Fallacy, Part Two: Monad, Kleisli and Eilenberg-Moore Category" /><published>2017-10-03T20:36:00+08:00</published><updated>2017-10-03T20:36:00+08:00</updated><id>https://lemonteaa.github.io/fundamentals/2017/10/03/the-monad-tutorial-fallacy-part-two-monad-kleisli-and-eilenberg-moore-category</id><content type="html" xml:base="https://lemonteaa.github.io/fundamentals/2017/10/03/the-monad-tutorial-fallacy-part-two-monad-kleisli-and-eilenberg-moore-category.html">&lt;p&gt;&lt;em&gt;(Go to &lt;a href=&quot;/fundamentals/2017/08/28/the-monad-tutorial-fallacy-part-one-introduction-prequel.html&quot;&gt;Part 1&lt;/a&gt; of this series)&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="https://lemonteaa.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lemonteaa.github.io/" rel="alternate" type="text/html" /><updated>2017-11-12T13:35:09+08:00</updated><id>https://lemonteaa.github.io/</id><title type="html">(into tech :lemontea)</title><subtitle>Lemontea's tech blog: A math lover in awe of the beauty and power of high level programming languages
+</subtitle><entry><title type="html">Getting Started With Clojurescript Development - Setup</title><link href="https://lemonteaa.github.io/tutorials/2017/10/11/getting-started-with-clojurescript-development-setup.html" rel="alternate" type="text/html" title="Getting Started With Clojurescript Development - Setup" /><published>2017-10-11T22:35:00+08:00</published><updated>2017-10-11T22:35:00+08:00</updated><id>https://lemonteaa.github.io/tutorials/2017/10/11/getting-started-with-clojurescript-development-setup</id><content type="html" xml:base="https://lemonteaa.github.io/tutorials/2017/10/11/getting-started-with-clojurescript-development-setup.html">&lt;p&gt;We have seen miraculous progress in frontend development in these few years - the domination/monopoly of javascript, AJAX, node.js, the rise and rapid iteration of javascript libraries/frameworks and Single Page Application (with the current crop being Angular, React, Vue, as well as many others). But we’ve also experienced growing pain - the churn rate of libraries is way too high&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;, javascript as a language (and as part of the toolchain) is too hopelessly ill-equipped&lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; to deal with the demand of modern frontend space, with attendant attempts to either patch over (transpiling languages such as Coffeescript and Typescript), reform (&lt;a href=&quot;https://benmccormick.org/2015/09/14/es5-es6-es2016-es-next-whats-going-on-with-javascript-versioning/&quot;&gt;ES-whatever&lt;/a&gt;), or outright replace (&lt;a href=&quot;http://webassembly.org/&quot;&gt;WebAssembly&lt;/a&gt;) it.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://clojurescript.org/&quot;&gt;Clojurescript&lt;/a&gt; is a solution in the “patch-over” category that bring the elegance and pleasure of writing program in Clojure to the web. More importantly, Clojurescript has placed a strong emphasis on Interactive development, and has been leading other technology stack over the years.
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
+&lt;p&gt;This section is written to help frontend developer / non-programmer get some context so they can understand where some of the apparently strange things in Clojurescript tooling come from. If you are a backend developer, please feel free to skip this section. (By the way, I’m not an expert in tooling so if you have deeper info, please leave a comment below. Thanks!)&lt;/p&gt;
+
+&lt;p&gt;Before Clojurescript, there is Clojure, a JVM-hosted, general purpose language. JVM is a nice platform that largely eliminates cross-platform issues (barring the JNI and JNA) while providing competitive performance (except bare-metal), and has widespread adoption especially in the enterprise world. The standard language on top of JVM is Java (not to be confused with javascript of course), which is arguably flawed, but has been used and deployed in so many places that it is effectively irreplaceable. Clojure is a language built on top of Java, and so can be run on the JVM. This choice let us leverage both the strength of the JVM platform, as well as the monumental amount of libraries in Java.&lt;/p&gt;
+
+&lt;p&gt;The major build tools for Clojure (and Clojurescript as it turns out) is lein and boot. A simple way to distinguish them is that lein is declarative while boot is more imperative. I will not go into discussing their relative merit and will use lein all the way. (Ya, that’s lazy, I know)&lt;/p&gt;
+
+&lt;p&gt;So what’s the point of all these talks? Although Clojurescript compiles to javascript, it still uses lein/boot as its build tool (which make sense in retrospect - it is really bad to fragment something as fundamental as build tool unnecessarily - and Clojure/Clojurescript is supposed to be very close, differing only in their interpretive/compilation target), and so you will need to install the JDK/JRE/JVM (See this &lt;a href=&quot;https://www.javatpoint.com/difference-between-jdk-jre-and-jvm&quot;&gt;page&lt;/a&gt; for the fine prints of their differences), as lein is a Clojure program and so ultimately runs on that.&lt;/p&gt;
+
+&lt;h2 id=&quot;prerequisite&quot;&gt;Prerequisite&lt;/h2&gt;
+&lt;p&gt;As the last section explains, you will need to have installed the JDK (Java Development Kit - which includes an implementation of JVM plus development tools such as the Java Compiler.)/JVM and then lein.&lt;/p&gt;
+
+&lt;p&gt;For the JDK, it is recommended to use JDK 8 though version 6 or 7 works as well - see the &lt;a href=&quot;https://clojure.org/guides/getting_started&quot;&gt;official website&lt;/a&gt;. One caveat - there was some compatibility issue with JDK 9 - see &lt;a href=&quot;https://www.reddit.com/r/Clojure/comments/71p5mv/java_9_has_been_released/&quot;&gt;here&lt;/a&gt; for example.&lt;/p&gt;
+
+&lt;p&gt;Once you have a working Java installation, visit the homepage of &lt;a href=&quot;https://leiningen.org/&quot;&gt;lein&lt;/a&gt; and follow the install instruction there.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-basic-project-using-figwheel&quot;&gt;A Basic Project Using Figwheel&lt;/h2&gt;
+&lt;p&gt;After getting the prerequisites, let’s get started! Much like other modern ecosystems, this particular step has been “optimized” and is as easy as opening up your command prompt and typing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lein new figwheel hello-world -- --reagent
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Which will create a new folder hello-world containing a barebone project. (In frontend we call this kind of project-generation-from-template scaffolding) &lt;a href=&quot;https://github.com/bhauman/lein-figwheel&quot;&gt;Figwheel&lt;/a&gt; is the tool that provides all those interactive experiences and niceties (we’ll see more later), while the last argument specifies which Clojurescript web framework to use (We choose reagent here).&lt;/p&gt;
+
+&lt;p&gt;For your reference here is the console output when generating new project:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Retrieving figwheel/lein-template/0.5.13/lein-template-0.5.13.pom from clojars
+Retrieving figwheel/lein-template/0.5.13/lein-template-0.5.13.jar from clojars
+Generating fresh 'lein new' figwheel project.
+
+Change into your 'hello-world' directory and run 'lein figwheel'
+Wait for it to finish compiling
+Then open 'http://localhost:3449/index.html' in your browser
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To run the project, just cd into the folder and type:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lein figwheel
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Figwheel will pop up a browser tab (with default location &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3449&lt;/code&gt;) connected to your project, and the command prompt will turn into a Clojurescript prompt/REPL.&lt;/p&gt;
+
+&lt;p&gt;Here is a screenshot of what you get in the browser:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Basic_1_Reagent.png&quot; title=&quot;ClojureScript Barebone Project (Reagent)&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Basic_1_Reagent.png&quot; alt=&quot;ClojureScript Barebone Project (Reagent)&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;A barebone Clojurescript Project using the Reagent framework plus figwheel&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;p&gt;while here is the console: (Notice that the first time you run a project, it will automatically download and install dependencies which may take a while. I’ve hidden those extra log for clarity)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*** Warning: This project requires Leiningen 2.7.1, but you have 2.6.1 ***
+
+Get the latest version of Leiningen at http://leiningen.org or by executing
+&quot;lein upgrade&quot;.
+Figwheel: Cutting some fruit, just a sec ...
+Retrieving reagent/reagent/0.7.0/reagent-0.7.0.pom from clojars
+Retrieving org/clojure/clojurescript/1.9.655/clojurescript-1.9.655.pom from central
+Retrieving com/google/javascript/closure-compiler-unshaded/v20170521/closure-compiler-unshaded-v20170521.pom from central
+...(snipped)...
+Figwheel: Validating the configuration found in project.clj
+Figwheel: Configuration Valid ;)
+Figwheel: Starting server at http://0.0.0.0:3449
+Figwheel: Watching build - dev
+Figwheel: Cleaning build - dev
+Compiling &quot;resources/public/js/compiled/hello_world.js&quot; from [&quot;src&quot;]...
+Successfully compiled &quot;resources/public/js/compiled/hello_world.js&quot; in 27.267 seconds.
+Figwheel: Starting CSS Watcher for paths  [&quot;resources/public/css&quot;]
+Launching ClojureScript REPL for build: dev
+Figwheel Controls:
+          (stop-autobuild)                ;; stops Figwheel autobuilder
+          (start-autobuild [id ...])      ;; starts autobuilder focused on optional ids
+          (switch-to-build id ...)        ;; switches autobuilder to different build
+          (reset-autobuild)               ;; stops, cleans, and starts autobuilder
+          (reload-config)                 ;; reloads build config and resets autobuild
+          (build-once [id ...])           ;; builds source one time
+          (clean-builds [id ..])          ;; deletes compiled cljs target files
+          (print-config [id ...])         ;; prints out build configurations
+          (fig-status)                    ;; displays current state of system
+          (figwheel.client/set-autoload false)    ;; will turn autoloading off
+          (figwheel.client/set-repl-pprint false) ;; will turn pretty printing off
+  Switch REPL build focus:
+          :cljs/quit                      ;; allows you to switch REPL to another build
+    Docs: (doc function-name-here)
+    Exit: Control+C or :cljs/quit
+ Results: Stored in vars *1, *2, *3, *e holds last exception object
+Prompt will show when Figwheel connects to your application
+To quit, type: :cljs/quit
+dev:cljs.user=&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Before we move on, let me try to explain what’s happening behind the scene (This is quite complicated and I am really not sure I got all the details right, so yup - proceed at your own risk).&lt;/p&gt;
+
+&lt;p&gt;So we started the build tool/task runner lein. Figwheel (running as an ordinary program in your OS with file system access) will start to watch your source directory for any file change and invoke recompilation in real time. This is known as auto-rebuilding, and is actually provided by another plugin &lt;a href=&quot;https://github.com/emezeske/lein-cljsbuild&quot;&gt;Cljsbuild&lt;/a&gt; which figwheel wraps.&lt;/p&gt;
+
+&lt;p&gt;At the same time it also launches a REPL environment that’s also provided in a vanilla clojurescript build. Since clojurescript compiles to javascript, it obviously needs a javascript execution environment. This makes thing more complicated as we want REPL to run in the build tool/lein we just spun up - we need to somehow connect them.&lt;/p&gt;
+
+&lt;p&gt;It turns out there is more than the obvious execution environment (browser vs node.js vs others, in case you’re long out-of-sync with the frontend space). For the case of browser, we just need to go to the browser (why, my dear ;) ) and open the page that loads those compiled scripts. It ought to also contain additional code fragment that makes a web socket connection to the lein process and then add the “suitable” event handler. (Web socket is used because it is two-way and real time, besides, it’s sorta cool)&lt;/p&gt;
+
+&lt;p&gt;Back in the REPL, it does listen for such connections and once they’re good, we can enter forms to evaluate, which the REPL handles by sending it to the browser/execution environment through the connection. The running program in the browser handle that message by calling clojurescript’s own eval inside its own environment, and then sending the result back.&lt;/p&gt;
+
+&lt;p&gt;So what additional values does figwheel provide? The answer is auto-reloading: plain clojurescript + REPL only re-compiles them. To do this, the “event handler” on browser’s side is &lt;a href=&quot;https://github.com/bhauman/lein-figwheel/blob/master/support/src/figwheel/client/file_reloading.cljs&quot;&gt;enhanced&lt;/a&gt; to also accept command to reload particular namespace, which it do by default through calling &lt;a href=&quot;https://google.github.io/closure-library/api/goog.net.jsloader.html&quot;&gt;functions&lt;/a&gt; in the Google Closure Library; the REPL is also beefed up to send those commands. Moreover, figwheel is smart enough to figure out what files truly need reloading and only reload those.&lt;/p&gt;
+
+&lt;p&gt;Another, slightly silly answer is that figwheel do the “go to browser and open the webpage” part for you automatically :P. It also hosts its own web server to serve those compile javascript and html files.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-slow-tour-of-what-we-can-do&quot;&gt;A Slow Tour of what we can do&lt;/h2&gt;
+&lt;h3 id=&quot;live-code-reloading-and-live-repl&quot;&gt;Live code reloading and live REPL&lt;/h3&gt;
+&lt;p&gt;Much like other web ecosystems, we can edit our code, save, and see the changes reflected immediately in browser. The main differences in figwheel are: &lt;sup id=&quot;fnref:3&quot;&gt;&lt;a href=&quot;#fn:3&quot; class=&quot;footnote&quot;&gt;3&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;No actual page reload is triggered&lt;/li&gt;
+  &lt;li&gt;Application state is preserved (provided you write reloadable code)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;So let’s try it in the context of interactively developing a non-trivial application. Go to the file &lt;code class=&quot;highlighter-rouge&quot;&gt;src/hello_world/core.cljs&lt;/code&gt; and edit as below, and then save:&lt;/p&gt;
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ns&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hello-world.core&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:require&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reagent.core&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:as&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reagent&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:refer&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+              &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;clojure.set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:as&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;...
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rainbow&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#FF0000&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#FF7F00&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#FFFF00&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#00FF00&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#0000FF&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#4B0082&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+     &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#9400D3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gen-style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:width&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+	 &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:height&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	 &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:background-color&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rainbow&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;mod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	 &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:margin&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;auto&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-tower&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-rod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+                       &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:display&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;inline-block&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:width&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;120&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                             &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;gen-style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hanoi-rod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;left&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hanoi-rod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;middle&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hanoi-rod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;right&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[])]))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hello-world&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:h1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:text&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:h3&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Edit this and watch it change!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hanoi-tower&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find-aux&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;s/difference&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:left&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:middle&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+			&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+			&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;throw&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js/Error.&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;pr-str&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Can't find aux: &quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Basic_2_Reloading_A.png&quot; title=&quot;Live reloading&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Basic_2_Reloading_A.png&quot; alt=&quot;Live reloading&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;Live reloading without page refresh. Note the HUD at bottom left.&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;p&gt;Notice the changes in both browser tab as well as browser console output (a line is printed that shows which files are reloaded), and the fact that there is no page refresh. Also notice the flashing Clojurescript logo at bottom left. This is called the Head-up-Display (HUD) (More on this later). Going back to our application, we now have a very basic Hanoi Tower UI - which is totally hacked together - going.&lt;/p&gt;
+
+&lt;p&gt;The console we launched our application with is now a live REPL with direct access to the currently running application. We can try this out by invoking functions we’ve just entered, after application launch:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dev:cljs.user=&amp;gt; (require '[hello-world.core :as c])
+nil
+dev:cljs.user=&amp;gt; (c/find-aux :left :right)
+:middle
+dev:cljs.user=&amp;gt; (c/find-aux :left 4)
+#object[Error Error: &quot;Can't find aux: &quot; #{:right :middle}]
+   hello_world$core$find_aux (file:/C:/Users/Owner/Documents/clojure_exp/figwheel-basic/hello-world/src/hello_world/core.cljs:57:11)
+nil
+dev:cljs.user=&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We then proceed to write a recursive function that solves the puzzle by returning a sequence of moves (each move is a vector of the form &lt;code class=&quot;highlighter-rouge&quot;&gt;[from to]&lt;/code&gt;), right inside the REPL:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dev:cljs.user=&amp;gt;
+(defn hanoi-solution [n src dst]
+	(if (= n 1)
+		[[src dst]]
+		(let [aux (c/find-aux src dst)
+			  pre (hanoi-solution (- n 1) src aux)
+			  post (hanoi-solution (- n 1) aux dst)]
+			(concat pre [[src dst]] post))))
+#'cljs.user/hanoi-solution
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And tests in a similar way:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dev:cljs.user=&amp;gt; (hanoi-solution 4 :left :right)
+([:left :middle]
+ [:left :right]
+ [:middle :right]
+ [:left :middle]
+ [:right :left]
+ [:right :middle]
+ [:left :middle]
+ [:left :right]
+ [:middle :right]
+ [:middle :left]
+ [:right :left]
+ [:middle :right]
+ [:left :middle]
+ [:left :right]
+ [:middle :right])
+dev:cljs.user=&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now that it works, copy the function definition and save the file.&lt;/p&gt;
+
+&lt;p&gt;Let’s go back to working on the UI. Right now the discs are hard-coded, so let’s modify our state and starts wiring them in.&lt;/p&gt;
+
+&lt;p&gt;Edit the file with the following structure (Note that the &lt;a href=&quot;https://clojure.org/reference/atoms&quot;&gt;atom&lt;/a&gt; here is an reagent atom - it is watched by reagent to trigger UI update whenever its content is changed):&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;defonce&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:text&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello world!&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:nb-disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:left&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:middle&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:right&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Save. Then try to extract value at the REPL:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dev:cljs.user=&amp;gt; (:nb-disc @c/app-state)
+nil
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Wait, it didn’t work! Why?&lt;/p&gt;
+
+&lt;p&gt;At this point, we’ll need to discuss what “reloadable code” mean. Literally, they are simply code that are safe to be reloaded. To a first order approximation to be reloadable is to be purely functional - calling code that define a pure function twice will merely redefine it, in effect rebinding it to the same symbol (More accurately the &lt;a href=&quot;https://clojure.org/reference/vars&quot;&gt;Vars&lt;/a&gt; named by the &lt;a href=&quot;https://stackoverflow.com/questions/11662084/why-does-clojure-distinguish-between-symbols-and-vars&quot;&gt;symbol&lt;/a&gt; in Clojure(script) to avoid confusion). Therefore one can already get pretty far in having reloadable code by following the recommended style of writing Clojure(script) using mostly pure functions.&lt;/p&gt;
+
+&lt;p&gt;Of course, real application cannot be completely pure - they by necessity will have some state. However one can still manage them by, say adopting the &lt;a href=&quot;https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html&quot;&gt;Onion architecture&lt;/a&gt; etc. Regardless of the name, the basic idea here is to be explicit about your states and push it to the “edge” of the system (if you’re doing backend) or to have a central store of states and channel all states updates through a common interface (Which is part of the core idea of the &lt;a href=&quot;https://medium.com/@cabot_solutions/flux-the-react-js-application-architecture-a-comprehensive-study-fd2585d06483&quot;&gt;flux architecture&lt;/a&gt;). Explicit states can be made to be reloadable through &lt;code class=&quot;highlighter-rouge&quot;&gt;defonce&lt;/code&gt; - this ensure it won’t be redefined (and hence overwritten) if it is already defined.&lt;/p&gt;
+
+&lt;p&gt;So to recap, our program should be written to consists of just pure functions plus an explicit application state, and we want that state to survive a reload, and this is done through using &lt;code class=&quot;highlighter-rouge&quot;&gt;defonce&lt;/code&gt;. The cost to pay is that whenever we change our schema for the application state, we would need to “migrate” that schema manually.&lt;/p&gt;
+
+&lt;p&gt;In theory, following the instructions above should mostly suffices. In practise though things are complicated and one needs to be careful not to accidentally introduce (hidden) mutable states, and these can be pretty subtle. For this particular point &lt;a href=&quot;https://practicalli.github.io/clojurescript/figwheel/re-loadable-code.html&quot;&gt;this page&lt;/a&gt; explains it much better than I can hope to, so be sure to check it out.&lt;/p&gt;
+
+&lt;p&gt;No big deal. Back at the REPL:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dev:cljs.user=&amp;gt; (swap! c/app-state assoc :nb-disc 4)
+{:text &quot;Hello world!&quot;, :nb-disc 4}
+dev:cljs.user=&amp;gt; (swap! c/app-state assoc :disc { :left [1 2 3 4] :middle [] :right [] })
+{:text &quot;Hello world!&quot;,
+ :nb-disc 4,
+ :disc {:left [1 2 3 4], :middle [], :right []}}
+dev:cljs.user=&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we’re back in the game/business of updating the UI. Edit the source file and save:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-tower&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-rod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+                       &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:display&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;inline-block&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:width&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;120&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                             &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;gen-style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:nb-disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hanoi-rod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;left&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hanoi-rod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;middle&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:middle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hanoi-rod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;right&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))]))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Though nothing seem to have changed, now the UI is wired to present the underlying state. Try to update the state manually and see what happen! Enter at REPL (omitting output):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(swap! c/app-state assoc :disc { :left [2 3 4] :middle [] :right [1] })
+(swap! c/app-state assoc :disc { :left [3 4] :middle [2] :right [1] })
+(swap! c/app-state assoc :disc { :left [3 4] :middle [1 2] :right [] })
+(swap! c/app-state assoc :disc { :left [4] :middle [1 2] :right [3] })
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;(and so on if you fancy)&lt;/p&gt;
+
+&lt;p&gt;Notice how the browser’s UI update itself, live, as you enter these commands.&lt;/p&gt;
+
+&lt;p&gt;For the next step, we will add control elements to the UI so the user can “play” with it. Add this to the source and save:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;control-panel&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:span&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Number of Discs: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;num&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;text&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;reset&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Reset&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;solve&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Solve!&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;By the way, notice how our (manually modified) state is preserved even though we have updated our source code.&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Basic_3_State_Persist.png&quot; title=&quot;State Persistence&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Basic_3_State_Persist.png&quot; alt=&quot;State Persistence&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;Our App at the end of this subsection. Note that the application state (the number of discs as well as their location) is preserved across live reloading.&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;h3 id=&quot;bonus-session&quot;&gt;Bonus Session&lt;/h3&gt;
+&lt;p&gt;&lt;em&gt;(What follows is basically more of the same from a setup point of view. You can play along though if you want to also learn the frameworks, since we’ll use some features in a slightly less shallow manner)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Now let’s add event handler dynamically. (later we will save it back to the source)&lt;/p&gt;
+
+&lt;p&gt;First design a function to construct the &lt;code class=&quot;highlighter-rouge&quot;&gt;:disc&lt;/code&gt; attr (by the way, you may have noticed by now that these long REPL transcripts are somewhat sanitized, but not 100%: I want to highlight how you can always try again and recover from mistakes):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dev:cljs.user=&amp;gt; (range 1 4)
+(1 2 3)
+dev:cljs.user=&amp;gt; (defn init-tower [n] {:left (range 1 (+ n 1)) :middle [] :right []})
+#'cljs.user/init-tower
+dev:cljs.user=&amp;gt; (init-tower 5)
+{:left (1 2 3 4 5), :middle [], :right []}
+dev:cljs.user=&amp;gt; (defn init-tower [n] {:left (apply vector (range 1 (+ n 1))) :middle [] :right []})
+#'cljs.user/init-tower
+dev:cljs.user=&amp;gt; (init-tower 5)
+{:left [1 2 3 4 5], :middle [], :right []}
+dev:cljs.user=&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then hook the element (&lt;code class=&quot;highlighter-rouge&quot;&gt;*1&lt;/code&gt; in REPL can be used to refer to the result of last evaluation):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dev:cljs.user=&amp;gt; (.getElementById js/document &quot;reset&quot;)
+#object[HTMLInputElement [object HTMLInputElement]]
+dev:cljs.user=&amp;gt; (.addEventListener *1 &quot;click&quot; (fn [e] (let [n (.-value (.getElementById js/document &quot;num&quot;)) ] (swap! c/app-state assoc :nb-disc n :disc (init-tower n)))) false)
+nil
+dev:cljs.user=&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;If you try it out, you’re going to be badly surprised:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Bonus_Fail_1.png&quot; title=&quot;Making mistake&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Bonus_Fail_1.png&quot; alt=&quot;Making mistake&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;Epic Fail! Why? (And the rainbow...)&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;p&gt;Why, use the REPL to debug! Examine the state: &lt;code class=&quot;highlighter-rouge&quot;&gt;@c/app-state&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;It’s strange that the &lt;code class=&quot;highlighter-rouge&quot;&gt;:disc&lt;/code&gt; has such a value. On a moment’s thought, the text field is a string, so we check our suspicion:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(init-tower &quot;1&quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Viola, that’s &lt;del&gt;our&lt;/del&gt; my mistake. &lt;sup id=&quot;fnref:4&quot;&gt;&lt;a href=&quot;#fn:4&quot; class=&quot;footnote&quot;&gt;4&lt;/a&gt;&lt;/sup&gt; Once we know what’s up, fixing it is relatively straight forward, just pass the extracted value through a &lt;code class=&quot;highlighter-rouge&quot;&gt;js/parseInt&lt;/code&gt; call (REPL transcript omitted).&lt;/p&gt;
+
+&lt;p&gt;Now that we are done, let’s update the source code:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;control-panel&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:span&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Number of Discs: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;num&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;text&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;reset&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Reset&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                 &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:on-click&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js/parseInt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+                                            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.-value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.getElementById&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js/document&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;num&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                                        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;swap!&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;assoc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:nb-disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init-tower&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;solve&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Solve!&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Exercise:&lt;/strong&gt; Wire the button so that it trigger solving the puzzle, playing each step automatically with a reasonable time delay (so mere mortals can see what’s happening). (Hint: read the website for &lt;a href=&quot;https://reagent-project.github.io/&quot;&gt;reagent&lt;/a&gt;)&lt;/p&gt;
+
+&lt;h3 id=&quot;heads-up-display&quot;&gt;Heads Up Display&lt;/h3&gt;
+&lt;p&gt;I’ve promised to talk about that. So what if we’ve got a mistake in the source code (which we have mostly avoided since we always test things out in the REPL before “committing” them in the source)? Try to edit the handler for the reset button (or add if you didn’t do the bonus session), say by making the handler function’s parentheses unbalanced:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_HUD_Error.png&quot; title=&quot;HUD Error example&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_HUD_Error.png&quot; alt=&quot;HUD Error example&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;Sample Error&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_HUD_Warning.png&quot; title=&quot;HUD Warning example&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_HUD_Warning.png&quot; alt=&quot;HUD Warning example&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;Sample Warning&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;p&gt;After saving, you will notice a warning window in the browser tab that shows where the error is. Interestingly, the application still works! (Don’t trust me, try to click “Solve!” if you’ve done the exercise in the bonus section. If not, update the state manually in the REPL)&lt;/p&gt;
+
+&lt;p&gt;After you’re done, revert the event handler back to the right form.&lt;/p&gt;
+
+&lt;h3 id=&quot;sourcemap-and-breakpoint&quot;&gt;Sourcemap and Breakpoint&lt;/h3&gt;
+&lt;p&gt;This and the next feature require some simple browser setup. Assuming you’re using Chrome, open the developer console (Ctrl-Shift-I), click the &lt;strong&gt;Customize and control DevTools&lt;/strong&gt; button on top right corner (which looks like three dots arranged vertically), and click settings. You will see the following screen:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_EnableFormatter_1.png&quot; title=&quot;Chrome DevTools Setting&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_EnableFormatter_1.png&quot; alt=&quot;Chrome DevTools Setting&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;Setting up Chrome for Sourcemap and Custom Formatter&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;p&gt;Make sure that both &lt;strong&gt;“Enable JavaScript source maps”&lt;/strong&gt; and &lt;strong&gt;“Enable custom formatters”&lt;/strong&gt; are clicked.&lt;/p&gt;
+
+&lt;p&gt;Source map is a chrome feature that allows mapping compiled javascript file’s location back to actual source location. The benefit it provides is that when debugging using the browser’s breakpoint, one will now see more meaningful source code.&lt;/p&gt;
+
+&lt;p&gt;To test this, edit the function hanoi-solution and add the line:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-solution&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;aux&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c/find-aux&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+              &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hanoi-solution&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;aux&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+              &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hanoi-solution&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;aux&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js-debugger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;concat&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now enter the following in REPL:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;(hanoi-solution 4 :left :middle)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;(Alternatively, edit the event handler for the “Solve!” button to call that function)&lt;/p&gt;
+
+&lt;p&gt;Chrome will pause in the debugger:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Sourcemap.png&quot; title=&quot;Debugger with sourcemap&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Sourcemap.png&quot; alt=&quot;Debugger with sourcemap&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;An example debugging session in Chrome with sourcemapping. The stacktrace also shows Clojurescript data structures but not the function arguments in the main screen. Read the main exposition for more explanation.&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;p&gt;Notice how clojurescript source, rather than javascript, is shown. Also notice an integer parameter after the filename: this is a feature of our project turned on by the &lt;code class=&quot;highlighter-rouge&quot;&gt;:source-map-timestamp&lt;/code&gt; switch in &lt;code class=&quot;highlighter-rouge&quot;&gt;project.clj&lt;/code&gt;, under the section for &lt;code class=&quot;highlighter-rouge&quot;&gt;:cljsbuild&lt;/code&gt;. Its purpose is to ensure we always get the latest source code, rather than the (HTTP) cached version which may get outdated as we live edit it. (The number is a timestamp so it always change across live/hot reload)&lt;/p&gt;
+
+&lt;p&gt;Now look at the call stack, where again clojurescript function is used, as well as the local variables (again located at the right column under the call stack). To see variables in outer scope, you have to click earlier entries in the call stack. Also notice the limitation that custom formatting doesn’t work on the live-inspection of argument passed to function. &lt;sup id=&quot;fnref:5&quot;&gt;&lt;a href=&quot;#fn:5&quot; class=&quot;footnote&quot;&gt;5&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;Aside from using clojurescript function, in browser breakpoint also works: click on the line in the find-aux function, and click “continue” to see it pause on that breakpoint as well.&lt;/p&gt;
+
+&lt;p&gt;Since this is a recursive function, you may click on “continue” a few more times to see the evolution of evaluation.&lt;/p&gt;
+
+&lt;h3 id=&quot;custom-formatter-via-cljs-devtools&quot;&gt;Custom Formatter via cljs-devtools&lt;/h3&gt;
+&lt;p&gt;Again, make sure you’ve done the setting from last section. If not, when you type the following to REPL:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.log&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js/console&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:foo&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;bar&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You’ll see the following screen:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_NoFormatting.png&quot; title=&quot;Printing clojurescript data without formatter&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_NoFormatting.png&quot; alt=&quot;Printing clojurescript data without formatter&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;The results of console logging clojurescript data without setting up custom formatting - we instead got the raw, underlying javascript data.&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;p&gt;So if we have done the setup and then enter the following into REPL:&lt;/p&gt;
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.log&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js/console&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c/hanoi-tower&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.log&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js/console&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c/app-state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.log&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js/console&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c/hanoi-solution&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:left&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:middle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We’ll get this:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Formatter.png&quot; title=&quot;Printing clojurescript data with formatter&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Formatter.png&quot; alt=&quot;Printing clojurescript data with formatter&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;Custom formatters provided by cljs-devtools, which let us examine Clojurescript data structures and also show other stuffs such as functions nicely.&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;h2 id=&quot;devcards&quot;&gt;Devcards&lt;/h2&gt;
+&lt;p&gt;As an alternative to developing your application directly, &lt;a href=&quot;https://github.com/bhauman/devcards&quot;&gt;Devcards&lt;/a&gt; give you an interactive, visual, REPL-like development experience that is like doing demo for each of your application’s component. Perhaps a picture is better here:&lt;/p&gt;
+
+&lt;p&gt;Asides from being plain cool, a deeper reason for doing thing this way is to decouple, or separate, the generic components being developed from the application context where it is used. This allows one to explore its state, structure, and behavior more effectively and directly.&lt;/p&gt;
+
+&lt;p&gt;To get started, we will scaffold a new project. Go to a new directory and enter:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;lein new devcards devcards-demo
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;(Our project name is &lt;code class=&quot;highlighter-rouge&quot;&gt;devcards-demo&lt;/code&gt;)&lt;/p&gt;
+
+&lt;p&gt;The generated project is also a figwheel project, so start it up in the usual way. Then visit the page at &lt;code class=&quot;highlighter-rouge&quot;&gt;http://localhost:3449/cards.html&lt;/code&gt;. You will be greeted with the following screen:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Devcards_Blank1.png&quot; title=&quot;Devcards Default 1&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Devcards_Blank1.png&quot; alt=&quot;Devcards Default 1&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;Main page of a Devcards project, with a listing of available pages.&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;p&gt;The project has a default page setup for us. Click on it to see the default card:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Devcards_Blank2.png&quot; title=&quot;Devcards Default 2&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Devcards_Blank2.png&quot; alt=&quot;Devcards Default 2&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;A Devcards page. Each card is displayed sequentially.&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;p&gt;Now we want to integrate the code we have so far into it. First update our &lt;code class=&quot;highlighter-rouge&quot;&gt;project.clj&lt;/code&gt; to choose the framework. In our case we chose reagent at the beginning, so update this line:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;:dependencies&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;org.clojure/clojure&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1.8.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;org.clojure/clojurescript&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1.9.229&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;devcards&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;0.2.3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sablono&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;0.7.4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                 
+                 &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; need to specify this for sablono
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;                 &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; when not using devcards
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;                 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cljsjs/react&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;15.3.1-0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cljsjs/react-dom&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;15.3.1-0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                 &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;org.omcljs/om&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1.0.0-alpha46&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reagent&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;0.6.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; &amp;lt;-- Update this line
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;                 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Notice that &lt;code class=&quot;highlighter-rouge&quot;&gt;#_&lt;/code&gt; is the “dispatch” &lt;a href=&quot;https://clojure.org/reference/reader#_dispatch&quot;&gt;reader macro&lt;/a&gt; for ignoring the next form, which can be thought of as a stronger form of commenting. Remember to restart the project after that for lein to download and install new dependencies.&lt;/p&gt;
+
+&lt;p&gt;After that, we update the require in the source code:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ns&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;devcards-demo.core&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:require&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;om.core&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:as&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;om&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:include-macros&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reagent.core&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:as&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reagent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; For the atom
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;clojure.set&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:as&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; Our app's require
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sablono.core&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:as&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sab&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:include-macros&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:require-macros&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;devcards.core&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:as&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:refer&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defcard&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;deftest&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defcard-rg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; Add defcard-rg
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To bring in the new reagent library and remove om. &lt;sup id=&quot;fnref:6&quot;&gt;&lt;a href=&quot;#fn:6&quot; class=&quot;footnote&quot;&gt;6&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;Next, copy the source code of the app we’ve been writing so far into &lt;code class=&quot;highlighter-rouge&quot;&gt;core.cljs&lt;/code&gt;, in between &lt;code class=&quot;highlighter-rouge&quot;&gt;(enable-console-print!)&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;defcard&lt;/code&gt;, while taking care to &lt;em&gt;still&lt;/em&gt; use Reagent’s atom implementation (as we’re not &lt;code class=&quot;highlighter-rouge&quot;&gt;refer&lt;/code&gt;ing the &lt;code class=&quot;highlighter-rouge&quot;&gt;atom&lt;/code&gt; in reagent namespace anymore), so our state should instead look like:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;defonce&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reagent/atom&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:text&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello world!&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:nb-disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:left&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:middle&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:right&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then we want to create a new card that holds our whole app, and to do so require using the interface correctly (with reagent integration).&lt;/p&gt;
+
+&lt;p&gt;Fortunately the library has a &lt;a href=&quot;http://rigsomelight.com/devcards/#!/devdemos.reagent&quot;&gt;guide&lt;/a&gt; on how to do that. The gist of it is that since Devcards is designed to handle &lt;strong&gt;ReactElement&lt;/strong&gt; for DOM-tree (alongside support for displaying plain Clojurescript data structure), we need to call &lt;code class=&quot;highlighter-rouge&quot;&gt;reagent.core/as-element&lt;/code&gt; to convert reagent code into those elements. The macro &lt;code class=&quot;highlighter-rouge&quot;&gt;devcards.core/defcard-rg&lt;/code&gt; do this and in a smart way that handles the interface details (like when we pass a function that returns DOM-tree like object instead) automagically.&lt;/p&gt;
+
+&lt;p&gt;By the way the guide above also has documentations for various aspects of Devcards - you may browse around through the navigation menu at the top of the page.&lt;/p&gt;
+
+&lt;p&gt;Add the following code:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-tower-widget&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:h1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:text&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hanoi-tower&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;control-panel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;defcard-rg&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-tower-card&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-tower-widget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:inspect-data&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:frame&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:history&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we have our app embedded in as a card:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Devcards_Integration.png&quot; title=&quot;Integrating our app into Devcards&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Devcards_Integration.png&quot; alt=&quot;Integrating our app into Devcards&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;Adding our app as a card. Note that the current state is displayed below.&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;p&gt;The last argument in our &lt;code class=&quot;highlighter-rouge&quot;&gt;defcard-rg&lt;/code&gt; macro call controls the meta-feature provided by Devcards. &lt;code class=&quot;highlighter-rouge&quot;&gt;inspect-data&lt;/code&gt; give us a view into the current component state as the screen capture above shows; &lt;code class=&quot;highlighter-rouge&quot;&gt;frame&lt;/code&gt; simply add a border around the card; &lt;code class=&quot;highlighter-rouge&quot;&gt;history&lt;/code&gt; records the history of state change and allows one to “time-travel” (One of the super-power of the functional-reactive style, enabled by completely teasing out the state and controlling its mutation strictly) - we will see this play out later.&lt;/p&gt;
+
+&lt;p&gt;Suppose we want to enhance this widget so that user can play with the puzzle themselves by supplying their own moves. First we add the UI: add the following code for generating a disc selection menu:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disc-select&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id-prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;letfn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;disc-item&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input-name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:li&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;radio&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;input-name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:label&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:for&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:ul&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:display&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;inline-block&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:list-style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;none&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:padding-right&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;20px&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;disc-item&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id-prefix&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;-left&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id-prefix&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Left Disc&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;left&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;disc-item&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id-prefix&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;-middle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id-prefix&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Middle Disc&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;middle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;disc-item&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id-prefix&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;-right&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id-prefix&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Right Disc&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;right&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then update the control panel (with a dummy event handler):&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-ui-move!&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;do&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;control-panel&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:span&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Number of Discs: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;num&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;text&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;reset&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Reset&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+                    &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:on-click&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js/parseInt&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+                                                &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.-value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.getElementById&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js/document&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;num&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                                            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;swap!&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;assoc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:nb-disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init-tower&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;solve&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Solve!&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:display&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;table&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:span&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:display&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;table-cell&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:vertical-align&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;middle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;From:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;disc-select&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;from&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:span&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:display&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;table-cell&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:vertical-align&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;middle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;To:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;disc-select&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;to&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:span&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:display&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;table-cell&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:vertical-align&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;middle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:input&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;move&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Move!&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;button&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                        &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:on-click&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-ui-move!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]]]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hanoi-error&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:style&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:color&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;red&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:background-color&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;#f1f1f1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}]])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;After that, develop the pure functions for validating the move and performing the move (which is a function from current state to next state). This should be done via the REPL as before, for reference below is one solution:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;move-disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;rest&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;vector&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cons&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;validate-move&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;if-let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;or&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;empty?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dst&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;discs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Again testing it out in REPL:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;devcards:cljs.user=&amp;gt; (move-disc {:left '(1 2 3 4) :middle '() :right '()} :left :right)
+{:left [2 3 4], :middle (), :right [1]}
+devcards:cljs.user=&amp;gt; (move-disc {:left '(3) :middle '(2 4) :right '(1)} :middle :left)
+{:left [2 3], :middle [4], :right (1)}
+devcards:cljs.user=&amp;gt; (validate-move {:left '(2) :middle '(1 4) :right '(3)} :left :right)
+true
+devcards:cljs.user=&amp;gt; (validate-move {:left '(2) :middle '(1 3 4) :right '()} :middle :right)
+true
+devcards:cljs.user=&amp;gt; (validate-move {:left '(2) :middle '(1 3 4) :right '()} :right :left)
+false
+devcards:cljs.user=&amp;gt; (validate-move {:left '() :middle '(3 4) :right '(1 2)} :middle :right)
+false
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Finally, we tie in everything together and tidy up some bits with the following code for acting on the UI as well as the event handler itself:&lt;/p&gt;
+
+&lt;div class=&quot;language-clojure highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rod-str-&amp;gt;label&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str-val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;case&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str-val&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;left&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:left&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;middle&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:middle&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;right&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:right&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get-radio-val&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;radio-name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;el&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.querySelector&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js/document&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; 
+                    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;input[name=\&quot;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;radio-name&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;\&quot;]:checked&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;el&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.-value&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;el&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;set-err-msg&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set!&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.-innerHTML&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.getElementById&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;js/document&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hanoi-error&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hanoi-ui-move!&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from-val&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;rod-str-&amp;gt;label&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-radio-val&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;from&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to-val&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;rod-str-&amp;gt;label&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-radio-val&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;to&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cond&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from-val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-err-msg&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Please select from disc.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to-val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-err-msg&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Please select to disc.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from-val&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to-val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-err-msg&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;From disc should be different from to disc.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;not&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;validate-move&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from-val&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to-val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-err-msg&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Invalid move.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:else&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;do&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;swap!&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;assoc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;move-disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:disc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app-state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from-val&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to-val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-err-msg&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Below is our finished app:&lt;/p&gt;
+
+&lt;div class=&quot;image-wrapper&quot;&gt;
+    &lt;a href=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Devcards_History.png&quot; title=&quot;Finished app with Devcards History feature&quot; target=&quot;_blank&quot;&gt;
+        &lt;img src=&quot;/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Devcards_History.png&quot; alt=&quot;Finished app with Devcards History feature&quot; /&gt;
+    &lt;/a&gt;
+    
+        &lt;p class=&quot;image-caption&quot;&gt;Final state of our Devcards app. It supports user moves. Notice the highlighted tooltip for time-travelling.&lt;/p&gt;
+    
+&lt;/div&gt;
+
+&lt;h2 id=&quot;endnotes&quot;&gt;Endnotes&lt;/h2&gt;
+&lt;p&gt;Phew! This is a pretty long post for an introductory topic! I hope you enjoyed it. It turns out that there are other articles/series on the web that offer something similar, and I heartily recommend the following if you’re interested for more:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;This &lt;a href=&quot;https://practicalli.github.io/clojurescript/&quot;&gt;workshop&lt;/a&gt; is more comprehensive/deep in its coverage of topics and worth working through if you want to deep dive, head first, into actually using Clojurescript.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.alexeberts.com/exploring-the-clojurescript-repl/&quot;&gt;Exploring the Clojurescript REPL&lt;/a&gt; is somewhat similar in scope to this article, the difference being that it gives more in-depth explanation of both language level as well as library level mechanism.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Until then! See you!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;(To be continued…)&lt;/em&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;See &lt;a href=&quot;https://hackernoon.com/how-it-feels-to-learn-javascript-in-2016-d3a717dd577f&quot;&gt;How it feels to learn JavaScript in 2016&lt;/a&gt;, although even the Javascript community has recognized this problem and is working on it, hence the response &lt;a href=&quot;https://medium.com/front-end-hacking/how-it-feels-to-learn-javascript-in-2017-a934b801fbe&quot;&gt;How it feels to learn JavaScript in 2017&lt;/a&gt;. (But it doesn’t cover build tools…)&amp;nbsp;&lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot;&gt;
+      &lt;p&gt;Javascript is ubiquitous, but its original version is done over the span of a bit more than a &lt;a href=&quot;https://en.wikipedia.org/wiki/Brendan_Eich&quot;&gt;week&lt;/a&gt;, and so there are many &lt;a href=&quot;https://www.youtube.com/watch?v=2pL28CcEijU&quot;&gt;rough&lt;/a&gt; edges. For example, its type system is… &lt;a href=&quot;https://www.reddit.com/r/ProgrammerHumor/comments/5bemtx/christianity_and_javascript_xpost/&quot;&gt;subtle&lt;/a&gt;. (In defense though it is good practise to use &lt;a href=&quot;https://stackoverflow.com/questions/5101948/javascript-checking-for-null-vs-undefined-and-difference-between-and&quot;&gt;strict&lt;/a&gt; equality to avoid these headaches) If this is too religious (in &lt;em&gt;both&lt;/em&gt; meanings in this context) for your taste, a simpler pain point is the lack of module/namespace/package in the original language, with the results being &lt;a href=&quot;https://stackoverflow.com/questions/16521471/relation-between-commonjs-amd-and-requirejs&quot;&gt;this&lt;/a&gt;.&amp;nbsp;&lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:3&quot;&gt;
+      &lt;p&gt;Given how other ecosystem have been catching up, in theory these difference aren’t intrinsic anymore. However, it could still be argued that these desirable traits are more easily/naturally achieved in Clojurescript than other languages.&amp;nbsp;&lt;a href=&quot;#fnref:3&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:4&quot;&gt;
+      &lt;p&gt;Don’t laugh, this is the actual mistake I made while preparing this tutorial. In fact I struggled a lot on this part due to all the fuse about interoping with Javascript directly, without the help of even a jQuery analog (There are libraries available, but you will need to restart the whole application due to &lt;code class=&quot;highlighter-rouge&quot;&gt;project.clj&lt;/code&gt; change).&amp;nbsp;&lt;a href=&quot;#fnref:4&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:5&quot;&gt;
+      &lt;p&gt;This is quite a pity - to resolve this we may use the &lt;a href=&quot;https://github.com/binaryage/dirac&quot;&gt;Dirac&lt;/a&gt; Chrome extension which I plan to write in the next post in this series.&amp;nbsp;&lt;a href=&quot;#fnref:5&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:6&quot;&gt;
+      &lt;p&gt;For some reason even restarting doesn’t work for me, so I entered &lt;code class=&quot;highlighter-rouge&quot;&gt;(reload-config)&lt;/code&gt; at figwheel’s REPL and then force refresh the browser’s page (Ctrl-F5) to truly rebuild everything.&amp;nbsp;&lt;a href=&quot;#fnref:6&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">We have seen miraculous progress in frontend development in these few years - the domination/monopoly of javascript, AJAX, node.js, the rise and rapid iteration of javascript libraries/frameworks and Single Page Application (with the current crop being Angular, React, Vue, as well as many others). But we’ve also experienced growing pain - the churn rate of libraries is way too high1, javascript as a language (and as part of the toolchain) is too hopelessly ill-equipped2 to deal with the demand of modern frontend space, with attendant attempts to either patch over (transpiling languages such as Coffeescript and Typescript), reform (ES-whatever), or outright replace (WebAssembly) it. Clojurescript is a solution in the “patch-over” category that bring the elegance and pleasure of writing program in Clojure to the web. More importantly, Clojurescript has placed a strong emphasis on Interactive development, and has been leading other technology stack over the years. See How it feels to learn JavaScript in 2016, although even the Javascript community has recognized this problem and is working on it, hence the response How it feels to learn JavaScript in 2017. (But it doesn’t cover build tools…)&amp;nbsp;&amp;#8617; Javascript is ubiquitous, but its original version is done over the span of a bit more than a week, and so there are many rough edges. For example, its type system is… subtle. (In defense though it is good practise to use strict equality to avoid these headaches) If this is too religious (in both meanings in this context) for your taste, a simpler pain point is the lack of module/namespace/package in the original language, with the results being this.&amp;nbsp;&amp;#8617;</summary></entry><entry><title type="html">The Monad Tutorial Fallacy, Part Two: Monad, Kleisli and Eilenberg-Moore Category</title><link href="https://lemonteaa.github.io/fundamentals/2017/10/03/the-monad-tutorial-fallacy-part-two-monad-kleisli-and-eilenberg-moore-category.html" rel="alternate" type="text/html" title="The Monad Tutorial Fallacy, Part Two: Monad, Kleisli and Eilenberg-Moore Category" /><published>2017-10-03T20:36:00+08:00</published><updated>2017-10-03T20:36:00+08:00</updated><id>https://lemonteaa.github.io/fundamentals/2017/10/03/the-monad-tutorial-fallacy-part-two-monad-kleisli-and-eilenberg-moore-category</id><content type="html" xml:base="https://lemonteaa.github.io/fundamentals/2017/10/03/the-monad-tutorial-fallacy-part-two-monad-kleisli-and-eilenberg-moore-category.html">&lt;p&gt;&lt;em&gt;(Go to &lt;a href=&quot;/fundamentals/2017/08/28/the-monad-tutorial-fallacy-part-one-introduction-prequel.html&quot;&gt;Part 1&lt;/a&gt; of this series)&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;In part 2 of this series we explain the technical core of the theory of Monad. Of central importance is the attempt to provide algebraic interpretation of everything, as well as to convert things into suitably algebraic structures. We will also revisit this issue at an arguably “better” (but more advanced) angle in part 5.&lt;/p&gt;
 
-&lt;p&gt;While the picture for an adjunction is relatively clear, it suffers from needing to work with two categories at the same time. Monad fixes this by composing the left and right adjoint functors into an endofunctor &lt;script type=&quot;math/tex&quot;&gt;T = G \circ F&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;T: \mathcal{C} \rightarrow \mathcal{C}&lt;/script&gt; over a single category. An additional advantage with this construction is that it is more algebraic as it is now composable: we can iterate &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; to get &lt;script type=&quot;math/tex&quot;&gt;T^2&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;T^3&lt;/script&gt; etc for example. &lt;!--more--&gt;&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;While the picture for an adjunction is relatively clear, it suffers from needing to work with two categories at the same time. Monad fixes this by composing the left and right adjoint functors into an endofunctor &lt;script type=&quot;math/tex&quot;&gt;T = G \circ F&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;T: \mathcal{C} \rightarrow \mathcal{C}&lt;/script&gt; over a single category. An additional advantage with this construction is that it is more algebraic as it is now composable: we can iterate &lt;script type=&quot;math/tex&quot;&gt;T&lt;/script&gt; to get &lt;script type=&quot;math/tex&quot;&gt;T^2&lt;/script&gt;, &lt;script type=&quot;math/tex&quot;&gt;T^3&lt;/script&gt; etc for example. &lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;
+&lt;!--more--&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;on-the-benefit-of-being-algebraicfunctional&quot;&gt;On the benefit of being Algebraic/Functional&lt;/h2&gt;
 &lt;p&gt;It is perhaps appropriate at this point to pontificate on what does it means to be “algebraic”, and why do we obsesses over it, before proceeding further on the details. From my armchair philosophical perspective, being “algebraic” simply mean having a system of rules for manipulating symbols. But this “definition” is obviously wrong, for with this requirement the whole of pure mathematics at the very least qualifies! (All math are built from logic, and formal logic is just such a system of rules, albeit a bit more complicated than arithmetic) What distinguishes algebra from other such formal system is an intrinsic quality that it is easy and convenient to use.&lt;/p&gt;
@@ -300,7 +1065,7 @@ T(Z)     @&gt;{\gamma}&gt;&gt;  Z \\
       &lt;p&gt;A gripe I have with the statically typed camp of programming, even for the sufficiently-advanced-type-that-offer-automatic-safety-guarantee, is that placing too much focus on the type risks crowding out my cognitive capacity to understand the actual semantics of a piece of code. It takes discipline to resist the temptation to consider a function correct just because the signature match.&amp;nbsp;&lt;a href=&quot;#fnref:7&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
-&lt;/div&gt;</content><author><name></name></author><summary type="html">(Go to Part 1 of this series) In part 2 of this series we explain the technical core of the theory of Monad. Of central importance is the attempt to provide algebraic interpretation of everything, as well as to convert things into suitably algebraic structures. We will also revisit this issue at an arguably “better” (but more advanced) angle in part 5. While the picture for an adjunction is relatively clear, it suffers from needing to work with two categories at the same time. Monad fixes this by composing the left and right adjoint functors into an endofunctor , over a single category. An additional advantage with this construction is that it is more algebraic as it is now composable: we can iterate to get , etc for example.</summary></entry><entry><title type="html">A Quick Note on the Clojure (Backend) Web Space</title><link href="https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html" rel="alternate" type="text/html" title="A Quick Note on the Clojure (Backend) Web Space" /><published>2017-09-14T20:16:00+08:00</published><updated>2017-09-14T20:16:00+08:00</updated><id>https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space</id><content type="html" xml:base="https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html">&lt;p&gt;&lt;em&gt;(Last Updated on 16 Sep 2017. Thanks nha, gsnewmark and danielcompton for corrections and discussions!)&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">(Go to Part 1 of this series) In part 2 of this series we explain the technical core of the theory of Monad. Of central importance is the attempt to provide algebraic interpretation of everything, as well as to convert things into suitably algebraic structures. We will also revisit this issue at an arguably “better” (but more advanced) angle in part 5. While the picture for an adjunction is relatively clear, it suffers from needing to work with two categories at the same time. Monad fixes this by composing the left and right adjoint functors into an endofunctor , over a single category. An additional advantage with this construction is that it is more algebraic as it is now composable: we can iterate to get , etc for example. 1 This does not mean that the adjunction construct is not algebraic - in fact a Category can be thought of as a groupoid, where elements can be multiplied provided their domain/co-domain match. Then an ordinary group is just a groupoid with only one domain so that anything can be multiplied with anything.&amp;nbsp;&amp;#8617;</summary></entry><entry><title type="html">A Quick Note on the Clojure (Backend) Web Space</title><link href="https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html" rel="alternate" type="text/html" title="A Quick Note on the Clojure (Backend) Web Space" /><published>2017-09-14T20:16:00+08:00</published><updated>2017-09-14T20:16:00+08:00</updated><id>https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space</id><content type="html" xml:base="https://lemonteaa.github.io/misc/2017/09/14/a-quick-note-on-the-clojure-backend-web-space.html">&lt;p&gt;&lt;em&gt;(Last Updated on 16 Sep 2017. Thanks nha, gsnewmark and danielcompton for corrections and discussions!)&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;(Note to Experts: if you find any factual error in this note, please tell me by leaving a comment in the comment section below. Many thanks!)&lt;/em&gt;&lt;/p&gt;
 

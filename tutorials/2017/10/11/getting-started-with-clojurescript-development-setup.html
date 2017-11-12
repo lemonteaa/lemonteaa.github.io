@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Getting Started With Clojurescript Development - Setup</title>
+  <meta name="description" content="We have seen miraculous progress in frontend development in these few years - the domination/monopoly of javascript, AJAX, node.js, the rise and rapid iterat...">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://lemonteaa.github.io/tutorials/2017/10/11/getting-started-with-clojurescript-development-setup.html">
+  <link rel="alternate" type="application/rss+xml" title="(into tech :lemontea)" href="/feed.xml">
+  
+  
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-105429614-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  
+
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+	<div>
+		<a id="avatar" href="/"></a>
+	</div>
+    <a class="site-title" href="/">(into tech :lemontea)</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/projects/">Projects</a>
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Getting Started With Clojurescript Development - Setup</h1>
+    <p class="post-meta">
+      <time datetime="2017-10-11T22:35:00+08:00" itemprop="datePublished">
+        
+        Oct 11, 2017
+      </time>
+      
+      
+        • <a href="https://lemonteaa.github.io/tutorials/2017/10/11/getting-started-with-clojurescript-development-setup.html#disqus_thread">0 Comments</a>
+      
+	</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>We have seen miraculous progress in frontend development in these few years - the domination/monopoly of javascript, AJAX, node.js, the rise and rapid iteration of javascript libraries/frameworks and Single Page Application (with the current crop being Angular, React, Vue, as well as many others). But we’ve also experienced growing pain - the churn rate of libraries is way too high<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>, javascript as a language (and as part of the toolchain) is too hopelessly ill-equipped<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup> to deal with the demand of modern frontend space, with attendant attempts to either patch over (transpiling languages such as Coffeescript and Typescript), reform (<a href="https://benmccormick.org/2015/09/14/es5-es6-es2016-es-next-whats-going-on-with-javascript-versioning/">ES-whatever</a>), or outright replace (<a href="http://webassembly.org/">WebAssembly</a>) it.</p>
+
+<p><a href="https://clojurescript.org/">Clojurescript</a> is a solution in the “patch-over” category that bring the elegance and pleasure of writing program in Clojure to the web. More importantly, Clojurescript has placed a strong emphasis on Interactive development, and has been leading other technology stack over the years.
+<!--more--></p>
+
+<h2 id="background">Background</h2>
+<p>This section is written to help frontend developer / non-programmer get some context so they can understand where some of the apparently strange things in Clojurescript tooling come from. If you are a backend developer, please feel free to skip this section. (By the way, I’m not an expert in tooling so if you have deeper info, please leave a comment below. Thanks!)</p>
+
+<p>Before Clojurescript, there is Clojure, a JVM-hosted, general purpose language. JVM is a nice platform that largely eliminates cross-platform issues (barring the JNI and JNA) while providing competitive performance (except bare-metal), and has widespread adoption especially in the enterprise world. The standard language on top of JVM is Java (not to be confused with javascript of course), which is arguably flawed, but has been used and deployed in so many places that it is effectively irreplaceable. Clojure is a language built on top of Java, and so can be run on the JVM. This choice let us leverage both the strength of the JVM platform, as well as the monumental amount of libraries in Java.</p>
+
+<p>The major build tools for Clojure (and Clojurescript as it turns out) is lein and boot. A simple way to distinguish them is that lein is declarative while boot is more imperative. I will not go into discussing their relative merit and will use lein all the way. (Ya, that’s lazy, I know)</p>
+
+<p>So what’s the point of all these talks? Although Clojurescript compiles to javascript, it still uses lein/boot as its build tool (which make sense in retrospect - it is really bad to fragment something as fundamental as build tool unnecessarily - and Clojure/Clojurescript is supposed to be very close, differing only in their interpretive/compilation target), and so you will need to install the JDK/JRE/JVM (See this <a href="https://www.javatpoint.com/difference-between-jdk-jre-and-jvm">page</a> for the fine prints of their differences), as lein is a Clojure program and so ultimately runs on that.</p>
+
+<h2 id="prerequisite">Prerequisite</h2>
+<p>As the last section explains, you will need to have installed the JDK (Java Development Kit - which includes an implementation of JVM plus development tools such as the Java Compiler.)/JVM and then lein.</p>
+
+<p>For the JDK, it is recommended to use JDK 8 though version 6 or 7 works as well - see the <a href="https://clojure.org/guides/getting_started">official website</a>. One caveat - there was some compatibility issue with JDK 9 - see <a href="https://www.reddit.com/r/Clojure/comments/71p5mv/java_9_has_been_released/">here</a> for example.</p>
+
+<p>Once you have a working Java installation, visit the homepage of <a href="https://leiningen.org/">lein</a> and follow the install instruction there.</p>
+
+<h2 id="a-basic-project-using-figwheel">A Basic Project Using Figwheel</h2>
+<p>After getting the prerequisites, let’s get started! Much like other modern ecosystems, this particular step has been “optimized” and is as easy as opening up your command prompt and typing:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>lein new figwheel hello-world -- --reagent
+</code></pre>
+</div>
+
+<p>Which will create a new folder hello-world containing a barebone project. (In frontend we call this kind of project-generation-from-template scaffolding) <a href="https://github.com/bhauman/lein-figwheel">Figwheel</a> is the tool that provides all those interactive experiences and niceties (we’ll see more later), while the last argument specifies which Clojurescript web framework to use (We choose reagent here).</p>
+
+<p>For your reference here is the console output when generating new project:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Retrieving figwheel/lein-template/0.5.13/lein-template-0.5.13.pom from clojars
+Retrieving figwheel/lein-template/0.5.13/lein-template-0.5.13.jar from clojars
+Generating fresh 'lein new' figwheel project.
+
+Change into your 'hello-world' directory and run 'lein figwheel'
+Wait for it to finish compiling
+Then open 'http://localhost:3449/index.html' in your browser
+</code></pre>
+</div>
+
+<p>To run the project, just cd into the folder and type:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>lein figwheel
+</code></pre>
+</div>
+
+<p>Figwheel will pop up a browser tab (with default location <code class="highlighter-rouge">localhost:3449</code>) connected to your project, and the command prompt will turn into a Clojurescript prompt/REPL.</p>
+
+<p>Here is a screenshot of what you get in the browser:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Basic_1_Reagent.png" title="ClojureScript Barebone Project (Reagent)" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Basic_1_Reagent.png" alt="ClojureScript Barebone Project (Reagent)" />
+    </a>
+    
+        <p class="image-caption">A barebone Clojurescript Project using the Reagent framework plus figwheel</p>
+    
+</div>
+
+<p>while here is the console: (Notice that the first time you run a project, it will automatically download and install dependencies which may take a while. I’ve hidden those extra log for clarity)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>*** Warning: This project requires Leiningen 2.7.1, but you have 2.6.1 ***
+
+Get the latest version of Leiningen at http://leiningen.org or by executing
+"lein upgrade".
+Figwheel: Cutting some fruit, just a sec ...
+Retrieving reagent/reagent/0.7.0/reagent-0.7.0.pom from clojars
+Retrieving org/clojure/clojurescript/1.9.655/clojurescript-1.9.655.pom from central
+Retrieving com/google/javascript/closure-compiler-unshaded/v20170521/closure-compiler-unshaded-v20170521.pom from central
+...(snipped)...
+Figwheel: Validating the configuration found in project.clj
+Figwheel: Configuration Valid ;)
+Figwheel: Starting server at http://0.0.0.0:3449
+Figwheel: Watching build - dev
+Figwheel: Cleaning build - dev
+Compiling "resources/public/js/compiled/hello_world.js" from ["src"]...
+Successfully compiled "resources/public/js/compiled/hello_world.js" in 27.267 seconds.
+Figwheel: Starting CSS Watcher for paths  ["resources/public/css"]
+Launching ClojureScript REPL for build: dev
+Figwheel Controls:
+          (stop-autobuild)                ;; stops Figwheel autobuilder
+          (start-autobuild [id ...])      ;; starts autobuilder focused on optional ids
+          (switch-to-build id ...)        ;; switches autobuilder to different build
+          (reset-autobuild)               ;; stops, cleans, and starts autobuilder
+          (reload-config)                 ;; reloads build config and resets autobuild
+          (build-once [id ...])           ;; builds source one time
+          (clean-builds [id ..])          ;; deletes compiled cljs target files
+          (print-config [id ...])         ;; prints out build configurations
+          (fig-status)                    ;; displays current state of system
+          (figwheel.client/set-autoload false)    ;; will turn autoloading off
+          (figwheel.client/set-repl-pprint false) ;; will turn pretty printing off
+  Switch REPL build focus:
+          :cljs/quit                      ;; allows you to switch REPL to another build
+    Docs: (doc function-name-here)
+    Exit: Control+C or :cljs/quit
+ Results: Stored in vars *1, *2, *3, *e holds last exception object
+Prompt will show when Figwheel connects to your application
+To quit, type: :cljs/quit
+dev:cljs.user=&gt;
+</code></pre>
+</div>
+
+<p>Before we move on, let me try to explain what’s happening behind the scene (This is quite complicated and I am really not sure I got all the details right, so yup - proceed at your own risk).</p>
+
+<p>So we started the build tool/task runner lein. Figwheel (running as an ordinary program in your OS with file system access) will start to watch your source directory for any file change and invoke recompilation in real time. This is known as auto-rebuilding, and is actually provided by another plugin <a href="https://github.com/emezeske/lein-cljsbuild">Cljsbuild</a> which figwheel wraps.</p>
+
+<p>At the same time it also launches a REPL environment that’s also provided in a vanilla clojurescript build. Since clojurescript compiles to javascript, it obviously needs a javascript execution environment. This makes thing more complicated as we want REPL to run in the build tool/lein we just spun up - we need to somehow connect them.</p>
+
+<p>It turns out there is more than the obvious execution environment (browser vs node.js vs others, in case you’re long out-of-sync with the frontend space). For the case of browser, we just need to go to the browser (why, my dear ;) ) and open the page that loads those compiled scripts. It ought to also contain additional code fragment that makes a web socket connection to the lein process and then add the “suitable” event handler. (Web socket is used because it is two-way and real time, besides, it’s sorta cool)</p>
+
+<p>Back in the REPL, it does listen for such connections and once they’re good, we can enter forms to evaluate, which the REPL handles by sending it to the browser/execution environment through the connection. The running program in the browser handle that message by calling clojurescript’s own eval inside its own environment, and then sending the result back.</p>
+
+<p>So what additional values does figwheel provide? The answer is auto-reloading: plain clojurescript + REPL only re-compiles them. To do this, the “event handler” on browser’s side is <a href="https://github.com/bhauman/lein-figwheel/blob/master/support/src/figwheel/client/file_reloading.cljs">enhanced</a> to also accept command to reload particular namespace, which it do by default through calling <a href="https://google.github.io/closure-library/api/goog.net.jsloader.html">functions</a> in the Google Closure Library; the REPL is also beefed up to send those commands. Moreover, figwheel is smart enough to figure out what files truly need reloading and only reload those.</p>
+
+<p>Another, slightly silly answer is that figwheel do the “go to browser and open the webpage” part for you automatically :P. It also hosts its own web server to serve those compile javascript and html files.</p>
+
+<h2 id="a-slow-tour-of-what-we-can-do">A Slow Tour of what we can do</h2>
+<h3 id="live-code-reloading-and-live-repl">Live code reloading and live REPL</h3>
+<p>Much like other web ecosystems, we can edit our code, save, and see the changes reflected immediately in browser. The main differences in figwheel are: <sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup></p>
+<ul>
+  <li>No actual page reload is triggered</li>
+  <li>Application state is preserved (provided you write reloadable code)</li>
+</ul>
+
+<p>So let’s try it in the context of interactively developing a non-trivial application. Go to the file <code class="highlighter-rouge">src/hello_world/core.cljs</code> and edit as below, and then save:</p>
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">ns</span><span class="w"> </span><span class="n">hello-world.core</span><span class="w">
+    </span><span class="p">(</span><span class="no">:require</span><span class="w"> </span><span class="p">[</span><span class="n">reagent.core</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">reagent</span><span class="w"> </span><span class="no">:refer</span><span class="w"> </span><span class="p">[</span><span class="n">atom</span><span class="p">]]</span><span class="w">
+              </span><span class="p">[</span><span class="n">clojure.set</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">s</span><span class="p">]))</span><span class="w">
+</span><span class="c1">;;...
+</span><span class="p">(</span><span class="k">def</span><span class="w"> </span><span class="n">rainbow</span><span class="w">
+    </span><span class="p">[</span><span class="s">"#FF0000"</span><span class="w">
+     </span><span class="s">"#FF7F00"</span><span class="w">
+     </span><span class="s">"#FFFF00"</span><span class="w">
+     </span><span class="s">"#00FF00"</span><span class="w">
+     </span><span class="s">"#0000FF"</span><span class="w">
+     </span><span class="s">"#4B0082"</span><span class="w">
+     </span><span class="s">"#9400D3"</span><span class="p">])</span><span class="w">
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">gen-style</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="w"> </span><span class="n">k</span><span class="p">]</span><span class="w">
+	</span><span class="p">{</span><span class="no">:width</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> 
+	 </span><span class="no">:height</span><span class="w"> </span><span class="mi">12</span><span class="w">
+	 </span><span class="no">:background-color</span><span class="w"> </span><span class="p">(</span><span class="nb">get</span><span class="w"> </span><span class="n">rainbow</span><span class="w"> </span><span class="p">(</span><span class="nf">mod</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">7</span><span class="p">))</span><span class="w">
+	 </span><span class="no">:margin</span><span class="w"> </span><span class="s">"auto"</span><span class="p">})</span><span class="w">
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">hanoi-tower</span><span class="w"> </span><span class="p">[]</span><span class="w">
+    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">hanoi-rod</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">pos</span><span class="w"> </span><span class="n">discs</span><span class="p">]</span><span class="w"> 
+                       </span><span class="p">[</span><span class="no">:div</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="no">:style</span><span class="w"> </span><span class="p">{</span><span class="no">:display</span><span class="w"> </span><span class="s">"inline-block"</span><span class="w"> </span><span class="no">:width</span><span class="w"> </span><span class="mi">120</span><span class="p">}}</span><span class="w">
+                             </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="no">:div</span><span class="w"> </span><span class="p">{</span><span class="no">:style</span><span class="w"> </span><span class="p">(</span><span class="nf">gen-style</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">k</span><span class="p">)}])</span><span class="w"> </span><span class="n">discs</span><span class="p">)])]</span><span class="w">
+    </span><span class="p">[</span><span class="no">:div</span><span class="w">
+      </span><span class="p">(</span><span class="nf">hanoi-rod</span><span class="w"> </span><span class="s">"left"</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">])</span><span class="w">
+      </span><span class="p">(</span><span class="nf">hanoi-rod</span><span class="w"> </span><span class="s">"middle"</span><span class="w"> </span><span class="p">[])</span><span class="w">
+      </span><span class="p">(</span><span class="nf">hanoi-rod</span><span class="w"> </span><span class="s">"right"</span><span class="w"> </span><span class="p">[])]))</span><span class="w">
+</span><span class="c1">;;
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">hello-world</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">[</span><span class="no">:div</span><span class="w">
+   </span><span class="p">[</span><span class="no">:h1</span><span class="w"> </span><span class="p">(</span><span class="no">:text</span><span class="w"> </span><span class="err">@</span><span class="n">app-state</span><span class="p">)]</span><span class="w">
+   </span><span class="p">[</span><span class="no">:h3</span><span class="w"> </span><span class="s">"Edit this and watch it change!"</span><span class="p">]</span><span class="w">
+   </span><span class="p">(</span><span class="nf">hanoi-tower</span><span class="p">)])</span><span class="w">
+</span><span class="c1">;;
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">find-aux</span><span class="w"> </span><span class="p">[</span><span class="n">src</span><span class="w"> </span><span class="n">dst</span><span class="p">]</span><span class="w">
+	</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nf">s/difference</span><span class="w"> </span><span class="o">#</span><span class="p">{</span><span class="no">:left</span><span class="w"> </span><span class="no">:middle</span><span class="w"> </span><span class="no">:right</span><span class="p">}</span><span class="w"> </span><span class="o">#</span><span class="p">{</span><span class="n">src</span><span class="w"> </span><span class="n">dst</span><span class="p">})]</span><span class="w">
+		</span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nb">count</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">
+			</span><span class="p">(</span><span class="nb">first</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w">
+			</span><span class="p">(</span><span class="nf">throw</span><span class="w"> </span><span class="p">(</span><span class="nf">js/Error.</span><span class="w"> </span><span class="p">(</span><span class="nb">pr-str</span><span class="w"> </span><span class="s">"Can't find aux: "</span><span class="w"> </span><span class="n">x</span><span class="p">))))))</span><span class="w">
+
+</span></code></pre>
+</div>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Basic_2_Reloading_A.png" title="Live reloading" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Basic_2_Reloading_A.png" alt="Live reloading" />
+    </a>
+    
+        <p class="image-caption">Live reloading without page refresh. Note the HUD at bottom left.</p>
+    
+</div>
+
+<p>Notice the changes in both browser tab as well as browser console output (a line is printed that shows which files are reloaded), and the fact that there is no page refresh. Also notice the flashing Clojurescript logo at bottom left. This is called the Head-up-Display (HUD) (More on this later). Going back to our application, we now have a very basic Hanoi Tower UI - which is totally hacked together - going.</p>
+
+<p>The console we launched our application with is now a live REPL with direct access to the currently running application. We can try this out by invoking functions we’ve just entered, after application launch:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dev:cljs.user=&gt; (require '[hello-world.core :as c])
+nil
+dev:cljs.user=&gt; (c/find-aux :left :right)
+:middle
+dev:cljs.user=&gt; (c/find-aux :left 4)
+#object[Error Error: "Can't find aux: " #{:right :middle}]
+   hello_world$core$find_aux (file:/C:/Users/Owner/Documents/clojure_exp/figwheel-basic/hello-world/src/hello_world/core.cljs:57:11)
+nil
+dev:cljs.user=&gt;
+</code></pre>
+</div>
+
+<p>We then proceed to write a recursive function that solves the puzzle by returning a sequence of moves (each move is a vector of the form <code class="highlighter-rouge">[from to]</code>), right inside the REPL:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dev:cljs.user=&gt;
+(defn hanoi-solution [n src dst]
+	(if (= n 1)
+		[[src dst]]
+		(let [aux (c/find-aux src dst)
+			  pre (hanoi-solution (- n 1) src aux)
+			  post (hanoi-solution (- n 1) aux dst)]
+			(concat pre [[src dst]] post))))
+#'cljs.user/hanoi-solution
+</code></pre>
+</div>
+
+<p>And tests in a similar way:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dev:cljs.user=&gt; (hanoi-solution 4 :left :right)
+([:left :middle]
+ [:left :right]
+ [:middle :right]
+ [:left :middle]
+ [:right :left]
+ [:right :middle]
+ [:left :middle]
+ [:left :right]
+ [:middle :right]
+ [:middle :left]
+ [:right :left]
+ [:middle :right]
+ [:left :middle]
+ [:left :right]
+ [:middle :right])
+dev:cljs.user=&gt;
+</code></pre>
+</div>
+
+<p>Now that it works, copy the function definition and save the file.</p>
+
+<p>Let’s go back to working on the UI. Right now the discs are hard-coded, so let’s modify our state and starts wiring them in.</p>
+
+<p>Edit the file with the following structure (Note that the <a href="https://clojure.org/reference/atoms">atom</a> here is an reagent atom - it is watched by reagent to trigger UI update whenever its content is changed):</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">defonce</span><span class="w"> </span><span class="n">app-state</span><span class="w"> </span><span class="p">(</span><span class="nf">atom</span><span class="w"> </span><span class="p">{</span><span class="no">:text</span><span class="w"> </span><span class="s">"Hello world!"</span><span class="w"> </span><span class="no">:nb-disc</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="no">:disc</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="no">:left</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="no">:middle</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="no">:right</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Save. Then try to extract value at the REPL:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dev:cljs.user=&gt; (:nb-disc @c/app-state)
+nil
+</code></pre>
+</div>
+
+<p>Wait, it didn’t work! Why?</p>
+
+<p>At this point, we’ll need to discuss what “reloadable code” mean. Literally, they are simply code that are safe to be reloaded. To a first order approximation to be reloadable is to be purely functional - calling code that define a pure function twice will merely redefine it, in effect rebinding it to the same symbol (More accurately the <a href="https://clojure.org/reference/vars">Vars</a> named by the <a href="https://stackoverflow.com/questions/11662084/why-does-clojure-distinguish-between-symbols-and-vars">symbol</a> in Clojure(script) to avoid confusion). Therefore one can already get pretty far in having reloadable code by following the recommended style of writing Clojure(script) using mostly pure functions.</p>
+
+<p>Of course, real application cannot be completely pure - they by necessity will have some state. However one can still manage them by, say adopting the <a href="https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html">Onion architecture</a> etc. Regardless of the name, the basic idea here is to be explicit about your states and push it to the “edge” of the system (if you’re doing backend) or to have a central store of states and channel all states updates through a common interface (Which is part of the core idea of the <a href="https://medium.com/@cabot_solutions/flux-the-react-js-application-architecture-a-comprehensive-study-fd2585d06483">flux architecture</a>). Explicit states can be made to be reloadable through <code class="highlighter-rouge">defonce</code> - this ensure it won’t be redefined (and hence overwritten) if it is already defined.</p>
+
+<p>So to recap, our program should be written to consists of just pure functions plus an explicit application state, and we want that state to survive a reload, and this is done through using <code class="highlighter-rouge">defonce</code>. The cost to pay is that whenever we change our schema for the application state, we would need to “migrate” that schema manually.</p>
+
+<p>In theory, following the instructions above should mostly suffices. In practise though things are complicated and one needs to be careful not to accidentally introduce (hidden) mutable states, and these can be pretty subtle. For this particular point <a href="https://practicalli.github.io/clojurescript/figwheel/re-loadable-code.html">this page</a> explains it much better than I can hope to, so be sure to check it out.</p>
+
+<p>No big deal. Back at the REPL:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dev:cljs.user=&gt; (swap! c/app-state assoc :nb-disc 4)
+{:text "Hello world!", :nb-disc 4}
+dev:cljs.user=&gt; (swap! c/app-state assoc :disc { :left [1 2 3 4] :middle [] :right [] })
+{:text "Hello world!",
+ :nb-disc 4,
+ :disc {:left [1 2 3 4], :middle [], :right []}}
+dev:cljs.user=&gt;
+</code></pre>
+</div>
+
+<p>Now we’re back in the game/business of updating the UI. Edit the source file and save:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">hanoi-tower</span><span class="w"> </span><span class="p">[]</span><span class="w">
+    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">hanoi-rod</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">pos</span><span class="w"> </span><span class="n">discs</span><span class="p">]</span><span class="w"> 
+                       </span><span class="p">[</span><span class="no">:div</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="no">:style</span><span class="w"> </span><span class="p">{</span><span class="no">:display</span><span class="w"> </span><span class="s">"inline-block"</span><span class="w"> </span><span class="no">:width</span><span class="w"> </span><span class="mi">120</span><span class="p">}}</span><span class="w">
+                             </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="no">:div</span><span class="w"> </span><span class="p">{</span><span class="no">:style</span><span class="w"> </span><span class="p">(</span><span class="nf">gen-style</span><span class="w"> </span><span class="p">(</span><span class="no">:nb-disc</span><span class="w"> </span><span class="err">@</span><span class="n">app-state</span><span class="p">)</span><span class="w"> </span><span class="n">k</span><span class="p">)}])</span><span class="w"> </span><span class="n">discs</span><span class="p">)])]</span><span class="w">
+    </span><span class="p">[</span><span class="no">:div</span><span class="w">
+      </span><span class="p">(</span><span class="nf">hanoi-rod</span><span class="w"> </span><span class="s">"left"</span><span class="w"> </span><span class="p">(</span><span class="nf">get-in</span><span class="w"> </span><span class="err">@</span><span class="n">app-state</span><span class="w"> </span><span class="p">[</span><span class="no">:disc</span><span class="w"> </span><span class="no">:left</span><span class="p">]))</span><span class="w">
+      </span><span class="p">(</span><span class="nf">hanoi-rod</span><span class="w"> </span><span class="s">"middle"</span><span class="w"> </span><span class="p">(</span><span class="nf">get-in</span><span class="w"> </span><span class="err">@</span><span class="n">app-state</span><span class="w"> </span><span class="p">[</span><span class="no">:disc</span><span class="w"> </span><span class="no">:middle</span><span class="p">]))</span><span class="w">
+      </span><span class="p">(</span><span class="nf">hanoi-rod</span><span class="w"> </span><span class="s">"right"</span><span class="w"> </span><span class="p">(</span><span class="nf">get-in</span><span class="w"> </span><span class="err">@</span><span class="n">app-state</span><span class="w"> </span><span class="p">[</span><span class="no">:disc</span><span class="w"> </span><span class="no">:right</span><span class="p">]))]))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Though nothing seem to have changed, now the UI is wired to present the underlying state. Try to update the state manually and see what happen! Enter at REPL (omitting output):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>(swap! c/app-state assoc :disc { :left [2 3 4] :middle [] :right [1] })
+(swap! c/app-state assoc :disc { :left [3 4] :middle [2] :right [1] })
+(swap! c/app-state assoc :disc { :left [3 4] :middle [1 2] :right [] })
+(swap! c/app-state assoc :disc { :left [4] :middle [1 2] :right [3] })
+</code></pre>
+</div>
+
+<p>(and so on if you fancy)</p>
+
+<p>Notice how the browser’s UI update itself, live, as you enter these commands.</p>
+
+<p>For the next step, we will add control elements to the UI so the user can “play” with it. Add this to the source and save:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">control-panel</span><span class="w"> </span><span class="p">[]</span><span class="w">
+    </span><span class="p">[</span><span class="no">:div</span><span class="w">
+        </span><span class="p">[</span><span class="no">:span</span><span class="w"> </span><span class="s">"Number of Discs: "</span><span class="p">]</span><span class="w">
+        </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"num"</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"text"</span><span class="p">}]</span><span class="w">
+        </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"reset"</span><span class="w"> </span><span class="no">:value</span><span class="w"> </span><span class="s">"Reset"</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"button"</span><span class="p">}]</span><span class="w">
+        </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"solve"</span><span class="w"> </span><span class="no">:value</span><span class="w"> </span><span class="s">"Solve!"</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"button"</span><span class="p">}]])</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>By the way, notice how our (manually modified) state is preserved even though we have updated our source code.</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Basic_3_State_Persist.png" title="State Persistence" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Basic_3_State_Persist.png" alt="State Persistence" />
+    </a>
+    
+        <p class="image-caption">Our App at the end of this subsection. Note that the application state (the number of discs as well as their location) is preserved across live reloading.</p>
+    
+</div>
+
+<h3 id="bonus-session">Bonus Session</h3>
+<p><em>(What follows is basically more of the same from a setup point of view. You can play along though if you want to also learn the frameworks, since we’ll use some features in a slightly less shallow manner)</em></p>
+
+<p>Now let’s add event handler dynamically. (later we will save it back to the source)</p>
+
+<p>First design a function to construct the <code class="highlighter-rouge">:disc</code> attr (by the way, you may have noticed by now that these long REPL transcripts are somewhat sanitized, but not 100%: I want to highlight how you can always try again and recover from mistakes):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dev:cljs.user=&gt; (range 1 4)
+(1 2 3)
+dev:cljs.user=&gt; (defn init-tower [n] {:left (range 1 (+ n 1)) :middle [] :right []})
+#'cljs.user/init-tower
+dev:cljs.user=&gt; (init-tower 5)
+{:left (1 2 3 4 5), :middle [], :right []}
+dev:cljs.user=&gt; (defn init-tower [n] {:left (apply vector (range 1 (+ n 1))) :middle [] :right []})
+#'cljs.user/init-tower
+dev:cljs.user=&gt; (init-tower 5)
+{:left [1 2 3 4 5], :middle [], :right []}
+dev:cljs.user=&gt;
+</code></pre>
+</div>
+
+<p>Then hook the element (<code class="highlighter-rouge">*1</code> in REPL can be used to refer to the result of last evaluation):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>dev:cljs.user=&gt; (.getElementById js/document "reset")
+#object[HTMLInputElement [object HTMLInputElement]]
+dev:cljs.user=&gt; (.addEventListener *1 "click" (fn [e] (let [n (.-value (.getElementById js/document "num")) ] (swap! c/app-state assoc :nb-disc n :disc (init-tower n)))) false)
+nil
+dev:cljs.user=&gt;
+</code></pre>
+</div>
+
+<p>If you try it out, you’re going to be badly surprised:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Bonus_Fail_1.png" title="Making mistake" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Bonus_Fail_1.png" alt="Making mistake" />
+    </a>
+    
+        <p class="image-caption">Epic Fail! Why? (And the rainbow...)</p>
+    
+</div>
+
+<p>Why, use the REPL to debug! Examine the state: <code class="highlighter-rouge">@c/app-state</code></p>
+
+<p>It’s strange that the <code class="highlighter-rouge">:disc</code> has such a value. On a moment’s thought, the text field is a string, so we check our suspicion:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>(init-tower "1")
+</code></pre>
+</div>
+
+<p>Viola, that’s <del>our</del> my mistake. <sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup> Once we know what’s up, fixing it is relatively straight forward, just pass the extracted value through a <code class="highlighter-rouge">js/parseInt</code> call (REPL transcript omitted).</p>
+
+<p>Now that we are done, let’s update the source code:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">control-panel</span><span class="w"> </span><span class="p">[]</span><span class="w">
+    </span><span class="p">[</span><span class="no">:div</span><span class="w">
+        </span><span class="p">[</span><span class="no">:span</span><span class="w"> </span><span class="s">"Number of Discs: "</span><span class="p">]</span><span class="w">
+        </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"num"</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"text"</span><span class="p">}]</span><span class="w">
+        </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"reset"</span><span class="w"> </span><span class="no">:value</span><span class="w"> </span><span class="s">"Reset"</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"button"</span><span class="w">
+                 </span><span class="no">:on-click</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="nf">js/parseInt</span><span class="w"> 
+                                            </span><span class="p">(</span><span class="nf">.-value</span><span class="w"> </span><span class="p">(</span><span class="nf">.getElementById</span><span class="w"> </span><span class="n">js/document</span><span class="w"> </span><span class="s">"num"</span><span class="p">)))</span><span class="w"> </span><span class="p">]</span><span class="w">
+                                        </span><span class="p">(</span><span class="nf">swap!</span><span class="w"> </span><span class="n">app-state</span><span class="w"> </span><span class="nb">assoc</span><span class="w"> </span><span class="no">:nb-disc</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="no">:disc</span><span class="w"> </span><span class="p">(</span><span class="nf">init-tower</span><span class="w"> </span><span class="n">n</span><span class="p">)))}]</span><span class="w">
+        </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"solve"</span><span class="w"> </span><span class="no">:value</span><span class="w"> </span><span class="s">"Solve!"</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"button"</span><span class="p">}]])</span><span class="w">
+</span></code></pre>
+</div>
+
+<p><strong>Exercise:</strong> Wire the button so that it trigger solving the puzzle, playing each step automatically with a reasonable time delay (so mere mortals can see what’s happening). (Hint: read the website for <a href="https://reagent-project.github.io/">reagent</a>)</p>
+
+<h3 id="heads-up-display">Heads Up Display</h3>
+<p>I’ve promised to talk about that. So what if we’ve got a mistake in the source code (which we have mostly avoided since we always test things out in the REPL before “committing” them in the source)? Try to edit the handler for the reset button (or add if you didn’t do the bonus session), say by making the handler function’s parentheses unbalanced:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_HUD_Error.png" title="HUD Error example" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_HUD_Error.png" alt="HUD Error example" />
+    </a>
+    
+        <p class="image-caption">Sample Error</p>
+    
+</div>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_HUD_Warning.png" title="HUD Warning example" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_HUD_Warning.png" alt="HUD Warning example" />
+    </a>
+    
+        <p class="image-caption">Sample Warning</p>
+    
+</div>
+
+<p>After saving, you will notice a warning window in the browser tab that shows where the error is. Interestingly, the application still works! (Don’t trust me, try to click “Solve!” if you’ve done the exercise in the bonus section. If not, update the state manually in the REPL)</p>
+
+<p>After you’re done, revert the event handler back to the right form.</p>
+
+<h3 id="sourcemap-and-breakpoint">Sourcemap and Breakpoint</h3>
+<p>This and the next feature require some simple browser setup. Assuming you’re using Chrome, open the developer console (Ctrl-Shift-I), click the <strong>Customize and control DevTools</strong> button on top right corner (which looks like three dots arranged vertically), and click settings. You will see the following screen:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_EnableFormatter_1.png" title="Chrome DevTools Setting" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_EnableFormatter_1.png" alt="Chrome DevTools Setting" />
+    </a>
+    
+        <p class="image-caption">Setting up Chrome for Sourcemap and Custom Formatter</p>
+    
+</div>
+
+<p>Make sure that both <strong>“Enable JavaScript source maps”</strong> and <strong>“Enable custom formatters”</strong> are clicked.</p>
+
+<p>Source map is a chrome feature that allows mapping compiled javascript file’s location back to actual source location. The benefit it provides is that when debugging using the browser’s breakpoint, one will now see more meaningful source code.</p>
+
+<p>To test this, edit the function hanoi-solution and add the line:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">hanoi-solution</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="n">dst</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">
+        </span><span class="p">[[</span><span class="n">src</span><span class="w"> </span><span class="n">dst</span><span class="p">]]</span><span class="w">
+        </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">aux</span><span class="w"> </span><span class="p">(</span><span class="nf">c/find-aux</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="n">dst</span><span class="p">)</span><span class="w">
+              </span><span class="n">pre</span><span class="w"> </span><span class="p">(</span><span class="nf">hanoi-solution</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="n">aux</span><span class="p">)</span><span class="w">
+              </span><span class="n">post</span><span class="w"> </span><span class="p">(</span><span class="nf">hanoi-solution</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">aux</span><span class="w"> </span><span class="n">dst</span><span class="p">)]</span><span class="w">
+            </span><span class="p">(</span><span class="nf">js-debugger</span><span class="p">)</span><span class="w">
+            </span><span class="p">(</span><span class="nb">concat</span><span class="w"> </span><span class="n">pre</span><span class="w"> </span><span class="p">[[</span><span class="n">src</span><span class="w"> </span><span class="n">dst</span><span class="p">]]</span><span class="w"> </span><span class="n">post</span><span class="p">))))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Now enter the following in REPL:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>(hanoi-solution 4 :left :middle)
+</code></pre>
+</div>
+
+<p>(Alternatively, edit the event handler for the “Solve!” button to call that function)</p>
+
+<p>Chrome will pause in the debugger:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Sourcemap.png" title="Debugger with sourcemap" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Sourcemap.png" alt="Debugger with sourcemap" />
+    </a>
+    
+        <p class="image-caption">An example debugging session in Chrome with sourcemapping. The stacktrace also shows Clojurescript data structures but not the function arguments in the main screen. Read the main exposition for more explanation.</p>
+    
+</div>
+
+<p>Notice how clojurescript source, rather than javascript, is shown. Also notice an integer parameter after the filename: this is a feature of our project turned on by the <code class="highlighter-rouge">:source-map-timestamp</code> switch in <code class="highlighter-rouge">project.clj</code>, under the section for <code class="highlighter-rouge">:cljsbuild</code>. Its purpose is to ensure we always get the latest source code, rather than the (HTTP) cached version which may get outdated as we live edit it. (The number is a timestamp so it always change across live/hot reload)</p>
+
+<p>Now look at the call stack, where again clojurescript function is used, as well as the local variables (again located at the right column under the call stack). To see variables in outer scope, you have to click earlier entries in the call stack. Also notice the limitation that custom formatting doesn’t work on the live-inspection of argument passed to function. <sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup></p>
+
+<p>Aside from using clojurescript function, in browser breakpoint also works: click on the line in the find-aux function, and click “continue” to see it pause on that breakpoint as well.</p>
+
+<p>Since this is a recursive function, you may click on “continue” a few more times to see the evolution of evaluation.</p>
+
+<h3 id="custom-formatter-via-cljs-devtools">Custom Formatter via cljs-devtools</h3>
+<p>Again, make sure you’ve done the setting from last section. If not, when you type the following to REPL:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">.log</span><span class="w"> </span><span class="n">js/console</span><span class="w"> </span><span class="p">[</span><span class="no">:foo</span><span class="w"> </span><span class="s">"bar"</span><span class="p">])</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>You’ll see the following screen:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_NoFormatting.png" title="Printing clojurescript data without formatter" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_NoFormatting.png" alt="Printing clojurescript data without formatter" />
+    </a>
+    
+        <p class="image-caption">The results of console logging clojurescript data without setting up custom formatting - we instead got the raw, underlying javascript data.</p>
+    
+</div>
+
+<p>So if we have done the setup and then enter the following into REPL:</p>
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">.log</span><span class="w"> </span><span class="n">js/console</span><span class="w"> </span><span class="n">c/hanoi-tower</span><span class="p">)</span><span class="w">
+</span><span class="p">(</span><span class="nf">.log</span><span class="w"> </span><span class="n">js/console</span><span class="w"> </span><span class="err">@</span><span class="n">c/app-state</span><span class="p">)</span><span class="w">
+</span><span class="p">(</span><span class="nf">.log</span><span class="w"> </span><span class="n">js/console</span><span class="w"> </span><span class="p">(</span><span class="nf">c/hanoi-solution</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="no">:left</span><span class="w"> </span><span class="no">:middle</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>We’ll get this:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Formatter.png" title="Printing clojurescript data with formatter" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Formatter.png" alt="Printing clojurescript data with formatter" />
+    </a>
+    
+        <p class="image-caption">Custom formatters provided by cljs-devtools, which let us examine Clojurescript data structures and also show other stuffs such as functions nicely.</p>
+    
+</div>
+
+<h2 id="devcards">Devcards</h2>
+<p>As an alternative to developing your application directly, <a href="https://github.com/bhauman/devcards">Devcards</a> give you an interactive, visual, REPL-like development experience that is like doing demo for each of your application’s component. Perhaps a picture is better here:</p>
+
+<p>Asides from being plain cool, a deeper reason for doing thing this way is to decouple, or separate, the generic components being developed from the application context where it is used. This allows one to explore its state, structure, and behavior more effectively and directly.</p>
+
+<p>To get started, we will scaffold a new project. Go to a new directory and enter:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>lein new devcards devcards-demo
+</code></pre>
+</div>
+<p>(Our project name is <code class="highlighter-rouge">devcards-demo</code>)</p>
+
+<p>The generated project is also a figwheel project, so start it up in the usual way. Then visit the page at <code class="highlighter-rouge">http://localhost:3449/cards.html</code>. You will be greeted with the following screen:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Devcards_Blank1.png" title="Devcards Default 1" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Devcards_Blank1.png" alt="Devcards Default 1" />
+    </a>
+    
+        <p class="image-caption">Main page of a Devcards project, with a listing of available pages.</p>
+    
+</div>
+
+<p>The project has a default page setup for us. Click on it to see the default card:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Devcards_Blank2.png" title="Devcards Default 2" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Devcards_Blank2.png" alt="Devcards Default 2" />
+    </a>
+    
+        <p class="image-caption">A Devcards page. Each card is displayed sequentially.</p>
+    
+</div>
+
+<p>Now we want to integrate the code we have so far into it. First update our <code class="highlighter-rouge">project.clj</code> to choose the framework. In our case we chose reagent at the beginning, so update this line:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="no">:dependencies</span><span class="w"> </span><span class="p">[[</span><span class="n">org.clojure/clojure</span><span class="w"> </span><span class="s">"1.8.0"</span><span class="p">]</span><span class="w">
+                 </span><span class="p">[</span><span class="n">org.clojure/clojurescript</span><span class="w"> </span><span class="s">"1.9.229"</span><span class="p">]</span><span class="w">
+                 </span><span class="p">[</span><span class="n">devcards</span><span class="w"> </span><span class="s">"0.2.3"</span><span class="p">]</span><span class="w">
+                 </span><span class="p">[</span><span class="n">sablono</span><span class="w"> </span><span class="s">"0.7.4"</span><span class="p">]</span><span class="w">
+                 
+                 </span><span class="c1">;; need to specify this for sablono
+</span><span class="w">                 </span><span class="c1">;; when not using devcards
+</span><span class="w">                 </span><span class="p">[</span><span class="n">cljsjs/react</span><span class="w"> </span><span class="s">"15.3.1-0"</span><span class="p">]</span><span class="w">
+                 </span><span class="p">[</span><span class="n">cljsjs/react-dom</span><span class="w"> </span><span class="s">"15.3.1-0"</span><span class="p">]</span><span class="w">
+                 </span><span class="o">#</span><span class="n">_</span><span class="p">[</span><span class="n">org.omcljs/om</span><span class="w"> </span><span class="s">"1.0.0-alpha46"</span><span class="p">]</span><span class="w">
+                 </span><span class="p">[</span><span class="n">reagent</span><span class="w"> </span><span class="s">"0.6.0"</span><span class="p">]</span><span class="w"> </span><span class="c1">;; &lt;-- Update this line
+</span><span class="w">                 </span><span class="p">]</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Notice that <code class="highlighter-rouge">#_</code> is the “dispatch” <a href="https://clojure.org/reference/reader#_dispatch">reader macro</a> for ignoring the next form, which can be thought of as a stronger form of commenting. Remember to restart the project after that for lein to download and install new dependencies.</p>
+
+<p>After that, we update the require in the source code:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">ns</span><span class="w"> </span><span class="n">devcards-demo.core</span><span class="w">
+  </span><span class="p">(</span><span class="no">:require</span><span class="w">
+   </span><span class="o">#</span><span class="n">_</span><span class="p">[</span><span class="n">om.core</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">om</span><span class="w"> </span><span class="no">:include-macros</span><span class="w"> </span><span class="n">true</span><span class="p">]</span><span class="w">
+   </span><span class="p">[</span><span class="n">reagent.core</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">reagent</span><span class="p">]</span><span class="w"> </span><span class="c1">;; For the atom
+</span><span class="w">   </span><span class="p">[</span><span class="n">clojure.set</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">s</span><span class="p">]</span><span class="w"> </span><span class="c1">;; Our app's require
+</span><span class="w">   </span><span class="p">[</span><span class="n">sablono.core</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">sab</span><span class="w"> </span><span class="no">:include-macros</span><span class="w"> </span><span class="n">true</span><span class="p">])</span><span class="w">
+  </span><span class="p">(</span><span class="no">:require-macros</span><span class="w">
+   </span><span class="p">[</span><span class="n">devcards.core</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">dc</span><span class="w"> </span><span class="no">:refer</span><span class="w"> </span><span class="p">[</span><span class="n">defcard</span><span class="w"> </span><span class="n">deftest</span><span class="w"> </span><span class="n">defcard-rg</span><span class="p">]]))</span><span class="w"> </span><span class="c1">;; Add defcard-rg
+</span></code></pre>
+</div>
+
+<p>To bring in the new reagent library and remove om. <sup id="fnref:6"><a href="#fn:6" class="footnote">6</a></sup></p>
+
+<p>Next, copy the source code of the app we’ve been writing so far into <code class="highlighter-rouge">core.cljs</code>, in between <code class="highlighter-rouge">(enable-console-print!)</code> and the <code class="highlighter-rouge">defcard</code>, while taking care to <em>still</em> use Reagent’s atom implementation (as we’re not <code class="highlighter-rouge">refer</code>ing the <code class="highlighter-rouge">atom</code> in reagent namespace anymore), so our state should instead look like:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="nf">defonce</span><span class="w"> </span><span class="n">app-state</span><span class="w"> </span><span class="p">(</span><span class="nf">reagent/atom</span><span class="w"> </span><span class="p">{</span><span class="no">:text</span><span class="w"> </span><span class="s">"Hello world!"</span><span class="w"> </span><span class="no">:nb-disc</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="no">:disc</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="no">:left</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">]</span><span class="w"> </span><span class="no">:middle</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="no">:right</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Then we want to create a new card that holds our whole app, and to do so require using the interface correctly (with reagent integration).</p>
+
+<p>Fortunately the library has a <a href="http://rigsomelight.com/devcards/#!/devdemos.reagent">guide</a> on how to do that. The gist of it is that since Devcards is designed to handle <strong>ReactElement</strong> for DOM-tree (alongside support for displaying plain Clojurescript data structure), we need to call <code class="highlighter-rouge">reagent.core/as-element</code> to convert reagent code into those elements. The macro <code class="highlighter-rouge">devcards.core/defcard-rg</code> do this and in a smart way that handles the interface details (like when we pass a function that returns DOM-tree like object instead) automagically.</p>
+
+<p>By the way the guide above also has documentations for various aspects of Devcards - you may browse around through the navigation menu at the top of the page.</p>
+
+<p>Add the following code:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">hanoi-tower-widget</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="p">[</span><span class="no">:div</span><span class="w">
+   </span><span class="p">[</span><span class="no">:h1</span><span class="w"> </span><span class="p">(</span><span class="no">:text</span><span class="w"> </span><span class="err">@</span><span class="n">app-state</span><span class="p">)]</span><span class="w">
+   </span><span class="p">(</span><span class="nf">hanoi-tower</span><span class="p">)</span><span class="w">
+   </span><span class="p">(</span><span class="nf">control-panel</span><span class="p">)</span><span class="w">
+   </span><span class="p">])</span><span class="w">
+
+</span><span class="p">(</span><span class="nf">defcard-rg</span><span class="w"> </span><span class="n">hanoi-tower-card</span><span class="w">
+  </span><span class="p">[</span><span class="n">hanoi-tower-widget</span><span class="p">]</span><span class="w">
+  </span><span class="n">app-state</span><span class="w">
+  </span><span class="p">{</span><span class="no">:inspect-data</span><span class="w"> </span><span class="n">true</span><span class="w">
+   </span><span class="no">:frame</span><span class="w"> </span><span class="n">true</span><span class="w">
+   </span><span class="no">:history</span><span class="w"> </span><span class="n">true</span><span class="p">})</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Now we have our app embedded in as a card:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Devcards_Integration.png" title="Integrating our app into Devcards" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Devcards_Integration.png" alt="Integrating our app into Devcards" />
+    </a>
+    
+        <p class="image-caption">Adding our app as a card. Note that the current state is displayed below.</p>
+    
+</div>
+
+<p>The last argument in our <code class="highlighter-rouge">defcard-rg</code> macro call controls the meta-feature provided by Devcards. <code class="highlighter-rouge">inspect-data</code> give us a view into the current component state as the screen capture above shows; <code class="highlighter-rouge">frame</code> simply add a border around the card; <code class="highlighter-rouge">history</code> records the history of state change and allows one to “time-travel” (One of the super-power of the functional-reactive style, enabled by completely teasing out the state and controlling its mutation strictly) - we will see this play out later.</p>
+
+<p>Suppose we want to enhance this widget so that user can play with the puzzle themselves by supplying their own moves. First we add the UI: add the following code for generating a disc selection menu:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">disc-select</span><span class="w"> </span><span class="p">[</span><span class="n">id-prefix</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="nf">letfn</span><span class="w"> </span><span class="p">[(</span><span class="nf">disc-item</span><span class="w"> </span><span class="p">[</span><span class="n">id</span><span class="w"> </span><span class="n">input-name</span><span class="w"> </span><span class="n">label</span><span class="w"> </span><span class="nb">val</span><span class="p">]</span><span class="w">
+                </span><span class="p">[</span><span class="no">:li</span><span class="w">
+                    </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"radio"</span><span class="w"> </span><span class="no">:name</span><span class="w"> </span><span class="n">input-name</span><span class="w"> </span><span class="no">:value</span><span class="w"> </span><span class="nb">val</span><span class="p">}]</span><span class="w">
+                    </span><span class="p">[</span><span class="no">:label</span><span class="w"> </span><span class="p">{</span><span class="no">:for</span><span class="w"> </span><span class="n">id</span><span class="p">}</span><span class="w"> </span><span class="n">label</span><span class="p">]])]</span><span class="w">
+        </span><span class="p">[</span><span class="no">:ul</span><span class="w"> </span><span class="p">{</span><span class="no">:style</span><span class="w"> </span><span class="p">{</span><span class="no">:display</span><span class="w"> </span><span class="s">"inline-block"</span><span class="w"> </span><span class="no">:list-style</span><span class="w"> </span><span class="s">"none"</span><span class="w"> </span><span class="no">:padding-right</span><span class="w"> </span><span class="s">"20px"</span><span class="p">}}</span><span class="w">
+            </span><span class="p">(</span><span class="nf">disc-item</span><span class="w"> </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="n">id-prefix</span><span class="w"> </span><span class="s">"-left"</span><span class="p">)</span><span class="w"> </span><span class="n">id-prefix</span><span class="w"> </span><span class="s">"Left Disc"</span><span class="w"> </span><span class="s">"left"</span><span class="p">)</span><span class="w">
+            </span><span class="p">(</span><span class="nf">disc-item</span><span class="w"> </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="n">id-prefix</span><span class="w"> </span><span class="s">"-middle"</span><span class="p">)</span><span class="w"> </span><span class="n">id-prefix</span><span class="w"> </span><span class="s">"Middle Disc"</span><span class="w"> </span><span class="s">"middle"</span><span class="p">)</span><span class="w">
+            </span><span class="p">(</span><span class="nf">disc-item</span><span class="w"> </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="n">id-prefix</span><span class="w"> </span><span class="s">"-right"</span><span class="p">)</span><span class="w"> </span><span class="n">id-prefix</span><span class="w"> </span><span class="s">"Right Disc"</span><span class="w"> </span><span class="s">"right"</span><span class="p">)]</span><span class="w">
+        </span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Then update the control panel (with a dummy event handler):</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">hanoi-ui-move!</span><span class="w"> </span><span class="p">[</span><span class="n">e</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="nf">do</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">control-panel</span><span class="w"> </span><span class="p">[]</span><span class="w">
+    </span><span class="p">[</span><span class="no">:div</span><span class="w">
+        </span><span class="p">[</span><span class="no">:div</span><span class="w">
+            </span><span class="p">[</span><span class="no">:span</span><span class="w"> </span><span class="s">"Number of Discs: "</span><span class="p">]</span><span class="w">
+            </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"num"</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"text"</span><span class="p">}]</span><span class="w">
+            </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"reset"</span><span class="w"> </span><span class="no">:value</span><span class="w"> </span><span class="s">"Reset"</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"button"</span><span class="w"> 
+                    </span><span class="no">:on-click</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="nf">js/parseInt</span><span class="w"> 
+                                                </span><span class="p">(</span><span class="nf">.-value</span><span class="w"> </span><span class="p">(</span><span class="nf">.getElementById</span><span class="w"> </span><span class="n">js/document</span><span class="w"> </span><span class="s">"num"</span><span class="p">)))</span><span class="w"> </span><span class="p">]</span><span class="w">
+                                            </span><span class="p">(</span><span class="nf">swap!</span><span class="w"> </span><span class="n">app-state</span><span class="w"> </span><span class="nb">assoc</span><span class="w"> </span><span class="no">:nb-disc</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="no">:disc</span><span class="w"> </span><span class="p">(</span><span class="nf">init-tower</span><span class="w"> </span><span class="n">n</span><span class="p">)))}]</span><span class="w">
+            </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"solve"</span><span class="w"> </span><span class="no">:value</span><span class="w"> </span><span class="s">"Solve!"</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"button"</span><span class="p">}]]</span><span class="w">
+        </span><span class="p">[</span><span class="no">:div</span><span class="w"> </span><span class="p">{</span><span class="no">:style</span><span class="w"> </span><span class="p">{</span><span class="no">:display</span><span class="w"> </span><span class="s">"table"</span><span class="p">}}</span><span class="w">
+            </span><span class="p">[</span><span class="no">:span</span><span class="w"> </span><span class="p">{</span><span class="no">:style</span><span class="w"> </span><span class="p">{</span><span class="no">:display</span><span class="w"> </span><span class="s">"table-cell"</span><span class="w"> </span><span class="no">:vertical-align</span><span class="w"> </span><span class="s">"middle"</span><span class="p">}}</span><span class="w"> </span><span class="s">"From:"</span><span class="p">]</span><span class="w">
+            </span><span class="p">(</span><span class="nf">disc-select</span><span class="w"> </span><span class="s">"from"</span><span class="p">)</span><span class="w">
+            </span><span class="p">[</span><span class="no">:span</span><span class="w"> </span><span class="p">{</span><span class="no">:style</span><span class="w"> </span><span class="p">{</span><span class="no">:display</span><span class="w"> </span><span class="s">"table-cell"</span><span class="w"> </span><span class="no">:vertical-align</span><span class="w"> </span><span class="s">"middle"</span><span class="p">}}</span><span class="w"> </span><span class="s">"To:"</span><span class="p">]</span><span class="w">
+            </span><span class="p">(</span><span class="nf">disc-select</span><span class="w"> </span><span class="s">"to"</span><span class="p">)</span><span class="w">
+            </span><span class="p">[</span><span class="no">:span</span><span class="w"> </span><span class="p">{</span><span class="no">:style</span><span class="w"> </span><span class="p">{</span><span class="no">:display</span><span class="w"> </span><span class="s">"table-cell"</span><span class="w"> </span><span class="no">:vertical-align</span><span class="w"> </span><span class="s">"middle"</span><span class="p">}}</span><span class="w">
+                </span><span class="p">[</span><span class="no">:input</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"move"</span><span class="w"> </span><span class="no">:value</span><span class="w"> </span><span class="s">"Move!"</span><span class="w"> </span><span class="no">:type</span><span class="w"> </span><span class="s">"button"</span><span class="w">
+                        </span><span class="no">:on-click</span><span class="w"> </span><span class="n">hanoi-ui-move!</span><span class="p">}]]]</span><span class="w">
+        </span><span class="p">[</span><span class="no">:div</span><span class="w"> </span><span class="p">{</span><span class="no">:id</span><span class="w"> </span><span class="s">"hanoi-error"</span><span class="w"> </span><span class="no">:style</span><span class="w"> </span><span class="p">{</span><span class="no">:color</span><span class="w"> </span><span class="s">"red"</span><span class="w"> </span><span class="no">:background-color</span><span class="w"> </span><span class="s">"#f1f1f1"</span><span class="p">}}]])</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>After that, develop the pure functions for validating the move and performing the move (which is a function from current state to next state). This should be done via the REPL as before, for reference below is one solution:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">move-disc</span><span class="w"> </span><span class="p">[</span><span class="n">discs</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="n">dst</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">item</span><span class="w"> </span><span class="p">(</span><span class="nb">first</span><span class="w"> </span><span class="p">(</span><span class="nf">src</span><span class="w"> </span><span class="n">discs</span><span class="p">))]</span><span class="w">
+        </span><span class="p">(</span><span class="nb">-&gt;</span><span class="w"> </span><span class="n">discs</span><span class="w">
+            </span><span class="p">(</span><span class="nf">update</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="nb">vector</span><span class="w"> </span><span class="p">(</span><span class="nb">rest</span><span class="w"> </span><span class="n">%</span><span class="p">)))</span><span class="w">
+            </span><span class="p">(</span><span class="nf">update</span><span class="w"> </span><span class="n">dst</span><span class="w"> </span><span class="o">#</span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="nb">vector</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="n">%</span><span class="p">))))))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">validate-move</span><span class="w"> </span><span class="p">[</span><span class="n">discs</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="n">dst</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="nb">if-let</span><span class="w"> </span><span class="p">[</span><span class="n">item</span><span class="w"> </span><span class="p">(</span><span class="nb">first</span><span class="w"> </span><span class="p">(</span><span class="nf">src</span><span class="w"> </span><span class="n">discs</span><span class="p">))]</span><span class="w">
+            </span><span class="p">(</span><span class="nb">or</span><span class="w"> </span><span class="p">(</span><span class="nf">empty?</span><span class="w"> </span><span class="p">(</span><span class="nf">dst</span><span class="w"> </span><span class="n">discs</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="p">(</span><span class="nb">first</span><span class="w"> </span><span class="p">(</span><span class="nf">dst</span><span class="w"> </span><span class="n">discs</span><span class="p">))))</span><span class="w">
+            </span><span class="n">false</span><span class="p">))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Again testing it out in REPL:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>devcards:cljs.user=&gt; (move-disc {:left '(1 2 3 4) :middle '() :right '()} :left :right)
+{:left [2 3 4], :middle (), :right [1]}
+devcards:cljs.user=&gt; (move-disc {:left '(3) :middle '(2 4) :right '(1)} :middle :left)
+{:left [2 3], :middle [4], :right (1)}
+devcards:cljs.user=&gt; (validate-move {:left '(2) :middle '(1 4) :right '(3)} :left :right)
+true
+devcards:cljs.user=&gt; (validate-move {:left '(2) :middle '(1 3 4) :right '()} :middle :right)
+true
+devcards:cljs.user=&gt; (validate-move {:left '(2) :middle '(1 3 4) :right '()} :right :left)
+false
+devcards:cljs.user=&gt; (validate-move {:left '() :middle '(3 4) :right '(1 2)} :middle :right)
+false
+</code></pre>
+</div>
+
+<p>Finally, we tie in everything together and tidy up some bits with the following code for acting on the UI as well as the event handler itself:</p>
+
+<div class="language-clojure highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">rod-str-&gt;label</span><span class="w"> </span><span class="p">[</span><span class="n">str-val</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="nf">case</span><span class="w"> </span><span class="n">str-val</span><span class="w">
+        </span><span class="s">"left"</span><span class="w"> </span><span class="no">:left</span><span class="w">
+        </span><span class="s">"middle"</span><span class="w"> </span><span class="no">:middle</span><span class="w">
+        </span><span class="s">"right"</span><span class="w"> </span><span class="no">:right</span><span class="w">
+        </span><span class="n">nil</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">get-radio-val</span><span class="w"> </span><span class="p">[</span><span class="n">radio-name</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">el</span><span class="w"> </span><span class="p">(</span><span class="nf">.querySelector</span><span class="w"> </span><span class="n">js/document</span><span class="w"> 
+                    </span><span class="p">(</span><span class="nb">str</span><span class="w"> </span><span class="s">"input[name=\""</span><span class="w"> </span><span class="n">radio-name</span><span class="w"> </span><span class="s">"\"]:checked"</span><span class="p">))]</span><span class="w">
+        </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">nil?</span><span class="w"> </span><span class="n">el</span><span class="p">)</span><span class="w">
+            </span><span class="n">nil</span><span class="w">
+            </span><span class="p">(</span><span class="nf">.-value</span><span class="w"> </span><span class="n">el</span><span class="p">))))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">set-err-msg</span><span class="w"> </span><span class="p">[</span><span class="n">msg</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="nf">set!</span><span class="w"> </span><span class="p">(</span><span class="nf">.-innerHTML</span><span class="w"> </span><span class="p">(</span><span class="nf">.getElementById</span><span class="w"> </span><span class="n">js/document</span><span class="w"> </span><span class="s">"hanoi-error"</span><span class="p">))</span><span class="w"> </span><span class="n">msg</span><span class="p">))</span><span class="w">
+
+</span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">hanoi-ui-move!</span><span class="w"> </span><span class="p">[</span><span class="n">e</span><span class="p">]</span><span class="w">
+    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">[</span><span class="n">from-val</span><span class="w"> </span><span class="p">(</span><span class="nf">rod-str-&gt;label</span><span class="w"> </span><span class="p">(</span><span class="nf">get-radio-val</span><span class="w"> </span><span class="s">"from"</span><span class="p">))</span><span class="w">
+          </span><span class="n">to-val</span><span class="w">   </span><span class="p">(</span><span class="nf">rod-str-&gt;label</span><span class="w"> </span><span class="p">(</span><span class="nf">get-radio-val</span><span class="w"> </span><span class="s">"to"</span><span class="p">))]</span><span class="w">
+        </span><span class="p">(</span><span class="k">cond</span><span class="w">
+            </span><span class="p">(</span><span class="nb">nil?</span><span class="w"> </span><span class="n">from-val</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">set-err-msg</span><span class="w"> </span><span class="s">"Please select from disc."</span><span class="p">)</span><span class="w">
+            </span><span class="p">(</span><span class="nb">nil?</span><span class="w"> </span><span class="n">to-val</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">set-err-msg</span><span class="w"> </span><span class="s">"Please select to disc."</span><span class="p">)</span><span class="w">
+            </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">from-val</span><span class="w"> </span><span class="n">to-val</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">set-err-msg</span><span class="w"> </span><span class="s">"From disc should be different from to disc."</span><span class="p">)</span><span class="w">
+            </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nf">validate-move</span><span class="w"> </span><span class="p">(</span><span class="no">:disc</span><span class="w"> </span><span class="err">@</span><span class="n">app-state</span><span class="p">)</span><span class="w"> </span><span class="n">from-val</span><span class="w"> </span><span class="n">to-val</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nf">set-err-msg</span><span class="w"> </span><span class="s">"Invalid move."</span><span class="p">)</span><span class="w">
+            </span><span class="no">:else</span><span class="w"> </span><span class="p">(</span><span class="nf">do</span><span class="w">
+                    </span><span class="p">(</span><span class="nf">swap!</span><span class="w"> </span><span class="n">app-state</span><span class="w"> </span><span class="nb">assoc</span><span class="w"> </span><span class="no">:disc</span><span class="w"> </span><span class="p">(</span><span class="nf">move-disc</span><span class="w"> </span><span class="p">(</span><span class="no">:disc</span><span class="w"> </span><span class="err">@</span><span class="n">app-state</span><span class="p">)</span><span class="w"> </span><span class="n">from-val</span><span class="w"> </span><span class="n">to-val</span><span class="p">))</span><span class="w">
+                    </span><span class="p">(</span><span class="nf">set-err-msg</span><span class="w"> </span><span class="s">""</span><span class="p">)))))</span><span class="w">
+</span></code></pre>
+</div>
+
+<p>Below is our finished app:</p>
+
+<div class="image-wrapper">
+    <a href="/assets/posts/getting-started-with-clojurescript-development-setup/CLJS_Devcards_History.png" title="Finished app with Devcards History feature" target="_blank">
+        <img src="/assets/posts/getting-started-with-clojurescript-development-setup/thumbnails/CLJS_Devcards_History.png" alt="Finished app with Devcards History feature" />
+    </a>
+    
+        <p class="image-caption">Final state of our Devcards app. It supports user moves. Notice the highlighted tooltip for time-travelling.</p>
+    
+</div>
+
+<h2 id="endnotes">Endnotes</h2>
+<p>Phew! This is a pretty long post for an introductory topic! I hope you enjoyed it. It turns out that there are other articles/series on the web that offer something similar, and I heartily recommend the following if you’re interested for more:</p>
+
+<ul>
+  <li>This <a href="https://practicalli.github.io/clojurescript/">workshop</a> is more comprehensive/deep in its coverage of topics and worth working through if you want to deep dive, head first, into actually using Clojurescript.</li>
+  <li><a href="http://www.alexeberts.com/exploring-the-clojurescript-repl/">Exploring the Clojurescript REPL</a> is somewhat similar in scope to this article, the difference being that it gives more in-depth explanation of both language level as well as library level mechanism.</li>
+</ul>
+
+<p>Until then! See you!</p>
+
+<p><em>(To be continued…)</em></p>
+
+<hr />
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>See <a href="https://hackernoon.com/how-it-feels-to-learn-javascript-in-2016-d3a717dd577f">How it feels to learn JavaScript in 2016</a>, although even the Javascript community has recognized this problem and is working on it, hence the response <a href="https://medium.com/front-end-hacking/how-it-feels-to-learn-javascript-in-2017-a934b801fbe">How it feels to learn JavaScript in 2017</a>. (But it doesn’t cover build tools…)&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>Javascript is ubiquitous, but its original version is done over the span of a bit more than a <a href="https://en.wikipedia.org/wiki/Brendan_Eich">week</a>, and so there are many <a href="https://www.youtube.com/watch?v=2pL28CcEijU">rough</a> edges. For example, its type system is… <a href="https://www.reddit.com/r/ProgrammerHumor/comments/5bemtx/christianity_and_javascript_xpost/">subtle</a>. (In defense though it is good practise to use <a href="https://stackoverflow.com/questions/5101948/javascript-checking-for-null-vs-undefined-and-difference-between-and">strict</a> equality to avoid these headaches) If this is too religious (in <em>both</em> meanings in this context) for your taste, a simpler pain point is the lack of module/namespace/package in the original language, with the results being <a href="https://stackoverflow.com/questions/16521471/relation-between-commonjs-amd-and-requirejs">this</a>.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p>Given how other ecosystem have been catching up, in theory these difference aren’t intrinsic anymore. However, it could still be argued that these desirable traits are more easily/naturally achieved in Clojurescript than other languages.&nbsp;<a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:4">
+      <p>Don’t laugh, this is the actual mistake I made while preparing this tutorial. In fact I struggled a lot on this part due to all the fuse about interoping with Javascript directly, without the help of even a jQuery analog (There are libraries available, but you will need to restart the whole application due to <code class="highlighter-rouge">project.clj</code> change).&nbsp;<a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:5">
+      <p>This is quite a pity - to resolve this we may use the <a href="https://github.com/binaryage/dirac">Dirac</a> Chrome extension which I plan to write in the next post in this series.&nbsp;<a href="#fnref:5" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:6">
+      <p>For some reason even restarting doesn’t work for me, so I entered <code class="highlighter-rouge">(reload-config)</code> at figwheel’s REPL and then force refresh the browser’s page (Ctrl-F5) to truly rebuild everything.&nbsp;<a href="#fnref:6" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div>
+
+  
+    
+
+  <div id="disqus_thread"></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://lemonteaa.github.io/tutorials/2017/10/11/getting-started-with-clojurescript-development-setup.html';
+      this.page.identifier = '/tutorials/2017/10/11/getting-started-with-clojurescript-development-setup.html';
+    };
+
+    (function() {
+      var d = document, s = d.createElement('script');
+
+      s.src = 'https://lemontea-techblog.disqus.com/embed.js';
+
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <!--<h2 class="footer-heading">(into tech :lemontea)</h2>-->
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col my-footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              (into tech :lemontea)
+            
+            </li>
+        </ul>
+      </div>
+
+      <div class="footer-col my-footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/lemonteaa"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">lemonteaa</span></a>
+
+          </li>
+          
+
+          
+		  
+		  
+          <li>
+			<a href="mailto:lemontea.Tom@gmail.com"><span class="icon icon--email"><svg viewBox="0 0 16 16" width="16px" height="16px">
+<g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g4187"
+       transform="matrix(0.82252529,0,0,0.82252529,-254.40571,-324.97836)">
+      <rect
+         y="400.36658"
+         x="311.20438"
+         height="10"
+         width="16"
+         id="rect4164"
+         style="fill:none;fill-opacity:1;stroke:#828282;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="ccc"
+         inkscape:connector-curvature="0"
+         id="path4166"
+         d="m 311.6,400.8622 7.9,4.9 7.5,-5"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4170"
+         d="m 311.4,409.9622 4.7,-5.8"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4170-5"
+         d="m 326.85,409.9622 -4.2,-6.1"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+  </g>
+</svg></span><span class="username">lemontea.Tom@gmail.com</span></a>
+
+		  </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col my-footer-col-3">
+        <p>Site Generated by <a href="https://jekyllrb.com/">Jekyll</a> using customized version of the <a href="https://github.com/jekyll/minima">Minima</a> theme.</p>
+
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+<script id="dsq-count-scr" src="//lemontea-techblog.disqus.com/count.js" async></script>
+
+
+
+  </body>
+
+</html>

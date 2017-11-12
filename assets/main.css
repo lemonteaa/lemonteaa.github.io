@@ -503,3 +503,8 @@ pre {
   .my-footer-col-3 {
     width: -webkit-calc(100% - (30px / 2));
     width: calc(100% - (30px / 2)); } }
+.image-wrapper {
+  text-align: center; }
+  .image-wrapper .image-caption {
+    color: #828282;
+    margin-top: 10px; }

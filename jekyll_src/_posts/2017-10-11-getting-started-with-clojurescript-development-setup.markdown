@@ -5,7 +5,6 @@ date:   2017-10-11 22:35:00 +0800
 categories: tutorials
 comments: true
 gallery:
-  - file: pencils.jpg
   - file: CLJS_Basic_1_Reagent.png
   - file: CLJS_Basic_2_Reloading_A.png
   - file: CLJS_Basic_3_State_Persist.png
