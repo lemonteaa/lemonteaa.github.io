@@ -56,3 +56,7 @@ google_analytics: UA-105429614-1
 
 thumbnail_cover:
   generates: false
+
+thumbnail_gallery:
+  width:  600
+  height: 375
