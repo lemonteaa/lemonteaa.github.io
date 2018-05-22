@@ -21,11 +21,130 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-105429614-1', 'auto');
+  ga('create', 'UA-105429614-1', {
+	'storage': 'none',
+	'clientId': Math.floor(Math.random()*9000000000+1000000000)
+  });
+  ga('set', 'anonymizeIp', true);
   ga('send', 'pageview');
 
 </script>
+
+
   
+  
+  <!-- Using customized Cookie Consent Library to save preference to local storage instead -->
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.6/cookieconsent.min.css" />
+<script src="/assets/cookieconsent.min.js"></script>
+<script type="text/javascript">
+var startedDisqus = false;
+function storageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage.length !== 0;
+    }
+}
+function startDisqus() {
+  console.log("Starting Disqus...");
+
+  var disqus_config = function () {
+    this.page.url = 'https://lemonteaa.github.io/about/';
+    this.page.identifier = '/about/';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+
+    s.src = 'https://lemontea-techblog.disqus.com/embed.js';
+
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    
+    s.src = "//lemontea-techblog.disqus.com/count.js";
+    s.id = "dsq-count-scr";
+    d.body.appendChild(s);
+  })();
+
+  startedDisqus = true;
+}
+
+//Conservative option, wait until everything loaded
+window.addEventListener("load", function(){
+  //Detect localStorage and polyfill if not supported
+  if (!storageAvailable('localStorage')) {
+    console.log("Local Storage not supported, fallback");
+    window.localStorage = {
+      _data: {},
+      getItem: function(k) { return this._data.hasOwnProperty(k) ? this._data[k] : undefined; },
+      setItem: function(k, v) { this._data[k] = v; },
+      removeItem: function(k) { delete this._data[k]; }
+    };
+  }
+  window.cookieconsent.initialise({
+    "palette": {
+      "popup": {
+        "background": "#eaf7f7",
+        "text": "#5c7291"
+      },
+      "button": {
+        "background": "#56cbdb",
+        "text": "#ffffff"
+      }
+    },
+    //"position": "bottom-left",
+    "revokable": true,
+    "law": { regionalLaw: true, countryCode: 'UK' },
+    "revokeBtn": '<div class=\'cc-revoke \{\{classes\}\}\'>Clear Privacy Settings</div>',
+    "compliance": { "opt-in": '<div class=\'cc-compliance cc-highlight\'>\{\{deny\}\}\{\{allow\}\}</div>' },
+    "type": "opt-in",
+    "content": {
+      "message": "This website uses Disqus for comments and discussions.",
+      "link": "Privacy Policy",
+      "href": "http://cookiesandyou.com",
+      "deny": "Disable",
+      "allow": "Enable Disqus"
+    },
+    "cookie": { "name": "consentDisqus" },
+    "onStatusChange": function(status, chosenBefore) {
+      if (status === 'allow') {
+        if (!startedDisqus) {
+          startDisqus();
+        }
+      } else if (status === 'deny') {
+        if (startedDisqus) {
+          alert("You have revoked consent for Disqus. Please refresh the page for it to take effect.");
+        }
+      }
+    },
+    "onInitialise": function(status) {
+      if (status === 'allow') { startDisqus(); }
+      setTimeout(function(){document.getElementsByClassName("cc-revoke")[0].style.display = "block";});
+    }
+  });
+});
+</script>
 
   
 </head>
@@ -70,6 +189,11 @@
             
           
             
+            
+          
+            
+            
+            <a class="page-link" href="/privacy/">Privacy</a>
             
           
             
@@ -145,21 +269,6 @@
     
 
   <div id="disqus_thread"></div>
-  <script>
-    var disqus_config = function () {
-      this.page.url = 'https://lemonteaa.github.io/about/';
-      this.page.identifier = '/about/';
-    };
-
-    (function() {
-      var d = document, s = d.createElement('script');
-
-      s.src = 'https://lemontea-techblog.disqus.com/embed.js';
-
-      s.setAttribute('data-timestamp', +new Date());
-      (d.head || d.body).appendChild(s);
-    })();
-  </script>
   <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
 
@@ -250,10 +359,6 @@
   </div>
 
 </footer>
-
-
-<script id="dsq-count-scr" src="//lemontea-techblog.disqus.com/count.js" async></script>
-
 
 
   </body>

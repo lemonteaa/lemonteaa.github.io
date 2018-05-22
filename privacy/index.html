@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>(into tech :lemontea)</title>
+  <title>Privacy</title>
   <meta name="description" content="Lemontea&#39;s tech blog: A math lover in awe of the beauty and power of high level programming languages">
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="https://lemonteaa.github.io/404.html">
+  <link rel="canonical" href="https://lemonteaa.github.io/privacy/">
   <link rel="alternate" type="application/rss+xml" title="(into tech :lemontea)" href="/feed.xml">
   
   
@@ -65,8 +65,8 @@ function startDisqus() {
   console.log("Starting Disqus...");
 
   var disqus_config = function () {
-    this.page.url = 'https://lemonteaa.github.io/404.html';
-    this.page.identifier = '/404.html';
+    this.page.url = 'https://lemonteaa.github.io/privacy/';
+    this.page.identifier = '/privacy/';
   };
 
   (function() {
@@ -213,26 +213,56 @@ window.addEventListener("load", function(){
 
     <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <style type="text/css" media="screen">
-  .container {
-    margin: 10px auto;
-    max-width: 600px;
-    text-align: center;
-  }
-  h1 {
-    margin: 30px 0;
-    font-size: 4em;
-    line-height: 1;
-    letter-spacing: -1px;
-  }
-</style>
+        <article class="post">
 
-<div class="container">
-  <h1>404</h1>
+  <header class="post-header">
+    <h1 class="post-title">Privacy</h1>
+  </header>
 
-  <p><strong>Page not found :(</strong></p>
-  <p>The requested page could not be found.</p>
+  <div class="post-content">
+    <p>This site uses <a href="https://www.google.com/analytics/">Google Analytics</a> and <a href="https://disqus.com/">Disqus</a>.</p>
+
+<ul>
+  <li>For Google Analytics (also called GA), anonymous, statistical data on page view is collected to let me know how many people are looking at my blog. I’ve turned off advertising and marketing features, and has done the following to ensure that this is truly anonymous:
+    <ul>
+      <li><strong>IP</strong> has been anonymized by stripping out the last octet at the client side.</li>
+      <li><strong>Cookie</strong> has been disabled using the <code class="highlighter-rouge">storage: 'none'</code> settings.</li>
+      <li><strong>Client ID</strong> has also been disabled - I generate a random, 10 digit number for each page load (to fulfill GA’s technical requirement) that is not saved or sent anywhere else.</li>
+    </ul>
+  </li>
+  <li>Disqus is used for comments and discussions. See <a href="https://blog.disqus.com/update-on-privacy-and-gdpr-compliance">here</a> for their updates to <a href="https://help.disqus.com/terms-and-policies/disqus-privacy-policy">privacy policy</a>. Since this is a third party system, we need your <strong>explicit consent</strong> to enable it on this site.
+    <ul>
+      <li>Once you’ve given your consent (or refusal), we store your preference using <em><a href="https://en.wikipedia.org/wiki/Web_storage">Local Storage</a></em> <sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</li>
+      <li>You may change your mind later by clicking on the <strong>Clear Privacy Settings</strong> button at the bottom left part of this website. Doing so will reset your preference so that you may choose again eitherway.</li>
+      <li>Alternatively, you may also delete Local Storage directly in your browser.</li>
+      <li>If your browser does not support Local Storage, then the choice will still work, but your preference will not be remembered and effectively, you will have to consent (or deny) for <em>each</em> page visit.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Aside from leaving a comment using Disqus, you may also send me an email for any further questions. Thanks!</p>
+
+<hr />
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>Which I consider to be better than Cookie in terms of privacy if there is no actual need to send this information to server - which is obviously the case here since this is a static site. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
 </div>
+
+  </div>
+
+  
+    
+
+  <div id="disqus_thread"></div>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+  
+</article>
 
       </div>
     </main>
