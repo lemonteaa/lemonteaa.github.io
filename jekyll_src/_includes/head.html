@@ -17,7 +17,7 @@
   {% include google-analytics.html %}
   {% endif %}
   <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.6/cookieconsent.min.css" />
-  <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.6/cookieconsent.min.js"></script>
+  <script src="/assets/cookieconsent.min.js"></script>
   <script type="text/javascript">
   var startedDisqus = false;
   function storageAvailable(type) {
@@ -49,19 +49,17 @@
   }
   
   window.addEventListener("load", function(){
-    //Detect localStorage
-    if (storageAvailable('localStorage')) {
-      var storedConsent = window.localStorage.getItem('enableDisqus');
-      var initialStatus;
-      if (storedConsent === 'true') {
-        initialStatus = 'allow';
-        startDisqus();
-      } else if (storedConsent === 'false') {
-        initialStatus = 'deny';
-      }
+    //Detect localStorage and polyfill if not supported
+    if (!storageAvailable('localStorage')) {
+      console.log("Local Storage not supported, fallback");
+      window.localStorage = {
+        _data: {},
+        getItem: function(k) { return this._data.hasOwnProperty(k) ? this._data[k] : undefined; },
+        setItem: function(k, v) { this._data[k] = v; },
+        removeItem: function(k) { delete this._data[k]; }
+      };
+    }
   	    window.cookieconsent.initialise({
-          status: initialStatus,
-          container: document.getElementsByTagName("body"),
           "palette": {
             "popup": {
               "background": "#eaf7f7",
@@ -72,10 +70,10 @@
               "text": "#ffffff"
             }
           },
-          "position": "bottom-left",
+          //"position": "bottom-left",
           "revokable": true,
           "law": { regionalLaw: true, countryCode: 'UK' },
-          "revokeBtn": '<div class=\'cc-revoke \{\{classes\}\}\'>Privacy Settings</div>',
+          "revokeBtn": '<div class=\'cc-revoke \{\{classes\}\}\'>Clear Privacy Settings</div>',
           "compliance": { "opt-in": '<div class=\'cc-compliance cc-highlight\'>\{\{deny\}\}\{\{allow\}\}</div>' },
           "type": "opt-in",
           "content": {
@@ -85,25 +83,23 @@
             "deny": "Disable",
             "allow": "Enable Disqus"
           },
+          "cookie": { "name": "consentDisqus" },
           "onStatusChange": function(status, chosenBefore) {
             if (status === 'allow') {
-              window.localStorage.setItem('enableDisqus', 'true');
               if (!startedDisqus) {
                 startDisqus();
               }
             } else if (status === 'deny') {
-              window.localStorage.setItem('enableDisqus', 'false');
+              if (startedDisqus) {
+                alert("You have revoked consent for Disqus. Please refresh the page for it to take effect.");
+              }
         	}
           },
           "onInitialise": function(status) {
-            if (status === 'allow' || status === 'deny')
-              setTimeout(function(){document.getElementsByClassName("cc-revoke")[0].style.display = "block";});
+            if (status === 'allow') { startDisqus(); }
+            setTimeout(function(){document.getElementsByClassName("cc-revoke")[0].style.display = "block";});
           }
         });
-    } else {
-      //Warn
-      console.log("Local Storage not supported");
-    }
   });
   </script>
 
