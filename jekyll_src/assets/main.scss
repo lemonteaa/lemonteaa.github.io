@@ -15,6 +15,14 @@
 	position: relative;
 }
 
+.list-unstyled + ul {
+	list-style-type: none;
+	margin-left: 40px;
+	li {
+		margin-bottom: 10px;
+	}
+}
+
 @media(max-width: 365px) {
 	a.site-title { font-size: 20px; }
 }
