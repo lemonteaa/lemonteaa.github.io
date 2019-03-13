@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Drafts</title>
+  <meta name="description" content="Lemontea&#39;s tech blog: A math lover in awe of the beauty and power of high level programming languages">
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://lemonteaa.github.io/drafts/">
+  <link rel="alternate" type="application/rss+xml" title="(into tech :lemontea)" href="/feed.xml">
+  
+  
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-105429614-1', {
+	'storage': 'none',
+	'clientId': Math.floor(Math.random()*9000000000+1000000000)
+  });
+  ga('set', 'anonymizeIp', true);
+  ga('send', 'pageview');
+
+</script>
+
+
+  
+  
+  <!-- Using customized Cookie Consent Library to save preference to local storage instead -->
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.6/cookieconsent.min.css" />
+<script src="/assets/cookieconsent.min.js"></script>
+<script type="text/javascript">
+var startedDisqus = false;
+function storageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage.length !== 0;
+    }
+}
+function startDisqus() {
+  console.log("Starting Disqus...");
+
+  var disqus_config = function () {
+    this.page.url = 'https://lemonteaa.github.io/drafts/';
+    this.page.identifier = '/drafts/';
+  };
+
+  (function() {
+    var d = document, s = d.createElement('script');
+
+    s.src = 'https://lemontea-techblog.disqus.com/embed.js';
+
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+
+
+  (function() {
+    var d = document, s = d.createElement('script');
+    
+    s.src = "//lemontea-techblog.disqus.com/count.js";
+    s.id = "dsq-count-scr";
+    d.body.appendChild(s);
+  })();
+
+  startedDisqus = true;
+}
+
+//Conservative option, wait until everything loaded
+window.addEventListener("load", function(){
+  //Detect localStorage and polyfill if not supported
+  if (!storageAvailable('localStorage')) {
+    console.log("Local Storage not supported, fallback");
+    window.localStorage = {
+      _data: {},
+      getItem: function(k) { return this._data.hasOwnProperty(k) ? this._data[k] : undefined; },
+      setItem: function(k, v) { this._data[k] = v; },
+      removeItem: function(k) { delete this._data[k]; }
+    };
+  }
+  window.cookieconsent.initialise({
+    "palette": {
+      "popup": {
+        "background": "#eaf7f7",
+        "text": "#5c7291"
+      },
+      "button": {
+        "background": "#56cbdb",
+        "text": "#ffffff"
+      }
+    },
+    //"position": "bottom-left",
+    "revokable": true,
+    "law": { regionalLaw: true, countryCode: 'UK' },
+    "revokeBtn": '<div class=\'cc-revoke \{\{classes\}\}\'>Clear Privacy Settings</div>',
+    "compliance": { "opt-in": '<div class=\'cc-compliance cc-highlight\'>\{\{deny\}\}\{\{allow\}\}</div>' },
+    "type": "opt-in",
+    "content": {
+      "message": "This website uses Disqus for comments and discussions.",
+      "link": "Privacy Policy",
+      "href": "/privacy",
+      "deny": "Disable",
+      "allow": "Enable Disqus"
+    },
+    "cookie": { "name": "consentDisqus" },
+    "onStatusChange": function(status, chosenBefore) {
+      if (status === 'allow') {
+        if (!startedDisqus) {
+          startDisqus();
+        }
+      } else if (status === 'deny') {
+        if (startedDisqus) {
+          alert("You have revoked consent for Disqus. Please refresh the page for it to take effect.");
+        }
+      }
+    },
+    "onInitialise": function(status) {
+      if (status === 'allow') { startDisqus(); }
+      setTimeout(function(){document.getElementsByClassName("cc-revoke")[0].style.display = "block";});
+    }
+  });
+});
+</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    
+    
+	<div>
+		<a id="avatar" href="/"></a>
+	</div>
+    <a class="site-title" href="/">(into tech :lemontea)</a>
+  
+    
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+              <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+              <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/about/">About</a>
+            
+          
+            
+            
+            <a class="page-link" href="/donate/">Donate</a>
+            
+          
+            
+            
+            <a class="page-link" href="/drafts/">Drafts</a>
+            
+          
+            
+            
+          
+            
+            
+          
+            
+            
+            <a class="page-link" href="/privacy/">Privacy</a>
+            
+          
+            
+            
+            <a class="page-link" href="/projects/">Projects</a>
+            
+          
+            
+            
+          
+        </div>
+      </nav>
+    
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Drafts</h1>
+  </header>
+
+  <div class="post-content">
+    <p><em>(Disclaimer: This area may contain anything - from outright rambling, to ambitious plan in anger (that may or may not pan out once I cool down and regain clarity), to serious plan (that may still be worse than that of a mice), to things that are sort of done already, to abandoned stuff (either because I have no time to get to it yet, or it is really a dead end). Have fun treasure hunting!)</em></p>
+
+<p>Listed below is a bunch of documents I have written/are writing. They are globally shared Google Docs:</p>
+
+<h3 id="programming-books-outline---link">Programming Books Outline - <a href="https://docs.google.com/document/d/1YUZ68xV6VV7oyhcfDdsblRYMkje9vMH74-Uv0ZcuW-E/edit?usp=sharing">Link</a></h3>
+
+<p>I plan to write two books on programming. Both are a kind of distillation of things I (think) I already knew/learnt in the last coupon of years, and in this sense they are my “past”.</p>
+
+<p>One of them, <strong>Lambda Calculus for the Working Programmer - A Gateway to Programming Language Theory</strong>, is fairly standard, matter-of-facts knowledges and so should be relatively easy to write - my main motivation for this one is that I love lambda calculus - I think it’s awesome - and more programmers should have an intimate knowledge of it. Unfortunately while most university programs in CS includes a course on Turing machine and related models, lambda calculus doesn’t seem to be as universal. A second motivation is that while there are books on the topic, they are either limited in scope or too scholarly. What I want is beginner friendly material that also have broad coverage of its many facets, both theoretical and practical.</p>
+
+<p>The other one, <strong>Patterns of Functional Data Processing - Business Application and Big Data</strong>, is (much) more ambitious. I target it to be more of an opinion piece. Despite the grand sounding title, its origin is modest: in my career as an enterprise/business programmer, I observed something sad. Many programmers cannot write “plain data processing” code. <sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> What I mean is that they are simply code that takes as input some in-memory data, do some computations that are algorithmic in nature (no external service call, no database interaction, no fancy stuff), and output some in-memory data. This is of course one of the perfect use case of functional programming. And mind you, I exclude computations that requires clever algorithms - they should all be relatively straight-forward conceptually. As examples of what I have in mind, consider the following problems:</p>
+
+<ol>
+  <li>Write the function <code class="highlighter-rouge">histogram</code>, that take as input a list, and output a histogram in the format of a list of tuple, where each tuple is of the form <code class="highlighter-rouge">(unique_item, count)</code>.</li>
+  <li>Write the function <code class="highlighter-rouge">sliding_window</code>, that take as input a list and an integer <code class="highlighter-rouge">k</code>, and output a list of the same items enriched with sliding windows. For instance, if the input is <code class="highlighter-rouge">[a_1, a_2, ...]</code> and <code class="highlighter-rouge">k</code> is 3, then the output is <code class="highlighter-rouge">[ (a_1, a_2, a_3), (a_2, a_3, a_4), ... ]</code>. You may use any reasonable scheme to handle the boundary case.</li>
+</ol>
+
+<p>Again, to avoid misunderstanding, I am not considering problems of analysing their algorithmic complexity or using a fast algorithms. And many people just stares at them with a blank mind, totally lost at what to do/how to begin. In my opinion, this is more reflective of a weakness in our education system than the capability of said programmers (indeed, my belief is that with the right kind of mentoring, they can master them easily).</p>
+
+<p>Now, given that this planned book is an opinion piece and not a beginner book, it aims at something that is somewhat different. The original Design Patterns are there to provide common solution to common problem, and perhaps more importantly, to build up a set of vocabulary and concepts that can be used to help us think more systematically and productively. It is the vision of this book to do the same for functional programming applied to the limited domain of plain data processing - as far as I know, this is a niche that is a gapping hole, perhaps considered too trivial by most experts.</p>
+
+<p><em>Logistics:</em> My plan is to push them to <a href="https://leanpub.com/">Leanpub</a> once I’ve got at least 1/3 of each book written.</p>
+
+<h3 id="clojure-beginner-tutorial---link">Clojure Beginner Tutorial - <a href="https://docs.google.com/document/d/1FkxM1qkbCLvK4ZOMcUCG9eNcc2mpg-DzsNv9AC9kt-w/edit?usp=sharing">Link</a></h3>
+
+<p>Why another tutorial? I hesitated a bit at first but went ahead after I looked at the states of tutorials in other popular programming language. What I found out is that if you do a simple minded google search (which is what a beginner would likely do), those languages will turn up with a long list of tutorials by many different people. This redundancy (or not, because different learners may require materials with different approach/presentation/media etc to “work”) is advantageous, as it gives the impression that the language is popular and well-supported by a large community.</p>
+
+<p>Anyway. So I’ve broken it into two part: one is a “normal” tutorial at a beginning level (but I still assume some experience in other languages), and the second is a guided project that will lead the learner through creating a complete, non-trivial application.</p>
+
+<p>Unfortunately, given the amount of other committed learning/writing works I have, this item is relatively low on the priority list. I might be able to put more time into it if there is interests expressed from the community.</p>
+
+<p><em>Logistics:</em> Different types of material have a natural fit with different media formats. Right now, it seems to me that <a href="https://clojurecademy.com/">Clojurecademy</a> is a good fit for the usual tutorial (although I may need to do some fine-tuning to make the long expository part fits in without disrupting the “flow” of learning and growing by doing). Meanwhile for the (extended) projects, in-browser, self-hosting REPL using the <em>Klipsi plugin</em> appears to be more flexible. (See <a href="https://blog.klipse.tech/clojure/2016/06/07/klipse-plugin-tuto.html">this</a> and <a href="https://github.com/viebel/klipse">this</a>)</p>
+
+<h3 id="haskell-survival-guide---link">Haskell Survival Guide - <a href="https://docs.google.com/document/d/1fIKOO6gOVPQpDHpfwif3dKbmFL8WjrQJqyJ1abTUnP8/edit?usp=sharing">Link</a></h3>
+
+<p>Haskell is, hands down, one of the most elite language out there, right along with the old guard of C++ (On this point I would like to commend the Haskell community for their recent efforts of outreach and making the language more approachable to outsiders by a combination of tutorials, ecosystem work, and PR). As in real life, the full picture is fairly complicated - it is a convergence of many factors that make it so - being a semi-research language, being hardline on adopting pure functional style, being lazy, its very advanced type system, among other things.</p>
+
+<p>While Haskell has many merits as far as learning functional programming properly is concerned, I also personally believe that there are other, less favourable factors at play, some being purely a historical accident and not really anybody’s fault, that acts a kind of “accidental complexity” and become a harmful obstacle to Haskell’s adoption uptake. They might be justified as being the only feasible way to maximise Haskell’s power at the expert end of the scale, but they come at the price of making it harder for beginners to learn.</p>
+
+<p>To this end, this guide tries to make explicit some of the implicit assumptions of the language - the “ground rule” if you will - that one have to know in order to minimise pain and wrong turns while learning. The latter half of the guide (still unwritten and just an area of copy-and-paste from the internet, pieces of info that I find useful) aims to give a relatively short summary of the core API of the language, both the normal data structures stuff, and the more advanced type classes, especially the cryptic shorthand operators (my ultimate goal is to have a clean cheat-list of the symbols organised in a way that highlight the conceptual hierarchy)</p>
+
+<h3 id="introduction-to-software-developer---link">Introduction to Software Developer - <a href="https://docs.google.com/document/d/1jtt9k9sOr1LK29Z8JyPBox9Hno1r4xrHDm6t_GgYcg4/edit?usp=sharing">Link</a></h3>
+
+<p>A pretty old document I wrote in response to friend’s question on the technical details of a software developer. I’ve filtered away some personal/private stuff. Worth taking a look at the part where I talk about tooling/ecosystem - they don’t exactly focus on that in the CS program, and no one holds your hand in that area in the real world either - you are just expected to figure out this mess on your own. I’ve compared the situation across a few technology stacks (for some definition of “few”), and get to the same conclusion as David Nolen in his <a href="https://youtu.be/1VLN57wJAcU?t=1387">talk</a>: despite superficial difference, we share many common practises in practise.</p>
+
+<h3 id="summary-of-css---link">Summary of CSS - <a href="https://docs.google.com/document/d/1aDDhG2fPVNqm6-4YdgF_m_O2uYZwnYeBwllRnb1kccM/edit?usp=sharing">Link</a></h3>
+
+<p>Oh ya, I planned to write a short book that summarise how to use CSS properly - because its conceptual model is actually pretty counter-intuitive due to its original design for plain, one dimensional document layout (think Microsoft Word instead of Magazine). I didn’t have time for that yet (hope to eventually get to it). In the meantime this doc is the same thing in point form.</p>
+
+<h3 id="python-escape-plan---link">Python Escape Plan - <a href="https://docs.google.com/document/d/1DcS-jIIDS2xaYLv30VY_D2ntK9PQdR3Ppqh3MzBJkHY/edit?usp=sharing">Link</a></h3>
+
+<p>Originally targeted to be a comprehensive plan to learn Python specifically for becoming a data scientist/Machine Learning Practitioner to someone who have no programming experience at all, and to catch up quickly (within 20 days!).</p>
+
+<h3 id="gist---how-computer-hardware-works-i---link">Gist - How Computer Hardware Works (I) - <a href="https://docs.google.com/document/d/1IrP7DOmL50WIaUZFw8XNpxhJtGptCP8vIbtTec9jAp8/edit?usp=sharing">Link</a></h3>
+
+<p>A big WIP. Planned to write it in order to summarise what I’ve learned studying Computer Architecture (beyond the superficial programming model, where I really go read about Virtual memory/cache, bus controller, CPU design, etc). If and when I’m done I may put it on Github’s gist I think?</p>
+
+<h3 id="ai-in-2019---link">AI in 2019 - <a href="https://docs.google.com/document/d/1VZDHynqWYPhzNmVzaklR9GLv_emTRKxfw_xpMTLywQg/edit?usp=sharing">Link</a></h3>
+
+<p>And finally, on the far end of the scale, this is some of my personal thought on “strong AI” etc.</p>
+
+<hr />
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>Well, perhaps my observation isn’t entirely new - there’s always the <a href="https://blog.codinghorror.com/why-cant-programmers-program/">classical piece</a> “Why can’t programmer… programs?” Which claims that even senior programmers cannot write a basic FizzBuzz. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div>
+
+  
+    
+
+  <div id="disqus_thread"></div>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+  
+</article>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <!--<h2 class="footer-heading">(into tech :lemontea)</h2>-->
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col my-footer-col-1">
+        <ul class="contact-list">
+          <li>
+            
+              (into tech :lemontea)
+            
+            </li>
+        </ul>
+      </div>
+
+      <div class="footer-col my-footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/lemonteaa"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">lemonteaa</span></a>
+
+          </li>
+          
+
+          
+		  
+		  
+          <li>
+			<a href="mailto:lemontea.Tom@gmail.com"><span class="icon icon--email"><svg viewBox="0 0 16 16" width="16px" height="16px">
+<g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g4187"
+       transform="matrix(0.82252529,0,0,0.82252529,-254.40571,-324.97836)">
+      <rect
+         y="400.36658"
+         x="311.20438"
+         height="10"
+         width="16"
+         id="rect4164"
+         style="fill:none;fill-opacity:1;stroke:#828282;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="ccc"
+         inkscape:connector-curvature="0"
+         id="path4166"
+         d="m 311.6,400.8622 7.9,4.9 7.5,-5"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4170"
+         d="m 311.4,409.9622 4.7,-5.8"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path4170-5"
+         d="m 326.85,409.9622 -4.2,-6.1"
+         style="fill:none;fill-rule:evenodd;stroke:#828282;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+  </g>
+</svg></span><span class="username">lemontea.Tom@gmail.com</span></a>
+
+		  </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col my-footer-col-3">
+        <p>Site Generated by <a href="https://jekyllrb.com/">Jekyll</a> using customized version of the <a href="https://github.com/jekyll/minima">Minima</a> theme.</p>
+
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

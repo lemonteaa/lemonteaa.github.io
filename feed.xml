@@ -1,5 +1,78 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="https://lemonteaa.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lemonteaa.github.io/" rel="alternate" type="text/html" /><updated>2018-05-22T23:07:27+08:00</updated><id>https://lemonteaa.github.io/</id><title type="html">(into tech :lemontea)</title><subtitle>Lemontea's tech blog: A math lover in awe of the beauty and power of high level programming languages
-</subtitle><entry><title type="html">How to get into the brave new world of Neural Network and Reinforcement Learning</title><link href="https://lemonteaa.github.io/misc/2018/02/08/how-to-get-into-the-brave-new-world-of-neural-network-and-reinforcement-learning.html" rel="alternate" type="text/html" title="How to get into the brave new world of Neural Network and Reinforcement Learning" /><published>2018-02-08T22:00:00+08:00</published><updated>2018-02-08T22:00:00+08:00</updated><id>https://lemonteaa.github.io/misc/2018/02/08/how-to-get-into-the-brave-new-world-of-neural-network-and-reinforcement-learning</id><content type="html" xml:base="https://lemonteaa.github.io/misc/2018/02/08/how-to-get-into-the-brave-new-world-of-neural-network-and-reinforcement-learning.html">&lt;p&gt;&lt;em&gt;(Note: This is a short preparatory post for the real one, where I plan to share my experience dabbling with the rusty but beautiful &lt;a href=&quot;https://github.com/matthiasplappert/keras-rl&quot;&gt;keras-rl&lt;/a&gt; library. I will release that after I finally fulfill my promise and deliver the PPO+A2C integration that has been dragged longer than I am comfortable with :stuck_out_tongue:)&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.1">Jekyll</generator><link href="https://lemonteaa.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lemonteaa.github.io/" rel="alternate" type="text/html" /><updated>2019-03-13T14:31:29+08:00</updated><id>https://lemonteaa.github.io/</id><title type="html">(into tech :lemontea)</title><subtitle>Lemontea's tech blog: A math lover in awe of the beauty and power of high level programming languages
+</subtitle><entry><title type="html">A Personal Update</title><link href="https://lemonteaa.github.io/meta/2019/03/12/a-personal-update.html" rel="alternate" type="text/html" title="A Personal Update" /><published>2019-03-12T22:00:00+08:00</published><updated>2019-03-12T22:00:00+08:00</updated><id>https://lemonteaa.github.io/meta/2019/03/12/a-personal-update</id><content type="html" xml:base="https://lemonteaa.github.io/meta/2019/03/12/a-personal-update.html">&lt;p&gt;Hello everyone! I haven’t updated this blog for a whole year, and I think it’s about time to give you all an update on what’s happened to me and this blog.&lt;/p&gt;
+
+&lt;p&gt;Long story short, I am not in a day job now - instead I’m in a DIY style technology retreat (sorta like the &lt;a href=&quot;https://www.recurse.com/&quot;&gt;recurse center&lt;/a&gt;) where I focus on myself - to explore technologies and methods I’m curious of, to expand my horizon, to challenge and push my knowledge, capabilities, and limit, and to reflect on my career path, as well as the meaning of technologies and its relation to human progress.&lt;/p&gt;
+
+&lt;p&gt;The road has been rougher than I planned (it always &lt;a href=&quot;https://en.wikipedia.org/wiki/Hofstadter%27s_law&quot;&gt;is&lt;/a&gt;, isn’t it? :wink:). As a result, I haven’t been able to spare any time for Open Source Work/Blogging, which used to be done on the side.&lt;/p&gt;
+
+&lt;p&gt;That being said, I will be doing what I can to compensate somewhat:
+&lt;!--more--&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;In the spirit of Open Source, I am opening up &lt;a href=&quot;/drafts/&quot;&gt;a new section&lt;/a&gt; on this blog - it contains a collection of writings/works that are not &lt;em&gt;production-ready&lt;/em&gt; yet, but which nonetheless may be already useful, in raw form, to some people.&lt;/li&gt;
+  &lt;li&gt;I will be shifting my overall direction to &lt;em&gt;more execution&lt;/em&gt; (over introspection/learning) in this phase of the retreat, given that I’ve done a round of catching up with basic knowledge already. This will hopefully make some of the planned blog posts ready faster. (I will explain this point below)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When I just began this blog, my vision is for it &lt;strong&gt;to be a place where I promote/advocate for relatively advanced software development technologies (interpreted in a broad way) in a forward-thinking, but still pragmatic manner&lt;/strong&gt;. Because of this I cannot just write any posts here: if I pick an easy topic, it will not be aligned with this vision and risks diluting/detracting from the main goal. On the other hand, for those topics that are aligned, they are either so beyond my comfort zone that I cannot honestly find anything substantial and valuable to say; or they involve hands-on projects that I haven’t myself completed yet. So I’m in a bind - in order to be able to write a post, I have to either 1) learn something that’s pretty hard relative to what I already know (I’m gradually getting there), or 2) do some projects that’re just beyond the extent of my ability. (I’m trying - just not done yet)&lt;/p&gt;
+
+&lt;p&gt;Now that the main business is dealt with, below are some relatively tangent topics. Read at your leisure :grimacing:&lt;/p&gt;
+
+&lt;h2 id=&quot;rationale&quot;&gt;Rationale&lt;/h2&gt;
+
+&lt;p&gt;Why pursue &lt;em&gt;advanced&lt;/em&gt; software development? This is not as trivial a question as may be perceived by some geeks. The context is a rather unspoken cultural divide (compare: &lt;a href=&quot;https://en.wikipedia.org/wiki/The_Two_Cultures&quot;&gt;the two cultures&lt;/a&gt; of science vs humanities) in the software industry:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;On one side is the business culture, where economy reigns supreme and both engineering and technologies are seen as just a tool (among many others) to some ends, being subservient to business.&lt;/li&gt;
+  &lt;li&gt;On the other side is the &lt;a href=&quot;https://en.wikipedia.org/wiki/Hacker_culture&quot;&gt;hacker culture&lt;/a&gt;, where technologies are seen as a potent, powerful force, that when correctly used can further human potentials by opening up new possibilities, especially those that are forbidden explicitly or implicitly by authorities and society. &lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you’re on the Hacker’s camp, using advanced technique to push the state of the art of software development forward would be a no-brainer. What they may have missed is that they may think everyone think this is a no-brainer, when in fact this is not true. From the eyes of someone who live and speak business, this is far from being &lt;em&gt;a priori&lt;/em&gt; true - they are justified only to the extent that it increases profit, and after accounting for the costs and risks involved in this path, &lt;strong&gt;including the opportunity costs of pursuing other paths instead&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;So, does that mean I’m biased? That I’m just a naive geek? (I hope not, but hey, it’s not productive to live in constant self-doubt) I still believe that there is unused potential in advanced method.&lt;/p&gt;
+
+&lt;p&gt;Software Engineering lives in quiet desparation of &lt;em&gt;just not working&lt;/em&gt;. &lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; class=&quot;footnote&quot;&gt;2&lt;/a&gt;&lt;/sup&gt; Despite decades of effort on almost every angle of research people can come up with, our industry, as a whole, still cannot make software consistently and reliably. Schedule delay, costly bugs, over-budget, all these nightmares are a fact of life, and life in this state is akin to what it is like before modern medicine - we can try a cure, but there is no guarantee.&lt;/p&gt;
+
+&lt;p&gt;What can we do then? Can this situation be improved? Some people believe that ultimately it is the &lt;a href=&quot;https://www.amazon.com/Peopleware-Productive-Projects-Teams-3rd/dp/0321934113&quot;&gt;human factor&lt;/a&gt; that limits what we can solve and that there is &lt;a href=&quot;https://www.amazon.com/Mythical-Man-Month-Software-Engineering-Anniversary/dp/0201835959&quot;&gt;no universal formula&lt;/a&gt;, no magic cure. While I respect the importance of these factors, I also believe that an attitude of disregarding, or dismissing, technical factor as trivial is counter-productive - most of us are not operating at a range where adding/improving software development technologies give diminishing marginal returns. &lt;strong&gt;Unfortunately, large returns may require global optimization - fundamentally changing the way we do development - instead of local, incremental improvements&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In short, we do not yet have a &lt;em&gt;science&lt;/em&gt; of software engineering, and hence the appropiate action to take in the long run is to explore, formulate, and test hypothesis, and to be especially aware of any potential pre-conceptions that may be completely wrong.&lt;/p&gt;
+
+&lt;h2 id=&quot;t-model-of-skills-and-my-project-list&quot;&gt;T-model of skills and my project list&lt;/h2&gt;
+
+&lt;p&gt;The T-model of skills posits that a good engineer should have a broad understanding of various disciplines at a basic level (the horizontal bar), with one (or more) specialty that he drills down into and possess deep, expert skills (the vertical stroke). My own target list with respect to softwares is as follows:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;AI - Mainly neural network and reinforcement learning&lt;/li&gt;
+  &lt;li&gt;DevOps - Making operation less of a black art&lt;/li&gt;
+  &lt;li&gt;Software Architecture and Design - life after MVC&lt;/li&gt;
+  &lt;li&gt;Modern Frontend web development - Single Page Application (SPA) Frameworks, and recent features in browsers (also, HTML5)&lt;/li&gt;
+  &lt;li&gt;Computer Graphics&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;My background’s mainly in backend, and that’s where I’m going deep into. To that end I have planned a number of exercises for myself:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Build a Big Data Pipeline using: Onyx, Kafka, some NoSQL DB (Cassandra?)&lt;/li&gt;
+  &lt;li&gt;Realtime live chat/videa streaming type app using: &lt;a href=&quot;https://github.com/ptaoussanis/sente&quot;&gt;sente&lt;/a&gt;, WebRTC etc&lt;/li&gt;
+  &lt;li&gt;Complex Domain Modelling with Datomic&lt;/li&gt;
+  &lt;li&gt;Microservice/API using: Lacina (for GraphQL), &lt;a href=&quot;https://github.com/juxt/yada&quot;&gt;yada&lt;/a&gt;?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;closing&quot;&gt;Closing&lt;/h2&gt;
+
+&lt;p&gt;Thanks for bearing with me. May the source be with you!&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;This does &lt;em&gt;not&lt;/em&gt; mean that hackers are anti-social. It simply means that they prefer to judge the morality of things more on whether they are actually of benefits, than by the dictate of social norms &lt;em&gt;in and of itself&lt;/em&gt;. See also: &lt;a href=&quot;https://en.wikipedia.org/wiki/Social_constructionism&quot;&gt;Social Constructionism&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/Critical_theory&quot;&gt;Critical Theory&lt;/a&gt; &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li id=&quot;fn:2&quot;&gt;
+      &lt;p&gt;This is an open secret, and a kind of “family shame”. &lt;a href=&quot;#fnref:2&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;</content><author><name></name></author><summary type="html">Hello everyone! I haven’t updated this blog for a whole year, and I think it’s about time to give you all an update on what’s happened to me and this blog. Long story short, I am not in a day job now - instead I’m in a DIY style technology retreat (sorta like the recurse center) where I focus on myself - to explore technologies and methods I’m curious of, to expand my horizon, to challenge and push my knowledge, capabilities, and limit, and to reflect on my career path, as well as the meaning of technologies and its relation to human progress. The road has been rougher than I planned (it always is, isn’t it? :wink:). As a result, I haven’t been able to spare any time for Open Source Work/Blogging, which used to be done on the side. That being said, I will be doing what I can to compensate somewhat:</summary></entry><entry><title type="html">How to get into the brave new world of Neural Network and Reinforcement Learning</title><link href="https://lemonteaa.github.io/misc/2018/02/08/how-to-get-into-the-brave-new-world-of-neural-network-and-reinforcement-learning.html" rel="alternate" type="text/html" title="How to get into the brave new world of Neural Network and Reinforcement Learning" /><published>2018-02-08T22:00:00+08:00</published><updated>2018-02-08T22:00:00+08:00</updated><id>https://lemonteaa.github.io/misc/2018/02/08/how-to-get-into-the-brave-new-world-of-neural-network-and-reinforcement-learning</id><content type="html" xml:base="https://lemonteaa.github.io/misc/2018/02/08/how-to-get-into-the-brave-new-world-of-neural-network-and-reinforcement-learning.html">&lt;p&gt;&lt;em&gt;(Note: This is a short preparatory post for the real one, where I plan to share my experience dabbling with the rusty but beautiful &lt;a href=&quot;https://github.com/matthiasplappert/keras-rl&quot;&gt;keras-rl&lt;/a&gt; library. I will release that after I finally fulfill my promise and deliver the PPO+A2C integration that has been dragged longer than I am comfortable with :stuck_out_tongue:)&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;(Hint: some of the not-explicitly-referenced links are just Wiki, but many others are hidden treasure troves. Thanks for all these authors for their amazing works! :blush:)&lt;/em&gt;&lt;/p&gt;
 
